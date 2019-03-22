@@ -1,0 +1,32 @@
+/* ----------------------------- */
+/*  CSS DA ANIMACAO DOS INPUTS   */
+/* ----------------------------- */
+.backgroundRed {
+    animation: fundoVermelho 0.5s;
+}
+
+@keyframes fundoVermelho {
+    0% {
+        background: #FFF;
+    }
+    100% {
+        background: #dfaeaa;
+    }
+}
+
+.backgroundBlue {
+    animation: fundoAzul 0.5s;
+}
+
+.disabled {
+    pointer-events: none;
+}
+
+@keyframes fundoAzul {
+    0% {
+        background: #FFF;
+    }
+    100% {
+        background: #b2dcee;
+    }
+}

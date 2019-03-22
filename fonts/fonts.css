@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'nova_squarebook';
+    src: url('../fonts/NovaSquareBook.eot');
+    src: url('../fonts/NovaSquareBook.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/NovaSquareBook.woff') format('woff'),
+         url('../fonts/NovaSquareBook.ttf') format('truetype'),
+         url('../fonts/NovaSquareBook.svg#nova_squarebook') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}

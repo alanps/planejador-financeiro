@@ -1,0 +1,212 @@
+/* ----------------------------- */
+/*  Global Configurations        */
+/* ----------------------------- */
+
+html {
+    font-family: 'Verdana';
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: 'Verdana';
+    cursor: default;
+}
+
+form {
+    padding: 1.7em 0 0;
+    display: block;
+}
+
+
+input:focus { 
+	outline: none; 
+}
+
+input {
+	margin: 0.3em auto;
+	width: 18.2em;
+	height: 2.7em;
+	text-align: center;
+	font-family: 'Verdana';
+	font-size: 0.6em;
+	color: #595c62;
+	display: block;
+	border: 0;
+}
+
+button:focus { 
+	outline: none; 
+}
+
+button {
+	margin: 0.2em 2em;
+	height: 2.5em;
+	width: 15.7em;
+	background-color: #eda246;
+	-webkit-border-radius: 0.5em;
+	-moz-border-radius: 0.5em;
+	border-radius: 0.5em;
+	font-family: 'nova_squarebook';
+	color: #595c62;
+	font-size: 0.7em;
+	font-weight: bold;
+	cursor: pointer;
+	border: 0;
+	text-transform: uppercase;
+}
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0;
+    /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+a {
+    text-decoration: none;
+}
+
+.clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* ----------------------------- */
+/*  CSS GERAL                    */
+/* ----------------------------- */
+
+.page-esqueciasenha .base {
+	width: 29.6em;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.page-esqueciasenha .titulo {
+	text-align: center;
+	width: 12em;
+	height: 1.8em;
+	background-color: #e4e4e4;
+	-webkit-border-radius: .6em;
+	-moz-border-radius: .6em;
+	border-radius: .6em;
+	font-family: 'nova_squarebook';
+	font-size: 0.9em;
+	color: #595c62;
+	font-weight: bold;
+	line-height: 2em;
+	margin: 0em auto;
+	z-index: 10;
+	position: relative;
+	text-transform: uppercase;
+}
+
+.page-esqueciasenha .esqueciasenhaDiv {
+	width: 13.8em;
+	height: 9.2em;
+	background-color: #595c62;
+	-webkit-border-radius: 0.6em;
+	-moz-border-radius: 0.6em;
+	border-radius: 0.6em;
+	margin: -1em auto;
+}
+
+.page-esqueciasenha .logo {
+    width: 100%;
+}
+
+.page-esqueciasenha .loading {
+	margin-top: -1.5em;
+	margin-right: 2em;
+	float: right;
+	display: none;
+	width: 1em;
+	position: relative;
+}
+
+.page-esqueciasenha .esqueciasenhaErro {
+	height: 2.5em;
+	width: 23.5em;
+	background-color: #595c62;
+	position: absolute;
+	margin: 0.4em -.8em;
+	font-size: 0.6em;
+	color: #FFF;
+	font-family: 'Verdana';
+	text-align: center;
+	line-height: 2.4em;
+	border: 0.7em solid #e4e4e4;
+	-webkit-box-shadow: 0px 6px 8px 4px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    0px 6px 8px 4px rgba(50, 50, 50, 0.75);
+	box-shadow:         0px 6px 8px 4px rgba(50, 50, 50, 0.75);
+	display: none;
+	cursor: pointer;
+}
+
+.page-esqueciasenha .erro {
+	text-transform: uppercase;
+	height: 2.5em;
+	width: 27.8em;
+	background-color: #595c62;
+	position: absolute;
+	margin: 0.4em -.8em;
+	font-size: 0.5em;
+	color: #FFF;
+	font-family: 'Verdana';
+	text-align: center;
+	line-height: 2.4em;
+	border: 0.7em solid #e4e4e4;
+	-webkit-box-shadow: 0px 6px 8px 4px rgba(50, 50, 50, 0.75);
+	-moz-box-shadow:    0px 6px 8px 4px rgba(50, 50, 50, 0.75);
+	box-shadow:         0px 6px 8px 4px rgba(50, 50, 50, 0.75);
+	display: none;
+	cursor: pointer;
+}
+
+.page-esqueciasenha .esqueciasenha {
+	margin: 2em auto;
+}
+
+/* ----------------------------- */
+/*  CSS DO NAO DISPONIVEL        */
+/* ----------------------------- */
+.page-esqueciasenha .naodisponivel {
+    display: none;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.page-esqueciasenha .naodisponivel span.icon-lock {
+    display: block;
+    font-size: 4em;
+    margin-bottom: 0.2em;
+}
+
+.page-esqueciasenha .desabilitado {
+    display: none !important;
+}
+
+.page-esqueciasenha .desabilitado ~ .naodisponivel {
+    display: block !important;
+}
+
+.page-esqueciasenha .desabilitado ~ .carregando {
+    display: none !important;
+}
+
+.page-esqueciasenha .carregando {
+    display: none !important;
+}
