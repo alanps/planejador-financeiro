@@ -1,0 +1,2347 @@
+/* ----------------------------- */
+/*  Global Configurations        */
+/* ----------------------------- */
+
+html {
+    font-family: 'Verdana';
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: 'Verdana';
+    cursor: default;
+}
+
+input:focus {
+    outline: none;
+}
+
+input:disabled {
+    background-color: #e4e4e4;
+    opacity: 0.7;
+}
+
+input {
+    text-transform: uppercase;
+    width: 100%;
+    height: 34px;
+    margin: 0.3em 0 0.3em 0.4em;
+    border: 0;
+    font-family: 'Verdana';
+    color: #595c62;
+    font-size: 0.7em;
+    text-align: left;
+    padding: 0.1em 1em;
+    border: 0;
+    cursor: default;
+}
+
+button:focus {
+    outline: none;
+}
+
+button {
+    font-family: 'nova_squarebook';
+    font-weight: bold;
+    color: #595c62;
+    font-size: 0.8em;
+    text-align: center;
+    width: 22.9em;
+    height: 2.5em;
+    background-color: #eda246;
+    margin: 0.2em 0.3em;
+    -webkit-border-radius: 0.4em;
+    -moz-border-radius: 0.4em;
+    border-radius: 0.4em;
+    cursor: pointer;
+    border: 0;
+    text-transform: uppercase;
+}
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0;
+    /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+/* ----------------------------- */
+/*  CSS DO LOADING DE SEÇÕES     */
+/* ----------------------------- */
+#planejador {
+    pointer-events: all;
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+#planejador .loading_sessions {
+    margin: 0 auto;
+    display: none;
+    width: 1em;
+    position: relative;
+}
+
+#planejador .inANDout .loading_sessions.loading_waiting {
+    display: block;
+    margin: 1em auto 1.3em;
+}
+
+#planejador .objetivos .loading_sessions.loading_waiting {
+    display: block;
+    margin: 1em auto 1.3em;
+}
+                        
+#planejador .tela .ultimasNotificacoes .loading_sessions.loading_waiting  {
+    display: block;
+    margin: 3.6em auto;
+}
+
+
+/* ----------------------------- */
+/*  CSS NAO DISPONIVEL           */
+/* ----------------------------- */
+#planejador .naodisponivel {
+    display: none;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    padding: 0 2em;
+}
+
+#planejador .naodisponivel span.icon-lock {
+    display: block;
+    font-size: 4em;
+    width: 0.63em;
+    margin: 0 auto;
+    margin-bottom: 0.2em;
+}
+
+#planejador.desabilitado > .naodisponivel {
+    display: block !important;
+}
+
+#planejador.desabilitado > .carregando {
+    display: none !important;
+}
+
+
+/* ----------------------------- */
+/*  ERRO NO SISTEMA              */
+/* ----------------------------- */
+
+#planejador.erroNoSistemaOn > .erroNoSistema {
+    display: block;
+}
+
+#planejador .erroNoSistema {
+    display: none;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+}
+
+#planejador .erroNoSistema span.icon-confused {
+    display: block;
+    font-size: 4em;
+    margin-bottom: 0.2em;
+}
+
+/* ----------------------------- */
+/*  CSS DO LOADING               */
+/* ----------------------------- */
+#planejador .loading {
+    margin-top: -1.6em;
+    margin-right: 1em;
+    float: right;
+    width: 1em;
+    position: relative;
+    display: none;
+}
+
+#planejador .carregando {
+    display: none !important;
+}
+
+#planejador .load {
+    display: none;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    opacity: 0.2;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#planejador .carregando ~ .load {
+    display: block;
+}
+
+/* ----------------------------- */
+/* CSS EFEITO EDIT DADOS         */
+/* ----------------------------- */
+
+#planejador.travado * {
+    pointer-events: none !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#planejador.travado {
+    pointer-events: none !important;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#planejador .disabled {
+    pointer-events: none;
+}
+
+#planejador .dados.dadosEntrada.pisca {
+    background-color: #a5c1cd !important;
+}
+
+#planejador .dados.dadosSaida.pisca {
+    background-color: #cdaba8 !important;
+}
+
+#planejador .dados.piscaEsc {
+    background-color: #393838 !important;
+    color: #FFF;
+}
+
+#planejador .objetivosDados.objetivosDadosEntrada.pisca {
+    background-color: #7e998b !important;
+}
+
+#planejador .objetivosDados.objetivosDadosSaida.pisca {
+    background-color: #998f6c !important;
+}
+
+#planejador .objetivosDados.piscaEsc {
+    background-color: #393838 !important;
+    color: #FFF;
+}
+
+/* ----------------------------- */
+/*  CSS CONFIGURACAO DOS LADOS   */
+/* ----------------------------- */
+#planejador .flexGroup {
+    display: flex;
+}
+
+#planejador .tela {
+    border: 0;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    background-color: #595c62;
+    flex: 1;
+}
+
+#planejador .tela .esquerda {
+    background-color: #FFF;
+    padding: 1em .6em;
+    flex: 0 0 24em;
+    position: relative;
+}
+
+#planejador .tela .direita {
+    flex: 1;
+    background-color: #595c62;
+    padding: 1em 1.2em;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ----------------------------- */
+/*   CSS LADO ESQUERDO           */
+/* ----------------------------- */
+#planejador .box_perfil .flexGroup {
+    flex-direction: column;
+    width: calc(100% - 7.5em);
+}
+
+#planejador .tela .logo {
+    width: 100%;
+    margin-bottom: 1.5em;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#planejador .tela .copyright {
+    font-size: 10px;
+    text-align: center;
+    font-family: 'nova_squarebook';
+}
+
+#planejador .tela .copyright:last-of-type {
+    text-transform: uppercase;
+    margin-bottom: 1.5em;
+}
+
+#planejador .tela .copyright a {
+    color: #0061ff;
+    text-decoration: none;
+}
+
+#planejador .tela .rotulo {
+    text-transform: uppercase;
+    font-family: 'nova_squarebook';
+    font-weight: bold;
+    color: #595c62;
+    font-size: 1em;
+    text-align: center;
+    line-height: 2em;
+    height: 1.9em;
+    background-color: #e4e4e4;
+    margin: 0 2.6em;
+    -webkit-border-radius: 0.5em;
+    -moz-border-radius: 0.5em;
+    border-radius: 0.5em;
+    z-index: 5;
+    position: relative;
+}
+
+#planejador .tela .box {
+    display: flex;
+    background-color: #595c62;
+    padding: 1.6em 1em 1em 1.5em;
+    -webkit-border-radius: .5em;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    margin: -1em 1.1em 2.2em;
+    position: relative;
+}
+
+#planejador .tela .foto {
+    border: 0;
+    font-weight: bold;
+    color: #595c62;
+    font-size: 8px;
+    text-align: center;
+    line-height: 65px;
+    flex: 0 0 12em;
+    height: 7.7em;
+    display: block;
+    background-color: #FFF;
+    background-size: 100%;
+    background-position: center center;
+}
+
+#planejador .tela .box.box_perfil span {
+    margin: 0.2em 0 0.2em 1em;
+    font-family: Verdana;
+    font-weight: bold;
+    color: #FFF;
+    font-size: 10px;
+    text-transform: uppercase;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+}
+
+#planejador .tela .box .ellipsisContainer {
+    width: 100%;
+}
+
+#planejador .tela .box.box_perfil span.idade {
+    /* width: 5em; */
+}
+
+#planejador .tela .profissao {
+    margin-top: 0em !important;
+}
+
+#planejador .tela .editarPerfil {
+    text-transform: uppercase;
+    font-family: 'nova_squarebook';
+    font-weight: bold;
+    color: #595c62;
+    font-size: 9px;
+    text-align: center;
+    line-height: 2em;
+    width: 10.2em;
+    height: 2em;
+    background-color: #eda246;
+    bottom: -1.1em;
+    position: absolute;
+    -webkit-border-radius: 0.7em;
+    -moz-border-radius: 0.7em;
+    border-radius: 0.7em;
+    cursor: pointer;
+}
+
+#planejador .tela .entradaRotulo, .saidaRotulo, .objetivoRotulo {
+    font-family: 'nova_squarebook';
+    font-weight: bold;
+    color: #595c62;
+    font-size: 18px;
+    text-align: center;
+    line-height: 32px;
+    width: 235px;
+    height: 30px;
+    background-color: #e4e4e4;
+    margin-left: 45px;
+    margin-top: 30px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    z-index: 5;
+    position: relative;
+}
+
+#planejador .tela .entrada, .saida, .objetivo {
+    width: 285px;
+    height: 210px;
+    background-color: #595c62;
+    margin-left: 18px;
+    margin-top: -15px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+#planejador .tela .entradaTipoValor2, .saidaTipoValor2, .objetivoTipoValor2 {
+    pointer-events: all;
+}
+
+#planejador .tela .box .icon-arrow-down {
+    margin-top: 0.9em;
+    right: 0.5em;
+    position: absolute;
+    width: 22px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+    color: #595c62;
+}
+
+#planejador .tela .box .opcoes {
+    height: 2.5em;
+    width: 100%;
+    background-color: #595c62;
+    margin: 0 0.1em;
+    display: block;
+    font-size: 0.6em;
+    color: #FFF;
+    font-family: 'Verdana';
+    text-align: right;
+    padding-right: 1em;
+    line-height: 2.4em;
+    border: 0.5em solid #e4e4e4;
+    border-top: 3px solid #e4e4e4;
+    border-bottom: 0px solid #e4e4e4;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+#planejador .tela .box .opcoes:last-of-type {
+    border-bottom: 3px solid #e4e4e4;
+}
+
+#planejador .tela .box .opcoes:hover {
+    background-color: #e4e4e4;
+    color: #000;
+}
+
+#planejador .tela .box form.entradaForm {
+    position: relative;
+}
+
+#planejador .tela .box form.saidaForm {
+    position: relative;
+}
+
+#planejador .tela .box form.objetivoForm {
+    position: relative;
+}
+
+#planejador .tela .box span.tag {
+    background-color: #595c62;
+    left: 1em;
+    top: 1em;
+    padding: 0.2em;
+    font-size: 0.7em;
+    z-index: 1000;
+    position: absolute;
+    text-align: center;
+    color: #FFF;
+    text-transform: uppercase;
+    font-family: 'nova_squarebook';
+    display: none;
+}
+
+#planejador .tela .box .entradaTipoValorSelect {
+    z-index: 1000;
+    position: absolute;
+    margin: -0.2em 0.2em;
+    width: calc(100% - 0.6em);
+    background-color: #FFF;
+    line-height: 2em;
+    -webkit-box-shadow: 0px 4px 4px 2px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0px 4px 4px 2px rgba(50, 50, 50, 0.75);
+    box-shadow: 0px 4px 4px 2px rgba(50, 50, 50, 0.75);
+    display: none;
+    cursor: default;
+}
+
+#planejador .tela .box input.entradaParcelas {
+    width: 8em !important;
+}
+
+#planejador .tela .box input.entradaValorParcela {
+    width: calc(100% - 9.8em) !important;
+}
+
+#planejador .tela .box input.saidaValorParcela {
+    width: calc(100% - 9.8em) !important;
+}
+
+#planejador .tela .box input {
+    width: calc(100% - 1em) !important;
+}
+
+#planejador .tela .box form button {
+    width: calc(100% - 0.8em) !important;
+}
+
+#planejador .tela .box input.entradaTipoValor {
+    width: calc(100% - 1em) !important;
+}
+
+#planejador .tela .box .entradaTipoValor2 {
+    padding-left: 9.5em;
+    width: 11.5em;
+}
+
+#planejador .tela .box .entradaVencimentoParcelaDiv span.icon-clock2 {
+    position: absolute;
+    top: 0.85em;
+    right: 1em;
+    color: #595c62;
+    cursor: pointer;
+}
+
+#planejador .tela .box .entradaVencimentoParcelaDiv span.icon-clock22 {
+    position: absolute;
+    top: 0.85em;
+    right: 2.3em;
+    color: #595c62;
+    cursor: pointer;
+}
+
+#planejador .tela .box .entradaVencimentoParcelaDiv {
+    position: relative;
+}
+
+#planejador .tela .box .saidaTipoValorSelect {
+    z-index: 1000;
+    position: absolute;
+    margin: -0.2em 0.2em;
+    width: 15.55em;
+    background-color: #FFF;
+    line-height: 2em;
+    -webkit-box-shadow: 0px 4px 4px 2px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0px 4px 4px 2px rgba(50, 50, 50, 0.75);
+    box-shadow: 0px 4px 4px 2px rgba(50, 50, 50, 0.75);
+    display: none;
+    cursor: default;
+}
+
+#planejador .tela .box .saidaTipoValor2 {
+    padding-left: 9.5em;
+    width: 11.5em;
+    -webkit-transition: background-color 0.55s ease-in-out;
+    -ms-transition:     background-color 0.55s ease-in-out;
+    transition:         background-color 0.55s ease-in-out;
+}
+
+#planejador .tela .box input.saidaParcelas {
+    width: 8em !important;
+}
+
+#planejador .tela .box .saidaVencimentoParcelaDiv span.icon-clock2 {
+    position: absolute;
+    top: 0.85em;
+    right: 1em;
+    color: #595c62;
+    cursor: pointer;
+}
+
+#planejador .tela .box .saidaVencimentoParcelaDiv span.icon-clock22 {
+    position: absolute;
+    top: 0.85em;
+    right: 2.3em;
+    color: #595c62;
+    cursor: pointer;
+}
+
+#planejador .tela .box .saidaVencimentoParcelaDiv {
+    position: relative;
+}
+
+#planejador .tela .box .objetivoTipoValorSelect {
+    z-index: 1000;
+    position: absolute;
+    margin: -0.2em 0.2em;
+    width: 15.55em;
+    background-color: #FFF;
+    line-height: 2em;
+    -webkit-box-shadow: 0px 4px 4px 2px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow: 0px 4px 4px 2px rgba(50, 50, 50, 0.75);
+    box-shadow: 0px 4px 4px 2px rgba(50, 50, 50, 0.75);
+    display: none;
+    cursor: default;
+}
+
+/* ----------------------------- */
+/*   CSS LADO DIREITO            */
+/* ----------------------------- */
+#planejador .tela .data {
+    text-transform: uppercase;
+    color: #FFF;
+    font-size: 0.6em;
+    text-align: right;
+    margin-right: 1.5em;
+    margin-left: 1.5em;
+    float: right;
+    font-family: 'nova_squarebook';
+    cursor: pointer;
+}
+
+
+/* ----------------------------- */
+/*  CSS LADO DIREITO - ULTIMAS   */
+/* ----------------------------- */
+#planejador .tela .ultimas {
+    flex: 1;
+    max-height: 5.2em;
+    background-color: #e4e4e4;
+    margin-top: .2em;
+    position: relative;
+    display: flex;
+}
+
+#planejador .tela .ultimasRotulo {
+    text-transform: uppercase;
+    font-family: 'nova_squarebook';
+    font-weight: bold;
+    color: #e4e4e4;
+    font-size: 0.6em;
+    text-align: center;
+    line-height: 1.9em;
+    width: 8.5em;
+    height: 1.8em;
+    background-color: #595c62;
+    margin: 3.4em 0 2.3em -1.6em;
+    -ms-transform: rotate(270deg);
+    /* IE 9 */
+    -webkit-transform: rotate(270deg);
+    /* Chrome, Safari, Opera */
+    transform: rotate(270deg);
+    letter-spacing: 0.2em;
+}
+
+#planejador .tela .ultimasNotificacoes {
+    text-transform: uppercase;
+    font-family: 'verdana';
+    color: #595c62;
+    font-size: 0.6em;
+    margin-left: -2em;
+    margin-right: 5em;
+    margin-top: 0.5em;
+    line-height: 1.4em;
+    height: 8em;
+    width: calc(100% - 1em);
+}
+
+#planejador .tela .ultimasNotificacoes span.dataUltima {
+    background-color: rgba(89, 92, 98, 0.10);
+    padding: 0 0.2em;
+    font-size: 0.8em;
+    left: 0.2em;
+    top: 0.1em;
+    position: absolute;
+    width: 6.5em;
+    text-align: center;
+}
+
+#planejador .tela .ultimasNotificacoes span.tipoUltima {
+    font-size: 0.98em;
+}
+
+#planejador .tela .ultimasNotificacoes span.valorUltima {
+    font-size: 0.98em;
+}
+
+#planejador .tela .ultimasNotificacoes .itemUltima {
+    position: relative;
+    margin: 0.4em 0.3em 0;
+    background-color: rgba(89, 92, 98, 0.05);
+    height: 1.4em;
+}
+
+#planejador .tela .ultimasNotificacoes span.recebeuUltima {
+    margin-left: 6.8em;
+    margin-right: 0.5em;
+    background-color: rgba(89, 92, 98, 0.10);
+    padding: 0 0.2em;
+    font-size: 0.9em;
+    min-width: 6.5em;
+    text-align: center;
+}
+
+#planejador .tela  .ultimasNotificacoes span.recebeuUltima.entradaUltima {
+    background-color: rgba(193, 216, 226, 0.5);
+}
+
+#planejador .tela  .ultimasNotificacoes span.recebeuUltima.saidaUltima {
+    background-color: rgba(233, 216, 214, 0.5);
+}
+
+#planejador .tela  .ultimasNotificacoes span.recebeuUltima.objetivoCompraUltima {
+    background-color: rgba(154, 195, 174, 0.5);
+}
+
+#planejador .tela  .ultimasNotificacoes span.recebeuUltima.objetivoVendaUltima {
+    background-color: rgba(244, 232, 186, 0.5);
+}
+
+#planejador .tela  .ultimasNotificacoes .itemUltima:hover {
+    background-color: rgba(89, 92, 98, 0.1);
+}
+
+#planejador .tela .setaMes {
+    position: absolute;
+    cursor: pointer;
+    color: #ff9f34;
+    font-size: 0.9em;
+    right: 13.7em;
+}
+
+#planejador .tela .setaMesDireita {
+    margin-top: 3.1em;
+}
+
+#planejador .tela .setaMesEsquerda {
+    margin-top: 1.8em;
+}
+
+#planejador .tela .mes {
+    text-transform: uppercase;
+    width: 200px;
+    height: 35px;
+    background-color: #595c62;
+    margin-top: 1.4em;
+    right: 1em;
+    margin-left: 0.7em;
+    color: #e4e4e4;
+    font-size: 14px;
+    font-family: 'nova_squarebook';
+    line-height: 36px;
+    text-align: center;
+    position: relative;
+}
+
+#planejador .tela .mostrarTodos {
+    font-size: 0.5em;
+    display: block;
+    position: absolute;
+    right: 3.3em;
+    top: 7.6em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: #f2f2f2;
+    color: #000;
+    padding: 0.1em 2em;
+}
+
+#planejador .tela .ultimasNotificacoes .ultimasNada {
+    text-align: center;
+    margin: 2.25em auto 2.2em;
+    font-size: 1em;
+    font-family: 'Verdana';
+    text-transform: uppercase;
+    background-color: #f2f2f2;
+    padding: 1em;
+    color: #000;
+    width: calc(100% - 1em);
+}
+
+#planejador .tela .ultimasNotificacoes .ultimasNada.ultimasNadaOff {
+    display: none;
+}
+
+/* ----------------------------- */
+/*  CSS LADO DIREITO - SALARIO   */
+/* ----------------------------- */
+#planejador .tela .salario {
+    flex: 1;
+    height: 7.5em;
+    background-color: #e4e4e4;
+    margin-top: 1em;
+    position: relative;
+    color: #595c62;
+}
+
+#planejador .tela .rotuloSecao {
+    height: 2.5em;
+    text-transform: uppercase;
+    background-color: #595c62;
+    margin: .8em;
+    color: #e4e4e4;
+    font-size: 0.8em;
+    font-family: 'nova_squarebook';
+    line-height: 2.7em;
+    text-align: left;
+    padding-left: 1em;
+}
+
+#planejador .tela .rotuloSecao span.salarioDataValores {
+    font-size: 0.7em;
+    color: #ff9b2d;
+    float: right;
+}
+
+#planejador .tela .salarioEditar {
+    margin: 0.5em;
+    width: 1.7em;
+    height: 1.5em;
+    background-color: #e4e4e4;
+    float: right;
+    color: #595c62;
+    font-size: 1em;
+    font-family: 'Verdana';
+    line-height: 1.6em;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+#planejador .tela .salarioMarcacao {
+    position: relative;
+    margin: 2.4em 0.6em 0;
+    height: 1.5em;
+    background-color: #FFF;
+    box-sizing: border-box;
+    width: -moz-calc(100% - 1.2em);
+    width: -webkit-calc(100% - 1.2em);
+    width: -o-calc(100% - 1.2em);
+    width: calc(100% - 1.2em);
+}
+
+#planejador .tela .salarioBrutoRotulo {
+    float: left;
+    margin-top: -43px;
+    margin-left: 10px;
+    width: 140px;
+    height: 20px;
+    color: #595c62;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+#planejador .tela .salarioBruto {
+    float: left;
+    margin-top: -20px;
+    margin-left: 10px;
+    width: 140px;
+    height: 20px;
+    color: #595c62;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+#planejador .tela .barraVerticalId {
+    -ms-transform: rotate(90deg);
+    /* IE 9 */
+    -webkit-transform: rotate(90deg);
+    /* Chrome, Safari, Opera */
+    transform: rotate(90deg);
+    width: 57px;
+    border: 0.5px solid #000;
+}
+
+#planejador .tela .barraVertical {
+    height: 57px;
+    border: 0.5px solid #000;
+    position: absolute;
+    z-index: 10;
+    top: 2em;
+}
+
+#planejador .tela .salarioExtraRotulo {
+    float: left;
+    margin-top: -43px;
+    margin-left: 158px;
+    width: 140px;
+    height: 20px;
+    color: #595c62;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+#planejador .tela .salarioExtra {
+    float: left;
+    margin-top: -20px;
+    margin-left: 158px;
+    width: 140px;
+    height: 20px;
+    color: #595c62;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+#planejador .tela .barraVertical2 {
+    margin-top: -2px;
+    margin-left: 270px;
+}
+
+#planejador .tela .salarioDescontosRotulo {
+    float: left;
+    margin-top: -43px;
+    margin-left: 305px;
+    width: 140px;
+    height: 20px;
+    color: #ff2311;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+#planejador .tela .salarioDescontos {
+    float: left;
+    margin-top: -20px;
+    margin-left: 305px;
+    width: 140px;
+    height: 20px;
+    color: #ff2311;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+#planejador .tela .barraVertical3 {
+    margin-top: -2px;
+    margin-left: 420px;
+}
+
+#planejador .tela .salarioTotalRotulo {
+    float: left;
+    margin-top: -43px;
+    margin-left: 458px;
+    width: 140px;
+    height: 20px;
+    color: #0061ff;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+#planejador .tela .salarioTotal {
+    float: left;
+    margin-top: -20px;
+    margin-left: 458px;
+    width: 140px;
+    height: 20px;
+    color: #0061ff;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+/* ----------------------------- */
+/*  CSS LADO DIREITO - POUPANCA  */
+/* ----------------------------- */
+#planejador .tela .poupanca {
+    flex: 0 0 17em;
+    height: 7.5em;
+    background-color: #e4e4e4;
+    margin-top: 1em;
+    margin-left: 1em;
+    color: #595c62;
+}
+
+#planejador .tela .poupancaRotulo {
+    width: 16em;
+    height: 30px;
+    background-color: #595c62;
+    float: left;
+    margin-top: 10px;
+    margin-left: 10px;
+    color: #e4e4e4;
+    font-size: 13px;
+    font-family: 'nova_squarebook';
+    line-height: 32px;
+    text-align: left;
+    padding-left: 12px;
+}
+
+#planejador .tela .poupancaMarcacao {
+    margin-top: 2.4em;
+    margin-left: 10px;
+    width: 15.6em;
+    height: 20px;
+    background-color: #FFF;
+}
+
+#planejador .tela .poupancaTotalRotulo {
+    float: left;
+    margin-top: -43px;
+    margin-left: 10px;
+    width: 7em;
+    height: 20px;
+    color: #595c62;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: right;
+    text-transform: uppercase;
+}
+
+#planejador .tela .poupancaTotal {
+    float: left;
+    margin-top: -20px;
+    margin-left: 10px;
+    width: 9.3em;
+    height: 20px;
+    color: #595c62;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+#planejador .tela .barraVertical4 {
+    margin-top: -20px;
+    margin-left: 96px;
+}
+
+#planejador .tela .poupancaObjetivoRotulo {
+    float: left;
+    margin-top: -43px;
+    margin-left: 158px;
+    width: 4em;
+    height: 20px;
+    color: #595c62;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+#planejador .tela .poupancaObjetivo {
+    float: left;
+    margin-top: -20px;
+    margin-left: 124px;
+    width: 10em;
+    height: 20px;
+    color: #595c62;
+    font-size: 12px;
+    font-family: 'Verdana';
+    line-height: 22px;
+    text-align: center;
+}
+
+
+/* ------------------------------------ */
+/*  CSS LADO DIREITO - ENTRADA E SAIDA  */
+/* ------------------------------------ */
+#planejador .tela .inANDout {
+    flex: 1;
+    max-height: 30.5em;
+    background-color: #e4e4e4;
+    margin-top: 1em;
+}
+
+#planejador .tela .direita span.inANDoutRotulo {
+    float: left;
+}
+
+#planejador .tela .direita span.inANDoutPaginacao.paginacaoTravada {
+    pointer-events: none;
+}
+
+#planejador .tela .direita span.inANDoutPaginacao {
+    float: right;
+    font-size: 0.7em;
+    margin: 0 1em;
+}
+
+#planejador .tela .direita .inANDoutPaginacao span {
+    font-size: 1.8em;
+    cursor: pointer;
+}
+
+#planejador .tela .direita .inANDoutPaginacao span.paginaSelecionada {
+    color: #FFF;
+    font-weight: bold;
+    cursor: default !important;
+    pointer-events: none;
+}
+
+#planejador .tela .direita span.inANDoutTotalResultados {
+    font-size: 0.7em;
+    margin: 0 0.5em;
+    text-transform: none;
+}
+
+#planejador .tela .inANDout td.inANDoutData.inANDoutDataLoader {
+    pointer-events: none !important;
+}
+
+#planejador .tela .inANDout td.inANDoutTotal.inANDoutTotalLoader {
+    pointer-events: none !important;
+}
+
+#planejador .tela .inANDout td.inANDoutParcelas.inANDoutParcelasLoader {
+    pointer-events: none !important;
+}
+
+#planejador .tela .inANDout td.inANDoutValor.inANDoutValorLoader {
+    pointer-events: none !important;
+}
+
+#planejador .tela .inANDout td.inANDoutTipo.inANDoutTipoLoader {
+    pointer-events: none !important;
+}
+
+#planejador .tela .inANDout td.inANDoutAtual.inANDoutAtualLoader {
+    pointer-events: none !important;
+}
+
+#planejador .tela .inANDout td.inANDoutData.inANDoutDataDESC span.icon-arrow-up2 {
+    display: block !important;
+    transform: rotate(180deg);
+    top: 1.8em;
+    right: 2.8em;
+}
+
+#planejador .tela .inANDout td.inANDoutData.inANDoutDataASC span.icon-arrow-up2 {
+    display: block !important;
+    transform: rotate(0deg);
+    top: 1.8em;
+    right: 2.8em;
+}
+
+#planejador .tela .inANDout td.inANDoutTotal.inANDoutTotalDESC span.icon-arrow-up2 {
+    display: block !important;
+    transform: rotate(0deg);
+    top: 2.65em;
+    right: 2.2em;
+}
+
+#planejador .tela .inANDout td.inANDoutTotal.inANDoutTotalASC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(180deg);
+    top: 2.65em;
+    right: 2.2em;
+}
+
+#planejador .tela .inANDout td.inANDoutValor.inANDoutValorDESC span.icon-arrow-up2 {
+    display: block !important;
+    transform: rotate(0deg);
+    top: 3.6em;
+    right: 4.2em;
+}
+
+#planejador .tela .inANDout td.inANDoutValor.inANDoutValorASC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(180deg);
+    top: 3.6em;
+    right: 4.2em;
+}
+
+#planejador .tela .inANDout td.inANDoutParcelas.inANDoutParcelasDESC span.icon-arrow-up2 {
+    display: block !important;
+    transform: rotate(0deg);
+    top: 1.78em;
+    right: 1.6em;
+}
+
+#planejador .tela .inANDout td.inANDoutParcelas.inANDoutParcelasASC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(180deg);
+    top: 1.78em;
+    right: 1.6em;
+}
+
+#planejador .tela .inANDout td.inANDoutAtual.inANDoutAtualDESC span.icon-arrow-up2 {
+    display: block !important;
+    transform: rotate(0deg);
+    top: 3.55em;
+    right: 1.5em;
+}
+
+#planejador .tela .inANDout td.inANDoutAtual.inANDoutAtualASC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(180deg);
+    top: 3.55em;
+    right: 1.5em;
+}
+
+#planejador .tela .inANDout td.inANDoutTipo.inANDoutTipoDESC span.icon-arrow-up2 {
+    display: block !important;
+    transform: rotate(0deg);
+    top: 2.65em;
+    right: 16em;
+}
+
+#planejador .tela .inANDout td.inANDoutTipo.inANDoutTipoASC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(180deg);
+    top: 2.65em;
+    right: 16em;
+}
+
+#planejador .tela .inANDout span.icon-arrow-up2 {
+    font-size: 0.7em;
+    display: none;
+    position: absolute;
+    color: #eda246;
+}
+
+#planejador .tela .inANDout .inANDoutNada {
+    text-align: center;
+    margin: 1.5em 0 2.2em;
+    font-size: 0.6em;
+    font-family: 'Verdana';
+    text-transform: uppercase;
+    background-color: #f2f2f2;
+    padding: 1em;
+    width: calc(100% - 2em);
+    margin: 0 auto;
+}
+
+#planejador .tela .inANDout .inANDoutNada.inANDoutNadaOff {
+    display: none;
+}
+
+#planejador .tela .inANDoutTabela {
+    width: 52em;
+    height: 400px;
+    float: left;
+    margin-top: 20px;
+    margin-left: 16px;
+    text-align: center;
+}
+
+#planejador .tela .inANDoutTR {
+    float: left;
+    height: 20px;
+    font-size: 10px;
+    font-family: 'verdana';
+    color: #595c62;
+}
+
+#planejador .tela .inANDoutTR2 {
+    float: left;
+    margin-top: -232px;
+    height: 20px;
+    background-color: #deaca8;
+    font-size: 12px;
+    font-family: 'verdana';
+    line-height: 17px;
+    color: #595c62;
+    font-weight:
+}
+
+#planejador .tela .inANDoutTR3 {
+    float: left;
+    margin-top: -205px;
+    height: 20px;
+    background-color: #b2dcee;
+    font-size: 12px;
+    font-family: 'verdana';
+    line-height: 17px;
+    color: #595c62;
+    font-weight:
+}
+
+#planejador .tela .inANDoutTabela {
+}
+
+#planejador .tela .inANDoutTabelaOpcoes {
+    width: 55px;
+}
+
+#planejador .tela .inANDoutTabelaTipoValor {
+    width: 310px;
+}
+
+#planejador .tela .inANDoutTabelaValorTotal {
+    width: 145px;
+    pointer-events: all !important;
+}
+
+#planejador .tela .inANDoutTabelaNParcelas {
+    width: 80px;
+}
+
+#planejador .tela .inANDoutTabelaParcelaAtual {
+    width: 72px;
+}
+
+#planejador .tela .inANDoutTabelaValorParcela {
+    width: 130px;
+}
+
+#planejador .tela .inANDoutTabelaData {
+    width: 180px;
+}
+
+#planejador .tela .barraHorizontalId {
+    float: left;
+    width: 52em;
+    border: 0.5px solid #000;
+}
+
+#planejador .tela .barraHorizontal {
+    margin-top: -370px;
+    margin-left: 15px;
+}
+
+#planejador .tela .barraVertical5 {
+    position: absolute;
+    margin-top: 5em;
+    margin-left: 8.8em;
+    ms-transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+    width: 3em;
+    border: 0.5px solid #000;
+}
+
+#planejador .tela .barraVertical6 {
+    float: left;
+    margin-top: -220px;
+    margin-left: 170px;
+}
+
+#planejador .tela .barraVertical7 {
+    float: left;
+    margin-top: -220px;
+    margin-left: 310px;
+}
+
+#planejador .tela .barraVertical8 {
+    float: left;
+    margin-top: -220px;
+    margin-left: 386px;
+}
+
+#planejador .tela .barraVertical9 {
+    float: left;
+    margin-top: -220px;
+    margin-left: 462px;
+}
+
+#planejador .tela .barraVertical10 {
+    float: left;
+    margin-top: -220px;
+    margin-left: 582px;
+}
+
+#planejador .tela .sair {
+    right: 2.4em;
+    width: 4em;
+}
+
+#planejador .tela .salario .rotuloSecao {
+    box-sizing: border-box;
+}
+
+#planejador .tela .poupanca .rotuloSecao {
+    width: 19.5em;
+}
+
+#planejador .tela .salario table {
+    text-transform: uppercase;
+    position: relative;
+    z-index: 100;
+    margin: -4.4em 0.1em 0;
+    font-size: 0.8em;
+    width: 100%;
+}
+
+#planejador .tela .salario td {
+    width: 25%;
+    text-align: center;
+    top: 0em;
+    position: relative;
+    top: 0.8em;
+}
+
+#planejador .tela .salario td:nth-child(3) {
+    color: red;
+}
+
+#planejador .tela .salario td:nth-child(4) {
+    color: blue;
+}
+
+#planejador .tela .barraVertical:nth-child(5) {
+    left: 75%;
+}
+
+#planejador .tela .barraVertical:nth-child(4) {
+    left: 50%;
+}
+
+#planejador .tela .barraVertical:nth-child(3) {
+    left: 25%;
+}
+
+
+/* ----------------------------- */
+/*  Tabela                       */
+/* ----------------------------- */
+#planejador .tela .inANDout table {
+    text-transform: uppercase;
+    border-spacing: 0px;
+    border-collapse: separate;
+    margin: 0 auto;
+    color: #595c62;
+    font-size: 0.6em;
+    font-family: 'verdana';
+    text-align: center;
+    width: 100%;
+    display: block;
+    padding: 1em;
+}
+
+#planejador .tela .inANDout table tbody {
+    width: 100%;
+    position: relative;
+    display: block;
+}
+
+#planejador .tela .inANDout table tr.top {
+    width: 100%;
+    position: relative;
+    display: block;
+}
+
+#planejador .tela .inANDout table .top td {
+    border-bottom: 2px solid #595c62;
+}
+
+#planejador .tela .inANDout table td {
+    border-left: 2px solid #595c62;
+    padding: 1em;
+    height: 1.3em;
+}
+
+#planejador .tela .inANDout .vencido td:not(.dadosOpcoes) span {
+    opacity: 0.5;
+}
+
+#planejador .tela .inANDout .dadosAtualTd span.icon-notification {
+    font-size: 0.7em;
+    color: red;
+    margin-left: 0.5em;
+    display: none;
+}
+
+#planejador .tela .inANDout .vencido .dadosAtualTd span.icon-notification {
+    display: inline-block;
+}
+
+#planejador .tela .inANDout .vencido span.dadosAtual {
+    color: red;
+}
+
+#planejador .tela .inANDout .editando .dadosAtualTd span.icon-notification {
+    display: none;
+    opacity: 1;
+}
+
+#planejador .tela .inANDout .editando td:not(.dadosOpcoes) span {
+    opacity: 1;
+}
+
+#planejador .tela .inANDout table td:first-of-type {
+    border-left: none;
+}
+
+#planejador .tela .inANDout td.dadosOpcoes {
+    width: 7em;
+    position: relative;
+}
+
+#planejador .tela .inANDout td.inANDoutTipo {
+    width: 38em;
+    position: relative;
+}
+
+#planejador .tela .inANDout td.inANDoutParcelas {
+    width: 5em;
+    position: relative;
+}
+
+#planejador .tela .inANDout td.inANDoutAtual {
+    width: 10em;
+    position: relative;
+}
+
+#planejador .tela .inANDout td.inANDoutData {
+    width: 15em;
+    position: relative;
+}
+
+#planejador .tela .inANDout table .top td.inANDoutCriadoEm {
+    display:  none;
+}
+
+#planejador .tela .inANDout table td.dadosCriadoEmTd {
+    display:  none;
+}
+
+#planejador .tela .inANDout td.inANDoutValor {
+    width: 10em;
+    position: relative;
+}
+
+#planejador .tela .inANDout td.inANDoutTotal {
+    width: 12.5em;
+    position: relative;
+}
+
+#planejador .tela .inANDout td.inANDoutOpcoes {
+    width: 4em;
+}
+
+#planejador .tela tr.dados.dadosEntrada:nth-child(2n+2) {
+    font-size: 1.2em;
+    background-color: #b2dcee;
+}
+
+#planejador .tela tr.dados {
+    width: 100%;
+    position: relative;
+}
+
+#planejador .tela tr.dados.dadosEntrada:nth-child(2n+1) {
+    font-size: 1.2em;
+    background-color: #c1d8e2;
+}
+
+#planejador .tela tr.dados.dadosSaida:nth-child(2n+2) {
+    font-size: 1.2em;
+    background-color: #e6c7c4;
+}
+
+#planejador .tela tr.dados.dadosSaida:nth-child(2n+1) {
+    font-size: 1.2em;
+    background-color: #e9d8d6;
+}
+
+#planejador .tela .template {
+    display: none !important;
+}
+
+#planejador .tela span.tag {
+    background-color: rgba(228, 228, 228, 0.4);
+    padding: 0.4em;
+    font-size: 0.8em;
+}
+
+#planejador .tela .inANDout .dadosTipoTd {
+    padding: 0;
+}
+
+#planejador .tela .inANDout table tr.dados .dadosDataTd {
+    width: 15em;
+    position: relative;
+}
+
+#planejador .tela .inANDout table tr.dados .dadosTipoTd {
+    width: 36.1em;
+    position: relative;
+}
+
+#planejador .tela .inANDout table tr.dados .dadosOpcoes {
+    width: 6.7em;
+    position: relative;
+}
+
+#planejador .tela .inANDout table tr.dados .dadosValorTd {
+    width: 10em;
+    position: relative;
+}
+
+#planejador .tela .inANDout table tr.dados .dadosAtualTd {
+    width: 10em;
+    position: relative;
+}
+
+#planejador .tela .inANDout table tr.dados .dadosParcelasTd {
+    width: 7em;
+    position: relative;
+}
+
+#planejador .tela .inANDout table tr.dados .dadosTotalTd {
+    width: 11em;
+    position: relative;
+}
+
+/* ----------------------------- */
+/*  Itens da Tabela              */
+/* ----------------------------- */
+#planejador .tela .inANDout span.dadosX {
+    background-color: #595c62;
+    color: #FFF;
+    width: 2.2em;
+    height: 2em;
+    position: absolute;
+    line-height: 2em;
+    margin-left: -2.3em;
+    margin-top: -1em;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#planejador .tela .inANDout span.dadosE {
+    background-color: #595c62;
+    color: #FFF;
+    width: 2.2em;
+    height: 2em;
+    position: absolute;
+    line-height: 2em;
+    margin-left: 0.1em;
+    margin-top: -1em;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* ----------------------------- */
+/*  Totais                       */
+/* ----------------------------- */
+#planejador .tela .totais {
+    width: calc(100% - 1em) !important;
+    margin: 0.3em 0.5em;
+    background-color: #FFF;
+    font-size: 0.8em;
+    height: 2.2em;
+    text-transform: uppercase;
+    color: #595c62;
+    float: left;
+}
+
+#planejador .tela .totais .totalRecebido {
+    padding: 0.4em 2em;
+    float: left;
+}
+
+#planejador .tela .totais .totalDiv {
+    padding: .5em 1.8em;
+    float: left;
+}
+
+#planejador .tela .totais span.totalDiv_valor {
+    background-color: #e4e4e4;
+    display: inline-block;
+    width: 11em;
+    padding: 0 0.5em;
+    color: blue;
+    font-size: 0.8em;
+    height: 1.302em;
+}
+
+#planejador .tela .totais .totalDivGasto span.totalDiv_valor {
+    color: red;
+}
+
+#planejador .tela .totais .totalDivDisponivel span.totalDiv_valor {
+    color: #000;
+}
+
+
+/* ----------------------------- */
+/*  Objetivos                    */
+/* ----------------------------- */
+#planejador .tela .direita .objetivos {
+    flex: 1;
+    background-color: #e4e4e4;
+    margin-top: 1em;
+    color: #595c62;
+    max-height: 23em;
+}
+
+#planejador .tela .direita span.objetivosTotalResultados {
+    font-size: 0.7em;
+    margin: 0 0.5em;
+    text-transform: none;
+}
+
+#planejador .tela .direita span.objetivosRotulo {
+    float: left;
+}
+
+#planejador .tela .direita span.objetivosPaginacao.objetivosPaginacaoTravada {
+    pointer-events: none;
+}
+
+#planejador .tela .direita span.objetivosPaginacao {
+    float: right;
+    font-size: 0.7em;
+    margin: 0 1em;
+}
+
+#planejador .tela .direita .objetivosPaginacao span {
+    font-size: 1.8em;
+    cursor: pointer;
+}
+
+#planejador .tela .direita .objetivosPaginacao span.paginaSelecionada {
+    color: #FFF;
+    font-weight: bold;
+    cursor: default !important;
+    pointer-events: none;
+}
+
+#planejador .tela .objetivos .objetivosNada {
+    text-align: center;
+    margin: 1.5em 0 2.2em;
+    font-size: 0.6em;
+    font-family: 'Verdana';
+    text-transform: uppercase;
+    background-color: #f2f2f2;
+    padding: 1em;
+    width: calc(100% - 2em);
+    margin: 0 auto;
+}
+
+#planejador .tela .objetivos table tbody {
+    width: 100%;
+    display: block;
+}
+
+#planejador .tela .objetivos .objetivosNada.objetivosNadaOff {
+    display: none;
+}
+
+#planejador .tela .objetivos table {
+    text-transform: uppercase;
+    border-spacing: 0px;
+    border-collapse: separate;
+    margin: 0 auto;
+    color: #595c62;
+    font-size: 0.6em;
+    font-family: 'verdana';
+    text-align: center;
+    width: 100%;
+    display: block;
+    padding: 1em;
+}
+
+#planejador .tela .objetivos table .topObjetivos td {
+    border-bottom: 2px solid #595c62;
+    position: relative;
+    flex: 1;
+}
+
+#planejador .tela .objetivos table td {
+    border-left: 2px solid #595c62;
+    padding: 1em;
+    height: 3.6em;
+    flex: 1;
+    position: relative;
+}
+
+#planejador .tela .objetivos td.objetivosDadosTipo {
+    min-width: 23em;
+}
+
+#planejador .tela tr.objetivosDados {
+    display: flex;
+}
+
+#planejador .tela .objetivos table td.objetivosDadosOpcoes {
+    min-width: 8em;
+    max-width: 8em;
+}
+
+#planejador .tela .objetivos table td.objetivosDadosTotal {
+    min-width: 11em;
+}
+
+#planejador .tela .objetivos table td.objetivosDadosPrevisao.tooltip {
+    width: 11em;
+}
+
+#planejador .tela .objetivos table tbody tr.topObjetivos {
+    display: flex;
+    width: 100%;
+}
+
+#planejador .tela .objetivos table td:first-of-type {
+    border-left: none;
+}
+
+#planejador .tela .objetivos span.dadosX {
+    background-color: #595c62;
+    color: #FFF;
+    width: 2.2em;
+    height: 2em;
+    position: absolute;
+    line-height: 2em;
+    left: 0.5em;
+    top: 0.8em;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#planejador .tela .objetivos span.dadosE {
+    background-color: #595c62;
+    color: #FFF;
+    width: 2.2em;
+    height: 2em;
+    position: absolute;
+    line-height: 2em;
+    left: 2.9em;
+    top: 0.8em;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#planejador .tela .objetivos span.dadosC {
+    background-color: #595c62;
+    color: #FFF;
+    width: 2.2em;
+    height: 2em;
+    position: absolute;
+    line-height: 2em;
+    left: 5.4em;
+    top: 0.8em;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+#planejador .tela .objetivos td.objetivosOpcoes {
+    min-width: 8em;
+    max-width: 8em;
+}
+
+#planejador .tela .objetivos td.objetivosTipo {
+    min-width: 23em;
+}
+
+#planejador .tela .objetivos td.objetivosTotal {
+    min-width: 11em;
+    position: relative;
+}
+
+#planejador .tela .objetivos td.objetivosPrazo {
+    width: 11em;
+    position: relative;
+}
+
+#planejador .tela .objetivos td.objetivosTotal.objetivosTotalLoader {
+    pointer-events: none !important;
+}
+
+#planejador .tela .objetivos td.objetivosTipo.objetivosTipoLoader {
+    pointer-events: none !important;
+}
+
+#planejador .tela .objetivos td.objetivosPrazo.objetivosPrazoLoader {
+    pointer-events: none !important;
+}
+
+#planejador .tela .objetivos td.objetivosTotal.objetivosTotalDESC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(0deg);
+    top: 1.8em;
+    right: 1.5em;
+}
+
+#planejador .tela .objetivos td.objetivosTotal.objetivosTotalASC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(180deg);
+    top: 1.8em;
+    right: 1.5em;
+}
+
+#planejador .tela .objetivos td.objetivosPrazo.objetivosPrazoDESC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(0deg);
+    top: 1.8em;
+    right: 3.8em;
+}
+
+#planejador .tela .objetivos td.objetivosPrazo.objetivosPrazoASC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(180deg);
+    top: 1.8em;
+    right: 3.8em;
+}
+
+
+#planejador .tela .objetivos td.objetivosTipo.objetivosTipoDESC span.icon-arrow-up2 {
+    display: block !important;
+    transform: rotate(0deg);
+    top: 1.8em;
+    right: 6.8em;
+}
+
+#planejador .tela .objetivos td.objetivosTipo.objetivosTipoASC span.icon-arrow-up2 {
+    display: block;
+    transform: rotate(180deg);
+    top: 1.8em;
+    right: 6.8em;
+}
+
+#planejador .tela .objetivos span.icon-arrow-up2 {
+    font-size: 0.7em;
+    display: none;
+    position: absolute;
+    color: #eda246;
+}
+
+#planejador .tela tr.objetivosDados.objetivosDadosEntrada:nth-child(2n+2) {
+    background-color: #b8d9c8;
+}
+
+#planejador .tela tr.objetivosDados.objetivosDadosEntrada:nth-child(2n+1) {
+    background-color: #9ac3ae;
+}
+
+#planejador .tela tr.objetivosDados.objetivosDadosSaida:nth-child(2n+2) {
+    background-color: #f4e8ba;
+}
+
+#planejador .tela tr.objetivosDados.objetivosDadosSaida:nth-child(2n+1) {
+    background-color: #ded2a6;
+}
+
+#planejador .tela .objetivos td {
+    padding: 1em 0 0;
+}
+
+/* ----------------------------- */
+/*  Calculadora                  */
+/* ----------------------------- */
+#planejador .tela .calculadora {
+    width: 22em;
+    background-color: #e4e4e4;
+    float: left;
+    margin-top: 1em;
+    color: #595c62;
+    margin-left: 1em;
+}
+
+#planejador .tela .calculadora tbody {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#planejador .tela .calculadora .rotuloSecao {
+    width: 24.8em;
+}
+
+#planejador .tela .calculadora table {
+    text-transform: uppercase;
+    border-spacing: 0px;
+    border-collapse: separate;
+    margin: 0 auto;
+    color: #FFF;
+    font-size: 0.6em;
+    font-family: 'verdana';
+    text-align: center;
+    width: 36em;
+    display: block;
+    padding: 0.5em;
+}
+
+#planejador .tela .calculadora .calculadoraNumeros {
+    width: 4.6em;
+    background-color: #615A51;
+    margin: 0.3em;
+    display: inline-block;
+    height: 2em;
+    line-height: 2em;
+    font-size: 1.8em;
+    cursor: pointer;
+    font-family: 'nova_squarebook';
+}
+
+#planejador .tela .calculadora .calculadoraCanto {
+    width: 3em;
+    background-color: #80695b;
+    margin: 0.3em;
+    display: inline-block;
+    height: 2em;
+    line-height: 2em;
+    font-size: 1.8em;
+    cursor: pointer;
+    font-family: 'nova_squarebook';
+}
+
+#planejador .tela .calculadora .calculadoraInput {
+    width: 7.4em !important;
+    font-size: 1.5em;
+    height: 1.15em;
+    background-color: #FFF;
+    text-align: right;
+    padding: 0.1em 0.3em;
+    margin: 0;
+    cursor: auto;
+    border: 0 none;
+    outline: 0;
+}
+
+#planejador .tela .calculadora .calculadoraInputTd {
+    width: 12em;
+    background-color: #FFF;
+}
+
+#planejador .tela .calculadora .calculadoraC {
+    width: 2.5em !important;
+    background-color: #d85b51 !important;
+}
+
+#planejador .tela .calculadora .calculadoraEqual {
+    width: 19em !important;
+    background-color: #272727 !important;
+}
+
+#planejador .tela .calculadora .calculadoraResultadosContainer {
+    width: 19em;
+    background-color: #FFF;
+    margin-top: 0;
+    opacity: 0.5;
+    cursor: text;
+    height: 1.2em;
+    line-height: 1.2em;
+    -webkit-touch-callout: text;
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
+}
+
+#planejador .tela .calculadora .calculadoraResultadosContainer .calculadoraResultadosContainerSpan {
+    color: #272727;
+    text-align: right;
+    width: 26.4em;
+    font-size: 0.7em;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+}
+
+#planejador .tela .calculadora .calculadoraBackspace {
+    width: 3em !important;
+    background-color: #595c62 !important;
+    position: relative;
+}
+
+
+#planejador .tela .calculadora .calculadoraBackspace .icon-undo2 {
+    margin-top: 0.6em;
+    margin-left: -0.5em;
+    position: absolute;
+}
+
+/* ----------------------------- */
+/*  Tooltip                      */
+/* ----------------------------- */
+
+#planejador .tooltips {
+    color: #fff;
+    background: #1d1d1d;
+    display: none;
+    padding: 0.7em;
+    position: absolute;
+    z-index: 1500;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+#planejador .tooltips-alertDiv {
+    display: none;
+    -moz-animation: 0.5s ease 0s normal none infinite swing;
+    -moz-transform-origin: center top;
+    -webkit-animation:swing 0.5s infinite ease-in-out;
+    -webkit-transform-origin:top;
+    border-bottom: 3px solid #ff1600;
+    color: #fff;
+    background: #1d1d1d;
+    padding: 0.7em;
+    position: absolute;
+    z-index: 1000;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+#planejador .tooltips-alertTopDiv {
+    display: none;
+    -moz-animation: 0.5s ease 0s normal none infinite swing;
+    -moz-transform-origin: center top;
+    -webkit-animation:swing 0.5s infinite ease-in-out;
+    -webkit-transform-origin:top;
+    border-top: 3px solid #ff1600;
+    color: #fff;
+    background: #1d1d1d;
+    padding: 0.7em;
+    position: absolute;
+    z-index: 1000;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    pointer-events: none;
+}
+
+@-moz-keyframes swing{
+    0%{-moz-transform:rotate(-0.5deg)}
+    50%{-moz-transform:rotate(0.5deg)}
+    100%{-moz-transform:rotate(-0.5deg)}
+}
+
+@-webkit-keyframes swing{
+    0%{-webkit-transform:rotate(-0.5deg)}
+    50%{-webkit-transform:rotate(0.5deg)}
+    100%{-webkit-transform:rotate(-0.5deg)}
+}
+
+#planejador .tooltips-alert-seta-esquerda:before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-right: 6px solid #000;
+}
+
+#planejador .tooltips-alert-seta-esquerda {
+    position: absolute;
+    top: 11px;
+    left: -6px;
+}
+
+#planejador .tooltips-alert-seta-baixo {
+    position: absolute;
+    top: 33px;
+    left: 145px;
+}
+
+#planejador .tooltips-alert-seta-baixo:before  {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    width: 0; 
+    height: 0; 
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid #000;
+}
+
+/* ----------------------------- */
+/*  Inputs                       */
+/* ----------------------------- */
+
+#planejador input.campoEditavel {
+    background-color: transparent;
+    font-size: 1em;
+    width: 36px;
+    height: 1.1em;
+    padding: 0 0.3em !important;
+    margin: 0 !important;
+    margin-left: 0.3em !important;
+    cursor: text;
+    border: 1px solid #595c62;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+#planejador input.campoEditavel2 {
+    background-color: transparent;
+    font-size: 1em;
+    width: 36px;
+    height: 1.1em;
+    padding: 0 0.3em !important;
+    margin: 0 !important;
+    margin-left: 0.3em !important;
+    cursor: text;
+    text-align: center;
+    border: 1px solid #595c62;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+#planejador input.campoEditavelObjetivos {
+    background-color: transparent;
+    font-size: 1em;
+    width: 36px;
+    height: 1.1em;
+    padding: 0 0.3em !important;
+    margin: 0 !important;
+    margin-left: 0.3em !important;
+    cursor: text;
+    border: 1px solid #595c62;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+#planejador input.campoEditavelObjetivos2 {
+    background-color: transparent;
+    font-size: 1em;
+    width: 36px;
+    height: 1.1em;
+    padding: 0 0.3em !important;
+    margin: 0 !important;
+    margin-left: 0.3em !important;
+    cursor: text;
+    text-align: center;
+    border: 1px solid #595c62;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         0px 0px 5px 0px rgba(50, 50, 50, 0.75);
+}
+
+
+/* ----------------------------- */
+/*  Dialog Sim e Não             */
+/* ----------------------------- */
+
+#planejador .dialogSimNaoBox {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform:  translate(-50%, -50%);
+    background-color:  white;
+    padding: 2em;
+    text-align:  center;
+    font-size: 0.6em;
+    text-transform: uppercase;
+    border: 1px solid black;
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow:    0px 2px 5px 0px rgba(50, 50, 50, 0.5);
+    box-shadow:         0px 2px 5px 0px rgba(50, 50, 50, 0.5);
+}
+
+#planejador .dialogSimNao {
+    display: none;
+    background-color: rgba(0, 0, 0, 0.50);
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left:  0;
+    z-index: 99999;
+}
+
+#planejador .dialogSimNao.active {
+    display: block;
+}
+
+#planejador .dialogSimNao .textConfirm {
+    margin:  1em 0;
+}
+
+#planejador .dialogSimNao .itemConfirm {
+    margin:  1em 0;
+    background-color: #595c62;
+    color: white;
+    padding: 1em;
+    font-size:  0.8em;
+}
+
+#planejador .dialogSimNao .tag {
+    background-color: rgba(228, 228, 228, 0.4);
+    padding: 0.4em;
+    font-size: 0.8em;
+    color:  black;
+}
+
+#planejador .dialogSimNao .value {
+    margin: 0.6em 0;
+}
+
+#planejador .dialogSimNao .controls {
+    font-size:  1.3em;
+}
+
+#planejador .dialogSimNao .tipo {
+    margin-bottom:  0.6em;
+    font-weight:  bold;
+}
