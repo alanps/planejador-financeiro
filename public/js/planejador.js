@@ -3817,12 +3817,12 @@
 
                                     if (!template.hasClass("semParcelas") && parcelaConta-1 >= data.data[i].n_parcelas && data.data[i].n_parcelas > 1) {
                                         template.addClass("vencido");
-                                        template.find( ".dadosAtualTd" ).addClass("tooltip").attr("data-title", "Parcelas já finalizadas!");
+                                        template.find( ".dadosAtual" ).addClass("tooltip").attr("data-title", "Parcelas já finalizadas!");
                                         template.find( ".dadosAtual" ).html(data.data[i].n_parcelas);
                                     } else if (!template.hasClass("semParcelas") && parcelaConta-1 < data.data[i].n_parcelas && data.data[i].n_parcelas > 1) {
-                                        template.find( ".dadosAtualTd" ).addClass("tooltip").attr("data-title", "Próximo vencimento em: " + parcelaAtualDate2);
+                                        template.find( ".dadosAtual" ).addClass("tooltip").attr("data-title", "Próximo vencimento em: " + parcelaAtualDate2);
                                     } else if (template.hasClass("semParcelas")) {
-                                        template.find( ".dadosAtualTd" ).removeClass("tooltip");
+                                        template.find( ".dadosAtual" ).removeClass("tooltip");
                                     }
 
                                     template.attr("id", data.data[i].id);

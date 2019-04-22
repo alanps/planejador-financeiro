@@ -1689,7 +1689,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     width: calc(100% - 1em) !important;
     margin: 0.3em 0.5em;
     background-color: #FFF;
-    font-size: 0.8em;
+    font-size: 0.6em;
     height: 2.2em;
     text-transform: uppercase;
     color: #595c62;
@@ -1708,7 +1708,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 #planejador .tela .totais span.totalDiv_valor {
     background-color: #e4e4e4;
     display: inline-block;
-    width: 15em;
+    width: 9em;
     padding: 0 0.5em;
     color: blue;
     font-size: 0.8em;
@@ -1724,6 +1724,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     color: #000;
 }
 
+#planejador .tela .totais .totalDivPagar span.totalDiv_valor {
+    color: red;
+}
 
 /* ----------------------------- */
 /*  Objetivos                    */
@@ -1821,7 +1824,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     position: relative;
 }
 
-#planejador .tela .objetivos td.objetivosDadosTipo {
+#planejador .tela .objetivos td.objetivosDadosTipoTd {
     min-width: 23em;
 }
 
@@ -1834,11 +1837,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     max-width: 8em;
 }
 
-#planejador .tela .objetivos table td.objetivosDadosTotal {
+#planejador .tela .objetivos table td.objetivosDadosTotalTd {
     min-width: 11em;
 }
 
-#planejador .tela .objetivos table td.objetivosDadosPrevisao.tooltip {
+#planejador .tela .objetivos table td.objetivosDadosPrevisaoTd {
     width: 11em;
 }
 

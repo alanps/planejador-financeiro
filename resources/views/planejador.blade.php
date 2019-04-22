@@ -233,6 +233,14 @@
 							<span class="totalDiv_rotulo">Total Disponível:</span>
 							<span class="totalDiv_valor">R$ 00,00</span>
 						</div>
+						<div class="totalDiv totalDivReceber">
+							<span class="totalDiv_rotulo">Total à Receber:</span>
+							<span class="totalDiv_valor">R$ 00,00</span>
+						</div>
+						<div class="totalDiv totalDivPagar">
+							<span class="totalDiv_rotulo">Total à Pagar:</span>
+							<span class="totalDiv_valor">R$ 00,00</span>
+						</div>
 					</div>
 
 					<div class="flexGroup">
@@ -262,9 +270,9 @@
 										<span class="dadosE tooltip tooltip-alert-top" data-title="Editar"><span class="icon-write"></span></span>
 										<span class="dadosC tooltip tooltip-alert-top" data-title="Concluir"><span class="icon-checkmark2"></span></span>
 									</td>
-									<td class="objetivosDadosTipo"></td>
-									<td class="objetivosDadosTotal"></td>
-									<td class="objetivosDadosPrevisao tooltip" data-title=""></td>
+									<td class="objetivosDadosTipoTd"><span class="objetivosDadosTipo"></span></td>
+									<td class="objetivosDadosTotalTd"><span class="objetivosDadosTotal"></span></td>
+									<td class="objetivosDadosPrevisaoTd" data-title=""><span class="objetivosDadosPrevisao tooltip"></span></td>
 								</tr>
 							</table>
 							<div class="objetivosNada">Nenhum resultado encontrado!</div>
