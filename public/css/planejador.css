@@ -2015,10 +2015,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     user-select: none;
 }
 
-#planejador .tela .calculadora .rotuloSecao {
-    width: 24.8em;
-}
-
 #planejador .tela .calculadora table {
     text-transform: uppercase;
     border-spacing: 0px;

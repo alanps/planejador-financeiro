@@ -20,7 +20,7 @@ class CreateGeralTables extends Migration
             $table->integer('usuario_id')->unsigned();
             $table->string('tipo_valor_tag');
             $table->string('tipo_valor');
-            $table->integer('valor_total')->unsigned();
+            $table->integer('valor_total')->unsigned()->nullable();
             $table->integer('valor_parcela')->unsigned()->nullable();
             $table->integer('n_parcelas')->unsigned()->nullable();
             $table->integer('parcela_atual')->unsigned()->nullable();
