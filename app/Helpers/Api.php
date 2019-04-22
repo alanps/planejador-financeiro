@@ -26,6 +26,13 @@ class Api {
             $data = $data_arr['data'];
             $pagination = array_except($data_arr, 'data');
             $conteudo += ['pagination' => $pagination];
+            if ($pagination['current_page'] == $pagination['last_page']){
+                $total_in_page = $pagination['total'] - $pagination['per_page'];
+                $conteudo['pagination'] += ['total_in_page' => $total_in_page];
+            } else {
+                $conteudo['pagination'] += ['total_in_page' => (int) $pagination['per_page']];
+            }
+            $conteudo['pagination'] += ['total_pages' => ceil($pagination['total'] / $pagination['per_page'])];
         }
 
         if (isset($data)){

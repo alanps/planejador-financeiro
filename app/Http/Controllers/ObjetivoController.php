@@ -31,6 +31,10 @@ class ObjetivoController extends Controller
             $objetivos = $objetivos->orderBy("valor_total", "asc");
         } else if ($orderBy == "valor_total-desc") {
             $objetivos = $objetivos->orderBy("valor_total", "desc");
+        } else if ($orderBy == "created_at-asc") {
+            $objetivos = $objetivos->orderBy("created_at", "asc");
+        } else if ($orderBy == "created_at-desc") {
+            $objetivos = $objetivos->orderBy("created_at", "desc");
         }
 
         $objetivos = $objetivos->paginate($page_size);
@@ -58,7 +62,7 @@ class ObjetivoController extends Controller
     {
         $input = $request->all();
 
-        $objetivo = new Objetivo();
+        $objetivo = new Objetivo($input);
         $objetivo->save();
 
         $decorators = Decorator::decorators(Objetivo::class, $request);

@@ -6,10 +6,23 @@ if (!console.log) {console.log = function() {};}
 
 
 // -------------------------------------------------------------------------------------------
+// Funções usadas para login, salvando object no localstorage
+// -------------------------------------------------------------------------------------------
+function setObject(key, value){
+    localStorage.setItem(key, JSON.stringify(value));
+}
+
+function getObject(key){
+    var value = localStorage.getItem(key);
+    return JSON.parse(value);
+}
+
+
+// -------------------------------------------------------------------------------------------
 // Page dimensions detection
 // -------------------------------------------------------------------------------------------
 (function($) {
-           
+
     function detectDimensions(){
 
 

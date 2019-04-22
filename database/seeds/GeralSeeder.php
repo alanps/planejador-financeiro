@@ -16,7 +16,7 @@ class GeralSeeder extends Seeder
                   'password'    => bcrypt("123456"),
                   'sexo' => "Masculino",
                   'profissao'   => "Programador", 
-                  'data_nascimento'   => 560822400, 
+                  'data_nascimento'   => 560880000, 
                   'foto'   => "uploads/avatar.jpg", 
                   'api_token' => "NOvgX6zpAh8F0JvZhk2EVV1RxzUk7JDrvJJC2x9lFO3mzz9Lm3rgPGAFyKp6",
                  ];

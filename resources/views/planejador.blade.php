@@ -28,7 +28,7 @@
 						</div>
 					</div>
 					<div class="editarPerfil">Editar Perfil</div>
-					<a href="class/logout.php"><div class="editarPerfil sair">Sair</div></a>
+					<div class="editarPerfil sair">Sair</div>
 				</div>
 
 				<div class="rotulo">Entrada de Valores</div>
@@ -37,7 +37,7 @@
 						<span class="icon-arrow-down setaEntradaTipoValor"></span>
 						<input type="text" class="entradaTipoValor tooltip-alert" maxlength="23" value="Tipo de Valor">
 						<span class="tag entradaTipoValorTag"></span>
-						<div class="entradaTipoValorSelect">
+						<div class="entradaTipoValorSelect selectSpecial">
 							<span class="entradaTipoValorSelectOpcao1 opcoes">Salário</span>
 							<span class="entradaTipoValorSelectOpcao2 opcoes">Venda</span>
 							<span class="entradaTipoValorSelectOpcao3 opcoes">Bônus</span>
@@ -63,7 +63,7 @@
 						<span class="icon-arrow-down setaSaidaTipoValor"></span>
 						<input type="text" class="saidaTipoValor tooltip-alert" maxlength="23" value="Tipo de Valor">
 						<span class="tag saidaTipoValorTag"></span>
-						<div class="saidaTipoValorSelect">
+						<div class="saidaTipoValorSelect selectSpecial">
 							<span class="saidaTipoValorSelectOpcao1 opcoes">Compra</span>
 							<span class="saidaTipoValorSelectOpcao2 opcoes">Cartão de Crédito</span>
 							<span class="saidaTipoValorSelectOpcao3 opcoes">Empréstimo</span>
@@ -89,12 +89,12 @@
 						<span class="icon-arrow-down setaObjetivoTipoValor"></span>
 						<input type="text" class="objetivoTipoValor tooltip-alert" maxlength="23" value="Tipo de Objetivo">
 						<span class="tag objetivoTipoValorTag"></span>
-						<div class="objetivoTipoValorSelect">
+						<div class="objetivoTipoValorSelect selectSpecial">
 							<span class="objetivoTipoValorSelectOpcao1 opcoes">Compra</span>
 							<span class="objetivoTipoValorSelectOpcao2 opcoes">Venda</span>
 						</div>
-						<input type="text" class="objetivoData tooltip-alert" value="Data Prevista">
-						<input type="text" class="objetivoValor tooltip-alert" maxlength="15" value="Valor Total">
+						<input type="text" class="objetivoData tooltip-alert" placeholder="Data Prevista">
+						<input type="text" class="objetivoValor tooltip-alert" maxlength="15" placeholder="Valor Total">
 						<button class="objetivoAdd tooltip-alert">Adicionar</button>
 						<img src="images/loading.svg" class="loading objetivo_loading">
 					</form>
@@ -122,8 +122,10 @@
 							<img src="images/loading.svg" class="ultimasNotificacoesCarregando loading_sessions">
 						</div>
 						<div class="mes">Janeiro / 2016</div>
-						<span class="icon-arrow-left setaMes setaMesEsquerda tooltip" data-title="Mês Anterior"></span>
-						<span class="icon-arrow-right setaMesDireita setaMes tooltip" data-title="Próximo Mês"></span>
+						<div class="setas">
+							<span class="icon-arrow-left setaMes setaMesEsquerda tooltip" data-title="Mês Anterior"></span>
+							<span class="icon-arrow-right setaMesDireita setaMes tooltip" data-title="Próximo Mês"></span>
+						</div>
 						<div class="mostrarTodos">Mostrar Todas as Datas</div>
 					</div>
 
@@ -168,14 +170,37 @@
 						<div class="rotuloSecao"><span class="inANDoutRotulo">Entrada E Saída</span> <span class="inANDoutTotalResultados">Total de 9 item(ns) sendo exibidos de um total de 22 item(ns).</span><span class="inANDoutPaginacao"></span></div>
 						<table>
 							<tr class="top">
-								<td class="dadosOpcoes">Opções</td>
-								<td class="inANDoutTipo">Tipo de Valor<span class="icon-arrow-up2"></span></td>
-								<td class="inANDoutTotal">Valor Total<span class="icon-arrow-up2"></span></td>
-								<td class="inANDoutParcelas">Nº de Parcelas<span class="icon-arrow-up2"></span></td>
-								<td class="inANDoutAtual">Parcela Atual<span class="icon-arrow-up2"></span></td>
-								<td class="inANDoutValor">Valor da Parcela<span class="icon-arrow-up2"></span></td>
-								<td class="inANDoutData">Data de Entrada/Saída<span class="icon-arrow-up2"></span></td>
-								<td class="inANDoutCriadoEm">Criado Em<span class="icon-arrow-up2"></span></td>
+								<td class="dadosOpcoes">
+									<span class="label">Opções</span>
+								</td>
+								<td class="inANDoutTipo">
+									<span class="label">Tipo de Valor</span>
+									<span class="icon-arrow-up2"></span>
+								</td>
+								<td class="inANDoutTotal">
+									<span class="label">Valor Total</span>
+									<span class="icon-arrow-up2"></span>
+								</td>
+								<td class="inANDoutParcelas">
+									<span class="label">Nº de Parcelas</span>
+									<span class="icon-arrow-up2"></span>
+								</td>
+								<td class="inANDoutAtual">
+									<span class="label">Parcela Atual</span>
+									<span class="icon-arrow-up2"></span>
+								</td>
+								<td class="inANDoutValor">
+									<span class="label">Valor da Parcela</span>
+									<span class="icon-arrow-up2"></span>
+								</td>
+								<td class="inANDoutData">
+									<span class="label">Data de Entrada/Saída</span>
+									<span class="icon-arrow-up2"></span>
+								</td>
+								<td class="inANDoutCriadoEm">
+									<span class="label">Criado Em</span>
+									<span class="icon-arrow-up2"></span>
+								</td>
 							</tr>
 							<tr class="dados template">
 								<td class="dadosOpcoes">
@@ -215,10 +240,21 @@
 							<div class="rotuloSecao"><span class="objetivosRotulo">Objetivos</span> <span class="objetivosTotalResultados">Total de 9 item(ns) sendo exibidos de um total de 22 item(ns).</span><span class="objetivosPaginacao"></span></div>
 							<table>
 								<tr class="topObjetivos">
-									<td class="objetivosOpcoes">Opções</td>
-									<td class="objetivosTipo">Tipo de Objetivo<span class="icon-arrow-up2"></span></td>
-									<td class="objetivosTotal">Valor Total<span class="icon-arrow-up2"></span></td>
-									<td class="objetivosPrazo">Prazo<span class="icon-arrow-up2"></span></td>
+									<td class="objetivosOpcoes">
+										<span class="label">Opções</span>
+									</td>
+									<td class="objetivosTipo">
+										<span class="label">Tipo de Objetivo</span>
+										<span class="icon-arrow-up2"></span>
+									</td>
+									<td class="objetivosTotal">
+										<span class="label">Valor Total</span>
+										<span class="icon-arrow-up2"></span>
+									</td>
+									<td class="objetivosPrazo">
+										<span class="label">Prazo</span>
+										<span class="icon-arrow-up2"></span>
+									</td>
 								</tr>
 								<tr class="objetivosDados template">
 									<td class="objetivosDadosOpcoes">
@@ -278,6 +314,7 @@
 									<td class="calculadoraEqual calculadoraNumeros">=</td>
 								</tr>
 							</table>
+							<div class="copyright"><a href="http://www.agenciadreamup.com.br" target="_blank">www.agenciadreamup.com.br</a></div>
 						</div>
 					</div>
 			</div>

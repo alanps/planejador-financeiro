@@ -15,14 +15,26 @@
 
         $(document).ready(function() {
 
+            //login
+            var token = localStorage.getItem('token');
+            var userData = getObject('userData');
+            if(token && userData){
+                localStorage.setItem('token',token);
+                window.token = token;
+                setObject('userData',userData);
+                window.userData = userData;
+            }else{
+                window.location = window.homepath;
+            }
+
             //////////////////////////////////////////////
             //variaveis carregadas na inicialização
             var carregou = 0;
             var carregouTotal = 6;
             window.ordemObjetivos = "created_at-desc";
             window.pageObjetivos = "1";
-            window.itemsPageObjetivos = "10";
-            window.ordemEntradaESaida = "dataAdicionado DESC";
+            window.itemsPageObjetivos = "8";
+            window.ordemEntradaESaida = "created_at-desc";
             window.pageEntradaESaida = "1";
             window.itemsPageEntradaESaida = "10";
             window.firstTimestamp = "82800";
@@ -324,6 +336,43 @@
                     el.removeClass('travado');
                 }, 3000);
 
+            }
+
+            //fazer logout
+            $(document).on("click", ".sair",function(e){
+                logout();
+            });           
+
+            //função de logout
+            function logout() {
+                $.ajax({
+                    url: window.homepath + "logout",
+                    method: 'POST',
+                    dataType: 'json',
+                    data: {},
+                    beforeSend: function (data) {
+                        data.setRequestHeader("Authorization", window.token);
+                    },
+                    success: function (data) {
+                        console.log("---------------------------------");
+                        console.log("logout");
+                        console.log(data);
+
+                        if (data.success == true){
+                            window.location = window.homepath;
+                        } else {
+                            erroNoSistema(data);
+                        }
+
+                    },
+                    error: function (data, status, error) {
+                        console.log("---------------------------------");
+                        console.log("logout");
+                        console.log("ERRO:");
+                        console.log(data, status, error);
+                        erroNoSistema(data);
+                    },
+                });
             }
 
             //////////////////////////////////////////////
@@ -2311,10 +2360,10 @@
 
                 if (nParcelas <= 1) {
                     var entradaDataExplode = el.find(".entradaData").val().split('/');
-                    var entradaData = moment(entradaDataExplode[2]+"-"+entradaDataExplode[0]+"-"+entradaDataExplode[1]).format("X");
+                    var entradaData = moment(entradaDataExplode[2]+"-"+entradaDataExplode[1]+"-"+entradaDataExplode[0]).format("X");
                 } else {
                     var entradaDataExplode = el.find(".entradaVencimentoParcela").val().split('/');
-                    var entradaData = moment(entradaDataExplode[2]+"-"+entradaDataExplode[0]+"-"+entradaDataExplode[1]).format("X");
+                    var entradaData = moment(entradaDataExplode[2]+"-"+entradaDataExplode[1]+"-"+entradaDataExplode[0]).format("X");
                 }
 
                 var dataVencimentoParcelaExplode = el.find(".entradaVencimentoParcela").val().split('/');
@@ -2442,83 +2491,113 @@
                         url: window.homepath + "movimentacoes",
                         method: 'POST',
                         dataType: 'json',
-                        data: { tipo_movimentacao: "entrada", usuario_id: 1, tipo_valor_tag: entradaTextoTag, tipo_valor: entradaTexto, valor_total: money, valor_parcela: moneyParcelas, n_parcelas: nParcelas, parcela_atual: parcelaAtual, data_vencimento_parcela: dataVencimentoParcela, entrada_data: entradaData },
+                        data: { tipo_movimentacao: "entrada", usuario_id: window.userData.id, tipo_valor_tag: entradaTextoTag, tipo_valor: entradaTexto, valor_total: money, valor_parcela: moneyParcelas, n_parcelas: nParcelas, parcela_atual: parcelaAtual, data_vencimento_parcela: dataVencimentoParcela, entrada_data: entradaData },
                         beforeSend: function (data) {
-                            data.setRequestHeader("Authorization", "Bearer NOvgX6zpAh8F0JvZhk2EVV1RxzUk7JDrvJJC2x9lFO3mzz9Lm3rgPGAFyKp6");
+                            data.setRequestHeader("Authorization", window.token);
                         },
                         success: function (data) {
                             console.log("---------------------------------");
                             console.log("cadastroentrada");
                             console.log(data);
 
-                            el.find('.inANDout .inANDoutNada').addClass("inANDoutNadaOff");
+                            if (data.success == true){
+                                el.find('.inANDout .inANDoutNada').addClass("inANDoutNadaOff");
 
-                            el.find(".entradaTipoValorTag").html("");
-                            el.find(".entradaTipoValorTag").hide();
-                            el.find(".entradaTipoValor").removeClass("entradaTipoValor2");
-                            el.find(".entradaTipoValorSelect").hide();
-                            el.find(".entradaTipoValor").css("width", "18em");
-                            el.find(".entradaTipoValor").css("padding-left", "1em");
+                                el.find(".entradaTipoValorTag").html("");
+                                el.find(".entradaTipoValorTag").hide();
+                                el.find(".entradaTipoValor").removeClass("entradaTipoValor2");
+                                el.find(".entradaTipoValorSelect").hide();
+                                el.find(".entradaTipoValor").css("width", "18em");
+                                el.find(".entradaTipoValor").css("padding-left", "1em");
 
-                            el.find(".entradaVencimentoParcela").addClass("backgroundBlue");
-                            el.find(".entradaTipoValor").addClass("backgroundBlue");
-                            el.find(".entradaParcelas").addClass("backgroundBlue");
-                            el.find(".entradaValor").addClass("backgroundBlue");
-                            el.find(".entradaValorParcela").addClass("backgroundBlue");
-                            el.find(".entradaValorParcela").prop('disabled', true);
-                            el.find(".entradaVencimentoParcela").prop('disabled', true);
-                            el.find(".entradaValor").prop('disabled', false);
-                            el.find(".entradaData").prop('disabled', false);
-                            el.find(".entradaData").addClass("backgroundBlue");
-                            el.find(".entradaHoje").addClass('disabled');
-                            el.find(".entrada30Dias").addClass('disabled');
-                            el.find(".entradaForm")[0].reset();
-                            setTimeout(function() { 
-                                el.find(".entradaVencimentoParcela").removeClass("backgroundBlue");
-                                el.find(".entradaTipoValor").removeClass("backgroundBlue");
-                                el.find(".entradaParcelas").removeClass("backgroundBlue");
-                                el.find(".entradaValor").removeClass("backgroundBlue");
-                                el.find(".entradaData").removeClass("backgroundBlue");
-                                el.find(".entradaValorParcela").removeClass("backgroundBlue");
-                                el.find(".entradaAdd").removeClass("disabled");
-                            }, 3000);
+                                el.find(".entradaVencimentoParcela").addClass("backgroundBlue");
+                                el.find(".entradaTipoValor").addClass("backgroundBlue");
+                                el.find(".entradaParcelas").addClass("backgroundBlue");
+                                el.find(".entradaValor").addClass("backgroundBlue");
+                                el.find(".entradaValorParcela").addClass("backgroundBlue");
+                                el.find(".entradaValorParcela").prop('disabled', true);
+                                el.find(".entradaVencimentoParcela").prop('disabled', true);
+                                el.find(".entradaValor").prop('disabled', false);
+                                el.find(".entradaData").prop('disabled', false);
+                                el.find(".entradaData").addClass("backgroundBlue");
+                                el.find(".entradaHoje").addClass('disabled');
+                                el.find(".entrada30Dias").addClass('disabled');
+                                el.find(".entradaForm")[0].reset();
+                                setTimeout(function() { 
+                                    el.find(".entradaVencimentoParcela").removeClass("backgroundBlue");
+                                    el.find(".entradaTipoValor").removeClass("backgroundBlue");
+                                    el.find(".entradaParcelas").removeClass("backgroundBlue");
+                                    el.find(".entradaValor").removeClass("backgroundBlue");
+                                    el.find(".entradaData").removeClass("backgroundBlue");
+                                    el.find(".entradaValorParcela").removeClass("backgroundBlue");
+                                    el.find(".entradaAdd").removeClass("disabled");
+                                }, 3000);
 
 
-                            el.find(".inANDoutData").removeClass("inANDoutDataLoader").removeClass("inANDoutDataDESC").removeClass("inANDoutDataASC");
-                            el.find(".inANDoutParcelas").removeClass("inANDoutParcelasLoader").removeClass("inANDoutParcelasDESC").removeClass("inANDoutParcelasASC");
-                            el.find(".inANDoutAtual").removeClass("inANDoutAtualLoader").removeClass("inANDoutAtualDESC").removeClass("inANDoutAtualASC");
-                            el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader").removeClass("inANDoutTipoDESC").removeClass("inANDoutTipoASC");
-                            el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
-                            el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
-                            el.find(".inANDoutTotal").removeClass("inANDoutTotalLoader").removeClass("inANDoutTotalDESC").removeClass("inANDoutTotalASC");
+                                el.find(".inANDoutData").removeClass("inANDoutDataLoader").removeClass("inANDoutDataDESC").removeClass("inANDoutDataASC");
+                                el.find(".inANDoutParcelas").removeClass("inANDoutParcelasLoader").removeClass("inANDoutParcelasDESC").removeClass("inANDoutParcelasASC");
+                                el.find(".inANDoutAtual").removeClass("inANDoutAtualLoader").removeClass("inANDoutAtualDESC").removeClass("inANDoutAtualASC");
+                                el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader").removeClass("inANDoutTipoDESC").removeClass("inANDoutTipoASC");
+                                el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
+                                el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
+                                el.find(".inANDoutTotal").removeClass("inANDoutTotalLoader").removeClass("inANDoutTotalDESC").removeClass("inANDoutTotalASC");
 
-                            $("html, body").animate({ scrollTop: 0 }, "slow");
-                            lerEntradaESaida("1");
-                            lerUltimas();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                                lerEntradaESaida("1");
+                                lerUltimas();
 
-                            /*
-                            var template = el.find("tr.dados.template").clone().insertAfter($( ".inANDout table .template")).removeClass("template").addClass("dadosSaida");
+                                /*
+                                var template = el.find("tr.dados.template").clone().insertAfter($( ".inANDout table .template")).removeClass("template").addClass("dadosSaida");
 
-                            template.find( ".dadosTotal" ).html(data.data.valorTotal);
-                            template.find( ".dadosTotal" ).priceFormat({
-                                prefix: 'R$ ',
-                                centsSeparator: ',',
-                                thousandsSeparator: '.'
-                            });
+                                template.find( ".dadosTotal" ).html(data.data.valorTotal);
+                                template.find( ".dadosTotal" ).priceFormat({
+                                    prefix: 'R$ ',
+                                    centsSeparator: ',',
+                                    thousandsSeparator: '.'
+                                });
 
-                            template.find( ".dadosTipo" ).html(data.data.tipoValorTag + " " + data.data.tipoValor);
-                            template.find( ".dadosParcelas" ).html(data.data.nParcelas);
-                            template.find( ".dadosAtual" ).html(data.data.parcelaAtual);
-                            template.find( ".dadosValor" ).html(data.data.valorParcela);
+                                template.find( ".dadosTipo" ).html(data.data.tipoValorTag + " " + data.data.tipoValor);
+                                template.find( ".dadosParcelas" ).html(data.data.nParcelas);
+                                template.find( ".dadosAtual" ).html(data.data.parcelaAtual);
+                                template.find( ".dadosValor" ).html(data.data.valorParcela);
 
-                            var dateAdicionado = toDateBR(data.data.dataAdicionado);
-                            template.find( ".dadosData" ).html(dateAdicionado);
+                                var dateAdicionado = toDateBR(data.data.dataAdicionado);
+                                template.find( ".dadosData" ).html(dateAdicionado);
 
-                            template.attr("id", data.data.id);
-                            */
+                                template.attr("id", data.data.id);
+                                */
 
-                            el.find(".loading.entrada_loading").hide();
-                            //el.fi0].reset();
+                                el.find(".loading.entrada_loading").hide();
+                                //el.fi0].reset();
+
+                            } else {
+                                if (typeof(data.message) == "object"){
+                                    $.each(data.message, function(i, item) {
+                                        tooltipalert(el.find(".entradaAdd"), item);
+                                    });
+                                } else {
+                                    tooltipalert(el.find(".entradaAdd"), data.message);
+                                }
+                                el.find(".entradaVencimentoParcela").addClass("backgroundBlue");
+                                el.find(".entradaTipoValor").addClass("backgroundRed");
+                                el.find(".entradaParcelas").addClass("backgroundRed");
+                                el.find(".entradaValor").addClass("backgroundRed");
+                                el.find(".entradaValorParcela").addClass("backgroundRed");
+                                el.find(".entradaValorParcela").prop('disabled', true);
+                                el.find(".entradaValor").prop('disabled', false);
+                                el.find(".entradaData").addClass("backgroundRed");
+                                el.find(".entradaData").prop('disabled', false);
+                                setTimeout(function() { 
+                                    el.find(".entradaVencimentoParcela").removeClass("backgroundBlue");
+                                    el.find(".entradaTipoValor").removeClass("backgroundRed");
+                                    el.find(".entradaParcelas").removeClass("backgroundRed");
+                                    el.find(".entradaValor").removeClass("backgroundRed");
+                                    el.find(".entradaValorParcela").removeClass("backgroundRed");
+                                    el.find(".entradaData").removeClass("backgroundRed");
+                                    el.find(".entradaAdd").removeClass("disabled");
+                                }, 3000);
+                                el.find(".loading.entrada_loading").hide();
+                            }
                         },
                         error: function (data, status, error) {
                             console.log("---------------------------------");
@@ -2603,15 +2682,16 @@
                 }
 
                 if (nParcelas <= 1) {
-                    var entradaDataExplode = el.find(".saidaData").val().split('/');
-                    var entradaData = moment(entradaDataExplode[2]+"-"+entradaDataExplode[0]+"-"+entradaDataExplode[1]).format("X");
+                    var saidaDataExplode = el.find(".saidaData").val().split('/');
+                    var saidaData = moment(saidaDataExplode[2]+"-"+saidaDataExplode[1]+"-"+saidaDataExplode[0]).format("X");
                 } else {
-                    var entradaDataExplode = el.find(".saidaVencimentoParcela").val().split('/');
-                    var entradaData = moment(entradaDataExplode[2]+"-"+entradaDataExplode[0]+"-"+entradaDataExplode[1]).format("X");
+                    var saidaDataExplode = el.find(".saidaVencimentoParcela").val().split('/');
+                    var saidaData = moment(saidaDataExplode[2]+"-"+saidaDataExplode[1]+"-"+saidaDataExplode[0]).format("X");
                 }
 
+
                 var dataVencimentoParcelaExplode = el.find(".saidaVencimentoParcela").val().split('/');
-                var dataVencimentoParcela = moment(dataVencimentoParcelaExplode[2]+"-"+dataVencimentoParcelaExplode[0]+"-"+dataVencimentoParcelaExplode[1]).format("X");
+                var dataVencimentoParcela = moment(dataVencimentoParcelaExplode[2]+"-"+dataVencimentoParcelaExplode[1]+"-"+dataVencimentoParcelaExplode[0]).format("X");
                 if (!isNaN(dataVencimentoParcela) == false){
                     dataVencimentoParcela = 0;
                 }
@@ -2735,82 +2815,111 @@
                         url: window.homepath + "movimentacoes",
                         method: 'POST',
                         dataType: 'json',
-                        data: { tipo_movimentacao: "saida", usuario_id: 1, tipo_valor_tag: saidaTextoTag, tipo_valor: saidaTexto, valor_total: money, valor_parcela: moneyParcelas, n_parcelas: nParcelas, parcela_atual: parcelaAtual, data_vencimento_parcela: dataVencimentoParcela, entrada_data: entradaData },
+                        data: { tipo_movimentacao: "saida", usuario_id: window.userData.id, tipo_valor_tag: saidaTextoTag, tipo_valor: saidaTexto, valor_total: money, valor_parcela: moneyParcelas, n_parcelas: nParcelas, parcela_atual: parcelaAtual, data_vencimento_parcela: dataVencimentoParcela, entrada_data: saidaData },
                         beforeSend: function (data) {
-                            data.setRequestHeader("Authorization", "Bearer NOvgX6zpAh8F0JvZhk2EVV1RxzUk7JDrvJJC2x9lFO3mzz9Lm3rgPGAFyKp6");
+                            data.setRequestHeader("Authorization", window.token);
                         },
                         success: function (data) {
                             console.log("---------------------------------");
                             console.log("cadastroSaida");
                             console.log(data);
 
-                            el.find('.inANDout .inANDoutNada').addClass("inANDoutNadaOff");
+                            if (data.success == true){
+                                el.find('.inANDout .inANDoutNada').addClass("inANDoutNadaOff");
 
-                            el.find(".saidaTipoValorTag").html("");
-                            el.find(".saidaTipoValorTag").hide();
-                            el.find(".saidaTipoValor").removeClass("saidaTipoValor2");
-                            el.find(".saidaTipoValorSelect").hide();
-                            el.find(".saidaTipoValor").css("width", "18em");
-                            el.find(".saidaTipoValor").css("padding-left", "1em");
+                                el.find(".saidaTipoValorTag").html("");
+                                el.find(".saidaTipoValorTag").hide();
+                                el.find(".saidaTipoValor").removeClass("saidaTipoValor2");
+                                el.find(".saidaTipoValorSelect").hide();
+                                el.find(".saidaTipoValor").css("width", "18em");
+                                el.find(".saidaTipoValor").css("padding-left", "1em");
 
-                            el.find(".saidaVencimentoParcela").addClass("backgroundBlue");
-                            el.find(".saidaTipoValor").addClass("backgroundBlue");
-                            el.find(".saidaParcelas").addClass("backgroundBlue");
-                            el.find(".saidaValor").addClass("backgroundBlue");
-                            el.find(".saidaValorParcela").addClass("backgroundBlue");
-                            el.find(".saidaValorParcela").prop('disabled', true);
-                            el.find(".saidaVencimentoParcela").prop('disabled', true);
-                            el.find(".saidaValor").prop('disabled', false);
-                            el.find(".saidaData").prop('disabled', false);
-                            el.find(".saidaData").addClass("backgroundBlue");
-                            el.find(".saidaHoje").addClass('disabled');
-                            el.find(".saida30Dias").addClass('disabled');
-                            el.find(".saidaForm")[0].reset();
-                            setTimeout(function() { 
-                                el.find(".saidaVencimentoParcela").removeClass("backgroundBlue");
-                                el.find(".saidaTipoValor").removeClass("backgroundBlue");
-                                el.find(".saidaParcelas").removeClass("backgroundBlue");
-                                el.find(".saidaValor").removeClass("backgroundBlue");
-                                el.find(".saidaData").removeClass("backgroundBlue");
-                                el.find(".saidaValorParcela").removeClass("backgroundBlue");
-                                el.find(".saidaAdd").removeClass("disabled");
-                            }, 3000);
+                                el.find(".saidaVencimentoParcela").addClass("backgroundBlue");
+                                el.find(".saidaTipoValor").addClass("backgroundBlue");
+                                el.find(".saidaParcelas").addClass("backgroundBlue");
+                                el.find(".saidaValor").addClass("backgroundBlue");
+                                el.find(".saidaValorParcela").addClass("backgroundBlue");
+                                el.find(".saidaValorParcela").prop('disabled', true);
+                                el.find(".saidaVencimentoParcela").prop('disabled', true);
+                                el.find(".saidaValor").prop('disabled', false);
+                                el.find(".saidaData").prop('disabled', false);
+                                el.find(".saidaData").addClass("backgroundBlue");
+                                el.find(".saidaHoje").addClass('disabled');
+                                el.find(".saida30Dias").addClass('disabled');
+                                el.find(".saidaForm")[0].reset();
+                                setTimeout(function() { 
+                                    el.find(".saidaVencimentoParcela").removeClass("backgroundBlue");
+                                    el.find(".saidaTipoValor").removeClass("backgroundBlue");
+                                    el.find(".saidaParcelas").removeClass("backgroundBlue");
+                                    el.find(".saidaValor").removeClass("backgroundBlue");
+                                    el.find(".saidaData").removeClass("backgroundBlue");
+                                    el.find(".saidaValorParcela").removeClass("backgroundBlue");
+                                    el.find(".saidaAdd").removeClass("disabled");
+                                }, 3000);
 
 
-                            el.find(".inANDoutData").removeClass("inANDoutDataLoader").removeClass("inANDoutDataDESC").removeClass("inANDoutDataASC");
-                            el.find(".inANDoutParcelas").removeClass("inANDoutParcelasLoader").removeClass("inANDoutParcelasDESC").removeClass("inANDoutParcelasASC");
-                            el.find(".inANDoutAtual").removeClass("inANDoutAtualLoader").removeClass("inANDoutAtualDESC").removeClass("inANDoutAtualASC");
-                            el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader").removeClass("inANDoutTipoDESC").removeClass("inANDoutTipoASC");
-                            el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
-                            el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
-                            el.find(".inANDoutTotal").removeClass("inANDoutTotalLoader").removeClass("inANDoutTotalDESC").removeClass("inANDoutTotalASC");
+                                el.find(".inANDoutData").removeClass("inANDoutDataLoader").removeClass("inANDoutDataDESC").removeClass("inANDoutDataASC");
+                                el.find(".inANDoutParcelas").removeClass("inANDoutParcelasLoader").removeClass("inANDoutParcelasDESC").removeClass("inANDoutParcelasASC");
+                                el.find(".inANDoutAtual").removeClass("inANDoutAtualLoader").removeClass("inANDoutAtualDESC").removeClass("inANDoutAtualASC");
+                                el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader").removeClass("inANDoutTipoDESC").removeClass("inANDoutTipoASC");
+                                el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
+                                el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
+                                el.find(".inANDoutTotal").removeClass("inANDoutTotalLoader").removeClass("inANDoutTotalDESC").removeClass("inANDoutTotalASC");
 
-                            $("html, body").animate({ scrollTop: 0 }, "slow");
-                            lerEntradaESaida("1");
-                            lerUltimas();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                                lerEntradaESaida("1");
+                                lerUltimas();
 
-                            /*
-                            var template = el.find("tr.dados.template").clone().insertAfter($( ".inANDout table .template")).removeClass("template").addClass("dadosSaida");
+                                /*
+                                var template = el.find("tr.dados.template").clone().insertAfter($( ".inANDout table .template")).removeClass("template").addClass("dadosSaida");
 
-                            template.find( ".dadosTotal" ).html(data.data.valorTotal);
-                            template.find( ".dadosTotal" ).priceFormat({
-                                prefix: 'R$ ',
-                                centsSeparator: ',',
-                                thousandsSeparator: '.'
-                            });
+                                template.find( ".dadosTotal" ).html(data.data.valorTotal);
+                                template.find( ".dadosTotal" ).priceFormat({
+                                    prefix: 'R$ ',
+                                    centsSeparator: ',',
+                                    thousandsSeparator: '.'
+                                });
 
-                            template.find( ".dadosTipo" ).html(data.data.tipoValorTag + " " + data.data.tipoValor);
-                            template.find( ".dadosParcelas" ).html(data.data.nParcelas);
-                            template.find( ".dadosAtual" ).html(data.data.parcelaAtual);
-                            template.find( ".dadosValor" ).html(data.data.valorParcela);
+                                template.find( ".dadosTipo" ).html(data.data.tipoValorTag + " " + data.data.tipoValor);
+                                template.find( ".dadosParcelas" ).html(data.data.nParcelas);
+                                template.find( ".dadosAtual" ).html(data.data.parcelaAtual);
+                                template.find( ".dadosValor" ).html(data.data.valorParcela);
 
-                            var dateAdicionado = toDateBR(data.data.dataAdicionado);
-                            template.find( ".dadosData" ).html(dateAdicionado);
+                                var dateAdicionado = toDateBR(data.data.dataAdicionado);
+                                template.find( ".dadosData" ).html(dateAdicionado);
 
-                            template.attr("id", data.data.id);
-                            */
+                                template.attr("id", data.data.id);
+                                */
 
-                            el.find(".loading.saida_loading").hide();
+                                el.find(".loading.saida_loading").hide();
+                            } else {
+                                if (typeof(data.message) == "object"){
+                                    $.each(data.message, function(i, item) {
+                                        tooltipalert(el.find(".saidaAdd"), item);
+                                    });
+                                } else {
+                                    tooltipalert(el.find(".saidaAdd"), data.message);
+                                }
+                                el.find(".saidaVencimentoParcela").addClass("backgroundBlue");
+                                el.find(".saidaTipoValor").addClass("backgroundRed");
+                                el.find(".saidaParcelas").addClass("backgroundRed");
+                                el.find(".saidaValor").addClass("backgroundRed");
+                                el.find(".saidaValorParcela").addClass("backgroundRed");
+                                el.find(".saidaValorParcela").prop('disabled', true);
+                                el.find(".saidaValor").prop('disabled', false);
+                                el.find(".saidaData").addClass("backgroundRed");
+                                el.find(".saidaData").prop('disabled', false);
+                                setTimeout(function() { 
+                                    el.find(".saidaVencimentoParcela").removeClass("backgroundBlue");
+                                    el.find(".saidaTipoValor").removeClass("backgroundRed");
+                                    el.find(".saidaParcelas").removeClass("backgroundRed");
+                                    el.find(".saidaValor").removeClass("backgroundRed");
+                                    el.find(".saidaValorParcela").removeClass("backgroundRed");
+                                    el.find(".saidaData").removeClass("backgroundRed");
+                                    el.find(".saidaAdd").removeClass("disabled");
+                                }, 3000);
+                                el.find(".loading.saida_loading").hide();
+                            }
                         },
                         error: function (data, status, error) {
                             console.log("---------------------------------");
@@ -2862,7 +2971,8 @@
                 var objetivoTexto = el.find(".objetivoTipoValor2").val();
                 var objetivoTextoTag = el.find(".objetivoTipoValorTag").attr("tipo_valor_tag");
                 var arr = el.find('.objetivoData').val().split('/');
-                var dataPrevista = toTimestamp(arr[1] + '/' + arr[0] + '/' + arr[2] + ' 00:00:00');
+                var dataPrevista = moment(arr[2]+"-"+arr[1]+"-"+arr[1]).format("X");
+
 
                 if (!el.find(".objetivoTipoValor").hasClass("objetivoTipoValor2")) {
                     el.find(".objetivoTipoValor").addClass("backgroundRed");
@@ -2922,70 +3032,94 @@
                     el.find(".loading.objetivo_loading").hide();
                 } else if (el.find(".objetivoTipoValorTag").attr("tipo_valor_tag") != "") {
                     $.ajax({
-                        url: window.homepath + "ajax/cadastroObjetivos.php",
+                        url: window.homepath + "objetivos",
                         method: 'POST',
                         dataType: 'json',
-                        data: { tipoValorTag: objetivoTextoTag, tipoValor: objetivoTexto, valorTotal: money, dataPrevista: dataPrevista },
+                        data: { tipo_valor_tag: objetivoTextoTag, usuario_id: window.userData.id, tipo_valor: objetivoTexto, valor_total: money, data_prevista: dataPrevista },
+                        beforeSend: function (data) {
+                            data.setRequestHeader("Authorization", window.token);
+                        },
                         success: function (data) {
                             console.log("---------------------------------");
                             console.log("cadastroObjetivo");
                             console.log(data);
 
-                            el.find('.objetivos .objetivosNada').addClass("objetivosNadaOff");
+                            if (data.success == true){
+                                el.find('.objetivos .objetivosNada').addClass("objetivosNadaOff");
 
-                            el.find(".objetivoTipoValorTag").html("");
-                            el.find(".objetivoTipoValorTag").hide();
-                            el.find(".objetivoTipoValor").removeClass("objetivoTipoValor2");
-                            el.find(".objetivoTipoValorSelect").hide();
-                            el.find(".objetivoTipoValor").css("width", "18em");
-                            el.find(".objetivoTipoValor").css("padding-left", "1em");
+                                el.find(".objetivoTipoValorTag").html("");
+                                el.find(".objetivoTipoValorTag").hide();
+                                el.find(".objetivoTipoValor").removeClass("objetivoTipoValor2");
+                                el.find(".objetivoTipoValorSelect").hide();
+                                el.find(".objetivoTipoValor").css("width", "18em");
+                                el.find(".objetivoTipoValor").css("padding-left", "1em");
 
-                            el.find(".objetivoTipoValor").addClass("backgroundBlue");
-                            el.find(".objetivoData").addClass("backgroundBlue");
-                            el.find(".objetivoValor").addClass("backgroundBlue");
-                            el.find(".objetivoForm")[0].reset();
-                            setTimeout(function() { 
-                                el.find(".objetivoTipoValor").removeClass("backgroundBlue");
-                                el.find(".objetivoData").removeClass("backgroundBlue");
-                                el.find(".objetivoValor").removeClass("backgroundBlue");
-                                el.find(".objetivoAdd").removeClass("disabled");
-                            }, 3000);
+                                el.find(".objetivoTipoValor").addClass("backgroundBlue");
+                                el.find(".objetivoData").addClass("backgroundBlue");
+                                el.find(".objetivoValor").addClass("backgroundBlue");
+                                el.find(".objetivoForm")[0].reset();
+                                setTimeout(function() { 
+                                    el.find(".objetivoTipoValor").removeClass("backgroundBlue");
+                                    el.find(".objetivoData").removeClass("backgroundBlue");
+                                    el.find(".objetivoValor").removeClass("backgroundBlue");
+                                    el.find(".objetivoAdd").removeClass("disabled");
+                                }, 3000);
 
-                            el.find(".objetivosPrazo").removeClass("objetivosPrazoLoader").removeClass("objetivosPrazoDESC").removeClass("objetivosPrazoASC");
-                            el.find(".objetivosTipo").removeClass("objetivosTipoLoader").removeClass("objetivosTipoDESC").removeClass("objetivosTipoASC");
-                            el.find(".objetivosTotal").removeClass("objetivosTotalLoader").removeClass("objetivosTotalDESC").removeClass("objetivosTotalASC");
+                                el.find(".objetivosPrazo").removeClass("objetivosPrazoLoader").removeClass("objetivosPrazoDESC").removeClass("objetivosPrazoASC");
+                                el.find(".objetivosTipo").removeClass("objetivosTipoLoader").removeClass("objetivosTipoDESC").removeClass("objetivosTipoASC");
+                                el.find(".objetivosTotal").removeClass("objetivosTotalLoader").removeClass("objetivosTotalDESC").removeClass("objetivosTotalASC");
 
-                            lerObjetivos("1");
-                            lerUltimas();
+                                lerObjetivos("1");
+                                lerUltimas();
 
-                            /*
-                            if (data.data.tipoValorTag == "Compra") {
-                                var template = el.find("tr.objetivosDados.template").clone().insertAfter($( ".objetivos table .template")).removeClass("template").addClass("objetivosDadosEntrada");
-                            } else if (data.data.tipoValorTag == "Venda") {
-                                var template = el.find("tr.objetivosDados.template").clone().insertAfter($( ".objetivos table .template")).removeClass("template").addClass("objetivosDadosSaida");
+                                /*
+                                if (data.data.tipoValorTag == "Compra") {
+                                    var template = el.find("tr.objetivosDados.template").clone().insertAfter($( ".objetivos table .template")).removeClass("template").addClass("objetivosDadosEntrada");
+                                } else if (data.data.tipoValorTag == "Venda") {
+                                    var template = el.find("tr.objetivosDados.template").clone().insertAfter($( ".objetivos table .template")).removeClass("template").addClass("objetivosDadosSaida");
+                                }
+
+                                template.find( ".objetivosDadosTipo" ).html(data.data.tipoValorTag + " " + data.data.tipoValor);
+
+                                template.find( ".objetivosDadosTotal" ).html(data.data.valorTotal);
+                                template.find( ".objetivosDadosTotal" ).priceFormat({
+                                    prefix: 'R$ ',
+                                    centsSeparator: ',',
+                                    thousandsSeparator: '.'
+                                });
+
+                                var dataPrevisao = new Date(toDate(data.data.dataPrevista));
+                                var dataAtual = new Date();
+                                var dataConta = Math.abs(dataAtual.getTime() - dataPrevisao.getTime());
+                                var faltam = Math.ceil(dataConta / (1000 * 3600 * 24));
+                                template.find( ".objetivosDadosPrevisao" ).html(faltam + " dias");
+                                template.find( ".objetivosDadosPrevisao" ).attr("data-title", toDateBR(data.data.dataPrevista));
+
+                                template.attr("id", data.data.id);
+                                */
+
+                                el.find(".loading.objetivo_loading").hide();
+                                el.find(".objetivoData").attr("value", "Data Prevista");
+
+                            } else {
+                                if (typeof(data.message) == "object"){
+                                    $.each(data.message, function(i, item) {
+                                        tooltipalert(el.find(".objetivoAdd"), item);
+                                    });
+                                } else {
+                                    tooltipalert(el.find(".objetivoAdd"), data.message);
+                                }
+                                el.find(".objetivoTipoValor").addClass("backgroundRed");
+                                el.find(".objetivoValor").addClass("backgroundRed");
+                                el.find(".objetivoData").addClass("backgroundRed");
+                                setTimeout(function() { 
+                                    el.find(".objetivoTipoValor").removeClass("backgroundRed");
+                                    el.find(".objetivoValor").removeClass("backgroundRed");
+                                    el.find(".objetivoData").removeClass("backgroundRed");
+                                    el.find(".objetivoAdd").removeClass("disabled");
+                                }, 3000);
+                                el.find(".loading.objetivo_loading").hide();
                             }
-
-                            template.find( ".objetivosDadosTipo" ).html(data.data.tipoValorTag + " " + data.data.tipoValor);
-
-                            template.find( ".objetivosDadosTotal" ).html(data.data.valorTotal);
-                            template.find( ".objetivosDadosTotal" ).priceFormat({
-                                prefix: 'R$ ',
-                                centsSeparator: ',',
-                                thousandsSeparator: '.'
-                            });
-
-                            var dataPrevisao = new Date(toDate(data.data.dataPrevista));
-                            var dataAtual = new Date();
-                            var dataConta = Math.abs(dataAtual.getTime() - dataPrevisao.getTime());
-                            var faltam = Math.ceil(dataConta / (1000 * 3600 * 24));
-                            template.find( ".objetivosDadosPrevisao" ).html(faltam + " dias");
-                            template.find( ".objetivosDadosPrevisao" ).attr("data-title", toDateBR(data.data.dataPrevista));
-
-                            template.attr("id", data.data.id);
-                            */
-
-                            el.find(".loading.objetivo_loading").hide();
-                            el.find(".objetivoData").attr("value", "Data Prevista");
                         },
                         error: function (data) {
                             console.log("---------------------------------");
@@ -3074,42 +3208,42 @@
             //////////////////////////////////////////////
             //função de preenchimento do PERFIL DO USUARIO
             function lerPerfil() {
-                var url = new URL(window.location.href);
-                var user_id = url.searchParams.get("id");
                 $.ajax({
-                    url: window.homepath + "usuarios/" + user_id,
+                    url: window.homepath + "usuarios/" + window.userData.id,
                     method: 'GET',
                     dataType: 'json',
                     beforeSend: function (data) {
-                        data.setRequestHeader("Authorization", "Bearer NOvgX6zpAh8F0JvZhk2EVV1RxzUk7JDrvJJC2x9lFO3mzz9Lm3rgPGAFyKp6");
+                        data.setRequestHeader("Authorization", window.token);
                     },
                     success: function (data) {
                         console.log("---------------------------------");
                         console.log("lerPerfil");
                         console.log(data);
-                        el.find('.box_perfil .nome').text(data.data.nome);
-                        el.find('.box_perfil .nome').attr("data-title", data.data.nome);
-                        el.find('.box_perfil .profissao').text(data.data.profissao);
-                        el.find('.box_perfil .profissao').attr("data-title", data.data.profissao);
-                        if (data.data.foto != null) {
-                            el.find('.box_perfil .foto').css("background-image", "url('" + window.uploadpath + data.data.foto + "')");
-                            el.find('.box_perfil .foto').html("");
+
+                        if (data.success == true){
+                            el.find('.box_perfil .nome').text(data.data.nome);
+                            el.find('.box_perfil .nome').attr("data-title", data.data.nome);
+                            el.find('.box_perfil .profissao').text(data.data.profissao);
+                            el.find('.box_perfil .profissao').attr("data-title", data.data.profissao);
+                            if (data.data.foto != null) {
+                                el.find('.box_perfil .foto').css("background-image", "url('" + window.uploadpath + data.data.foto + "')");
+                                el.find('.box_perfil .foto').html("");
+                            }
+
+                            var date = toDate(data.data.data_nascimento);
+                            var dob = new Date(date);
+                            var today = new Date();
+                            var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
+
+                            el.find('.box_perfil .idade').text(age + " anos");
+                            el.find('.box_perfil .idade').attr("data-title", date);
+
+                            carregou_item = 2;
+                            if (carregou < carregouTotal) {
+                                carregou = carregou + 1;
+                            }
+                            carregando(carregou, carregou_item);
                         }
-
-                        var date = toDate(data.data.data_nascimento);
-                        var dob = new Date(date);
-                        var today = new Date();
-                        var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
-
-                        el.find('.box_perfil .idade').text(age + " anos");
-                        el.find('.box_perfil .idade').attr("data-title", date);
-
-                        carregou_item = 2;
-                        if (carregou < carregouTotal) {
-                            carregou = carregou + 1;
-                        }
-                        carregando(carregou, carregou_item);
-
                     },
                     error: function (data) {
                         erroNoSistema(data);
@@ -3128,7 +3262,8 @@
                         console.log("---------------------------------");
                         console.log("lerSalario");
                         console.log(data);
-                        if (data.data.length > 0){
+
+                        if (data.success == true){
                             var today = new Date();
                             var dd = ("0" + (data.data["0"].diaRecebimento)).slice(-2);
                             var ddNow = ("0" + (today.getMonth())).slice(-2);
@@ -3178,8 +3313,10 @@
                                 carregou = carregou + 1;
                             }
                             carregando(carregou, carregou_item);
-
+                        } else {
+                            erroNoSistema(data);
                         }
+
                     },
                     error: function (data) {
                         erroNoSistema(data);
@@ -3198,6 +3335,7 @@
                         console.log("---------------------------------");
                         console.log("lerPoupanca");
                         console.log(data);
+
                         if (data.success == true) {
                             el.find('.poupanca .poupancaObjetivo').text(data.data["0"].objetivo);
                             el.find('.poupanca .poupancaObjetivo').priceFormat({
@@ -3219,6 +3357,8 @@
                             }
                             carregando(carregou, carregou_item);
 
+                        } else {
+                            erroNoSistema(data);
                         }
                     },
                     error: function (data) {
@@ -3239,56 +3379,60 @@
                     dataType: 'json',
                     data: { data_inicio: window.firstTimestamp, data_fim: window.lastTimestamp, page_size: 4 },
                     beforeSend: function (data) {
-                        data.setRequestHeader("Authorization", "Bearer NOvgX6zpAh8F0JvZhk2EVV1RxzUk7JDrvJJC2x9lFO3mzz9Lm3rgPGAFyKp6");
+                        data.setRequestHeader("Authorization", window.token);
                     },
                     success: function (data) {
                         console.log("---------------------------------");
                         console.log("lerUltimas");
                         console.log(data);
 
-                        $.each(data.data, function(i, item) {
-                            if (data.data[i].tipo_movimentacao == "entrada") {
-                                var tipo_movimentacao = "Recebeu (" + data.data[i].tipo_valor_tag + ")";
-                                var tableUltima = "entradaUltima";
-                            } else if (data.data[i].tipo_movimentacao == "saida") {
-                                var tipo_movimentacao = "Gastou (" + data.data[i].tipo_valor_tag + ")";
-                                var tableUltima = "saidaUltima";
-                            } else if (!data.data[i].tipo_movimentacao) {
-                                if (data.data[i].tipo_valor_tag == "compra") {
-                                    var tipo_movimentacao = "Objetivo (Compra)";
-                                    var tableUltima = "objetivoCompraUltima";
-                                } else if (data.data[i].tipo_valor_tag == "venda") {
-                                    var tipo_movimentacao = "Objetivo (Venda)";
-                                    var tableUltima = "objetivoVendaUltima";
+                        if (data.success == true) {
+                            $.each(data.data, function(i, item) {
+                                if (data.data[i].tipo_movimentacao == "entrada") {
+                                    var tipo_movimentacao = "Recebeu (" + data.data[i].tipo_valor_tag + ")";
+                                    var tableUltima = "entradaUltima";
+                                } else if (data.data[i].tipo_movimentacao == "saida") {
+                                    var tipo_movimentacao = "Gastou (" + data.data[i].tipo_valor_tag + ")";
+                                    var tableUltima = "saidaUltima";
+                                } else if (!data.data[i].tipo_movimentacao) {
+                                    if (data.data[i].tipo_valor_tag == "compra") {
+                                        var tipo_movimentacao = "Objetivo (Compra)";
+                                        var tableUltima = "objetivoCompraUltima";
+                                    } else if (data.data[i].tipo_valor_tag == "venda") {
+                                        var tipo_movimentacao = "Objetivo (Venda)";
+                                        var tableUltima = "objetivoVendaUltima";
+                                    }
                                 }
-                            }
 
-                            var dataUltima = toDateBR(data.data[i].created_at, "noTime");
-                            var dataUltimaTitle = toDateBR(data.data[i].created_at, "yes");
+                                var dataUltima = toDateBR(data.data[i].created_at, "noTime");
+                                var dataUltimaTitle = toDateBR(data.data[i].created_at, "yes");
 
-                            el.find(".ultimasNotificacoes").append("<div class='itemUltima'><span class='dataUltima tooltip' data-title='" + dataUltimaTitle + "'>" + dataUltima + "</span><span class='recebeuUltima " + tableUltima + "'>" + tipo_movimentacao + "</span><span class='tipoUltima'>" + data.data[i].tipo_valor + "</span> <span class='valorUltima'>(<span class='valorFormatUltima'>" + data.data[i].valor_total + "</span>)</span></div>");
+                                el.find(".ultimasNotificacoes").append("<div class='itemUltima'><span class='dataUltima tooltip' data-title='" + dataUltimaTitle + "'>" + dataUltima + "</span><span class='recebeuUltima " + tableUltima + "'>" + tipo_movimentacao + "</span><span class='tipoUltima'>" + data.data[i].tipo_valor + "</span> <span class='valorUltima'>(<span class='valorFormatUltima'>" + data.data[i].valor_total + "</span>)</span></div>");
 
-                            el.find( ".ultimasNotificacoes .valorFormatUltima" ).priceFormat({
-                                prefix: 'R$ ',
-                                centsSeparator: ',',
-                                thousandsSeparator: '.'
+                                el.find( ".ultimasNotificacoes .valorFormatUltima" ).priceFormat({
+                                    prefix: 'R$ ',
+                                    centsSeparator: ',',
+                                    thousandsSeparator: '.'
+                                });
+
                             });
 
-                        });
+                            carregou_item = 7;
+                            if (carregou < carregouTotal) {
+                                carregou = carregou + 1;
+                            }
+                            carregando(carregou, carregou_item);
 
-                        carregou_item = 7;
-                        if (carregou < carregouTotal) {
-                            carregou = carregou + 1;
-                        }
-                        carregando(carregou, carregou_item);
+                            if (data.data.length >= 1) {
+                                el.find(".ultimasNada").addClass("ultimasNadaOff");
+                            } else {
+                                el.find(".ultimasNada").removeClass("ultimasNadaOff");
+                            }
 
-                        if (data.data.length >= 1) {
-                            el.find(".ultimasNada").addClass("ultimasNadaOff");
+                            el.find(".ultimasNotificacoesCarregando").removeClass("loading_waiting");
                         } else {
-                            el.find(".ultimasNada").removeClass("ultimasNadaOff");
+                            erroNoSistema(data);
                         }
-
-                        el.find(".ultimasNotificacoesCarregando").removeClass("loading_waiting");
                     },
                     error: function (data) {
                         erroNoSistema(data);
@@ -3306,7 +3450,7 @@
                 el.find(".inANDoutAtual").removeClass("inANDoutAtualLoader").removeClass("inANDoutAtualDESC").removeClass("inANDoutAtualASC");
                 el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader").removeClass("inANDoutTipoDESC").removeClass("inANDoutTipoASC");
                 if (el.find(".inANDoutValor").hasClass("inANDoutValorDESC")) {
-                    window.ordemEntradaESaida = "valorParcela ASC";
+                    window.ordemEntradaESaida = "valor_parcela-asc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3314,7 +3458,7 @@
                     }
                     el.find(".inANDoutValor").removeClass("inANDoutValorDESC").addClass("inANDoutValorASC");
                 } else {
-                    window.ordemEntradaESaida = "valorParcela DESC";
+                    window.ordemEntradaESaida = "valor_parcela-desc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3335,7 +3479,7 @@
                 el.find(".inANDoutAtual").removeClass("inANDoutAtualLoader").removeClass("inANDoutAtualDESC").removeClass("inANDoutAtualASC");
                 el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
                 if (el.find(".inANDoutTipo").hasClass("inANDoutTipoDESC")) {
-                    window.ordemEntradaESaida = "tipoValor DESC";
+                    window.ordemEntradaESaida = "tipo_valor-desc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3343,7 +3487,7 @@
                     }
                     el.find(".inANDoutTipo").removeClass("inANDoutTipoDESC").addClass("inANDoutTipoASC");
                 } else {
-                    window.ordemEntradaESaida = "tipoValor ASC";
+                    window.ordemEntradaESaida = "tipo_valor-asc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3364,7 +3508,7 @@
                 el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader").removeClass("inANDoutTipoDESC").removeClass("inANDoutTipoASC");
                 el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
                 if (el.find(".inANDoutAtual").hasClass("inANDoutAtualDESC")) {
-                    window.ordemEntradaESaida = "parcelaAtual ASC";
+                    window.ordemEntradaESaida = "parcela_atual-asc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3372,7 +3516,7 @@
                     }
                     el.find(".inANDoutAtual").removeClass("inANDoutAtualDESC").addClass("inANDoutAtualASC");
                 } else {
-                    window.ordemEntradaESaida = "parcelaAtual DESC";
+                    window.ordemEntradaESaida = "parcela_atual-desc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3393,7 +3537,7 @@
                 el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader").removeClass("inANDoutTipoDESC").removeClass("inANDoutTipoASC");
                 el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
                 if (el.find(".inANDoutParcelas").hasClass("inANDoutParcelasDESC")) {
-                    window.ordemEntradaESaida = "nParcelas ASC";
+                    window.ordemEntradaESaida = "n_parcelas-asc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3401,7 +3545,7 @@
                     }
                     el.find(".inANDoutParcelas").removeClass("inANDoutParcelasDESC").addClass("inANDoutParcelasASC");
                 } else {
-                    window.ordemEntradaESaida = "nParcelas DESC";
+                    window.ordemEntradaESaida = "n_parcelas-desc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3422,7 +3566,7 @@
                 el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader").removeClass("inANDoutTipoDESC").removeClass("inANDoutTipoASC");
                 el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
                 if (el.find(".inANDoutTotal").hasClass("inANDoutTotalDESC")) {
-                    window.ordemEntradaESaida = "valorTotal ASC";
+                    window.ordemEntradaESaida = "valor_total-asc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3430,7 +3574,7 @@
                     }
                     el.find(".inANDoutTotal").removeClass("inANDoutTotalDESC").addClass("inANDoutTotalASC");
                 } else {
-                    window.ordemEntradaESaida = "valorTotal DESC";
+                    window.ordemEntradaESaida = "valor_total-desc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3451,7 +3595,7 @@
                 el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader").removeClass("inANDoutTipoDESC").removeClass("inANDoutTipoASC");
                 el.find(".inANDoutValor").removeClass("inANDoutValorLoader").removeClass("inANDoutValorDESC").removeClass("inANDoutValorASC");
                 if (el.find(".inANDoutData").hasClass("inANDoutDataASC")) {
-                    window.ordemEntradaESaida = "dataAdicionado ASC";
+                    window.ordemEntradaESaida = "entrada_data-asc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3459,7 +3603,7 @@
                     }
                     el.find(".inANDoutData").removeClass("inANDoutDataASC").addClass("inANDoutDataDESC");
                 } else {
-                    window.ordemEntradaESaida = "dataAdicionado DESC";
+                    window.ordemEntradaESaida = "entrada_data-desc";
                     if (el.find(".inANDoutPaginacao span.paginaSelecionada").length >= 1) {
                         window.pageEntradaESaida = el.find(".inANDoutPaginacao span.paginaSelecionada").text();
                     } else {
@@ -3494,220 +3638,223 @@
                         url: window.homepath + "movimentacoes",
                         method: 'GET',
                         dataType: 'json',
-                        data: { pagina: pagina, items: window.itemsPageEntradaESaida, ordenacao: ordenacao, data_inicio: dataAdd, data_fim: dataFim },
+                        data: { page: pagina, page_size: window.itemsPageEntradaESaida, orderBy: ordenacao, data_inicio: dataAdd, data_fim: dataFim },
                         beforeSend: function (data) {
-                            data.setRequestHeader("Authorization", "Bearer NOvgX6zpAh8F0JvZhk2EVV1RxzUk7JDrvJJC2x9lFO3mzz9Lm3rgPGAFyKp6");
+                            data.setRequestHeader("Authorization", window.token);
                         },
                         success: function (data) {
                             console.log("---------------------------------");
                             console.log("lerEntradaESaida");
                             console.log(data);
 
-                            var paginas = Math.ceil(data.contagem / data.itens_por_pagina);
-                            if (paginas > 1) {
-                                el.find(".inANDoutPaginacao").html("Página: ");
-                                for (i = 1; i <= paginas; i++) {
-                                    if (i < paginas) {
-                                        el.find(".inANDoutPaginacao").append("<span id='inANDoutPagina"+i+"'>" + i + "</span>, ");
+                            if (data.success == true) {
+                                var paginas = data.pagination.total_pages;
+                                if (paginas > 1) {
+                                    el.find(".inANDoutPaginacao").html("Página: ");
+                                    for (i = 1; i <= paginas; i++) {
+                                        if (i < paginas) {
+                                            el.find(".inANDoutPaginacao").append("<span id='inANDoutPagina"+i+"'>" + i + "</span>, ");
+                                        } else {
+                                            el.find(".inANDoutPaginacao").append("<span id='inANDoutPagina"+i+"'>" + i + "</span>");
+                                        }
+                                        if (pagina == i) {
+                                            el.find("#inANDoutPagina"+i).addClass("paginaSelecionada");
+                                        }
+                                    }
+                                } else {
+                                    el.find(".inANDoutPaginacao").html("");
+                                }
+
+                                el.find(".inANDoutTotalResultados").slideDown();
+                                var mes = el.find('.mes').attr("data-mes-extenso");
+                                if (data.pagination.total_in_page == "") {
+                                    var itens_sendo_exibidos = "0";
+                                } else {
+                                    var itens_sendo_exibidos = data.pagination.total_in_page;
+                                }
+                                if (data.pagination.total == "") {
+                                    var contagem = "0";
+                                } else {
+                                    var contagem = data.pagination.total;
+                                }
+
+                                if (mes == "Todos") {
+                                    var mes_extenso = "de todas as datas.";
+                                } else {
+                                    var mes_extenso = "do mês de " + mes + ".";
+                                }
+                                if (itens_sendo_exibidos == 1) {
+                                    if (contagem == 1) {
+                                        el.find(".inANDoutTotalResultados").html("Total de " + itens_sendo_exibidos + " item sendo exibidos de um total de " + contagem + " item " + mes_extenso);
                                     } else {
-                                        el.find(".inANDoutPaginacao").append("<span id='inANDoutPagina"+i+"'>" + i + "</span>");
+                                        el.find(".inANDoutTotalResultados").html("Total de " + itens_sendo_exibidos + " item sendo exibidos de um total de " + contagem + " itens " + mes_extenso);
                                     }
-                                    if (pagina == i) {
-                                        el.find("#inANDoutPagina"+i).addClass("paginaSelecionada");
+                                } else {
+                                    if (contagem == 1) {
+                                        el.find(".inANDoutTotalResultados").html("Total de " + itens_sendo_exibidos + " itens sendo exibidos de um total de " + contagem + " item " + mes_extenso);
+                                    } else {
+                                        el.find(".inANDoutTotalResultados").html("Total de " + itens_sendo_exibidos + " itens sendo exibidos de um total de " + contagem + " itens " + mes_extenso);
                                     }
                                 }
-                            } else {
-                                el.find(".inANDoutPaginacao").html("");
-                            }
 
-                            el.find(".inANDoutTotalResultados").slideDown();
-                            var mes = el.find('.mes').attr("data-mes-extenso");
-                            if (data.itens_sendo_exibidos == "") {
-                                var itens_sendo_exibidos = "0";
-                            } else {
-                                var itens_sendo_exibidos = data.itens_sendo_exibidos;
-                            }
-                            if (data.contagem == "") {
-                                var contagem = "0";
-                            } else {
-                                var contagem = data.contagem;
-                            }
+                                $.each(data.data, function(i, item) {
+                                    if (data.data[i].tipo_movimentacao == "entrada") {
+                                        var template = el.find("tr.dados.template").clone().appendTo(el.find( ".inANDout table")).removeClass("template").addClass("dadosEntrada");
+                                    } else if (data.data[i].tipo_movimentacao == "saida") {
+                                        var template = el.find("tr.dados.template").clone().appendTo(el.find( ".inANDout table")).removeClass("template").addClass("dadosSaida");
+                                    }
 
-                            if (mes == "Todos") {
-                                var mes_extenso = "de todas as datas.";
-                            } else {
-                                var mes_extenso = "do mês de " + mes + ".";
-                            }
-                            if (itens_sendo_exibidos == 1) {
-                                if (contagem == 1) {
-                                    el.find(".inANDoutTotalResultados").html("Total de " + itens_sendo_exibidos + " item sendo exibidos de um total de " + contagem + " item " + mes_extenso);
-                                } else {
-                                    el.find(".inANDoutTotalResultados").html("Total de " + itens_sendo_exibidos + " item sendo exibidos de um total de " + contagem + " itens " + mes_extenso);
-                                }
-                            } else {
-                                if (contagem == 1) {
-                                    el.find(".inANDoutTotalResultados").html("Total de " + itens_sendo_exibidos + " itens sendo exibidos de um total de " + contagem + " item " + mes_extenso);
-                                } else {
-                                    el.find(".inANDoutTotalResultados").html("Total de " + itens_sendo_exibidos + " itens sendo exibidos de um total de " + contagem + " itens " + mes_extenso);
-                                }
-                            }
+                                    if (data.data[i].n_parcelas > 1) {
+                                        var totalRes = data.data[i].valor_parcela * data.data[i].n_parcelas;
+                                    } else {
+                                        var totalRes = data.data[i].valor_total;
+                                    }
 
-                            $.each(data.data, function(i, item) {
-                                if (data.data[i].tipo_movimentacao == "entrada") {
-                                    var template = el.find("tr.dados.template").clone().appendTo(el.find( ".inANDout table")).removeClass("template").addClass("dadosEntrada");
-                                } else if (data.data[i].tipo_movimentacao == "saida") {
-                                    var template = el.find("tr.dados.template").clone().appendTo(el.find( ".inANDout table")).removeClass("template").addClass("dadosSaida");
-                                }
+                                    template.find(".dadosTotal").html(totalRes);
+                                    template.find( ".dadosTotal" ).priceFormat({
+                                        prefix: 'R$ ',
+                                        centsSeparator: ',',
+                                        thousandsSeparator: '.'
+                                    });
 
-                                if (data.data[i].n_parcelas > 1) {
-                                    var totalRes = data.data[i].valor_parcela * data.data[i].n_parcelas;
-                                } else {
-                                    var totalRes = data.data[i].valor_total;
-                                }
-
-                                template.find(".dadosTotal").html(totalRes);
-                                template.find( ".dadosTotal" ).priceFormat({
-                                    prefix: 'R$ ',
-                                    centsSeparator: ',',
-                                    thousandsSeparator: '.'
-                                });
-
-                                template.find( ".dadosTipo" ).html("<span class='tag'>" + data.data[i].tipo_valor_tag + "</span> <span class='valor'>" + data.data[i].tipo_valor + "</span>");
-                                template.find( ".dadosParcelas" ).html(data.data[i].n_parcelas);
+                                    template.find( ".dadosTipo" ).html("<span class='tag'>" + data.data[i].tipo_valor_tag + "</span> <span class='valor'>" + data.data[i].tipo_valor + "</span>");
+                                    template.find( ".dadosParcelas" ).html(data.data[i].n_parcelas);
 
 
-                                template.find( ".dadosValor" ).html(data.data[i].valor_parcela);
-                                template.find( ".dadosValor" ).priceFormat({
-                                    prefix: 'R$ ',
-                                    centsSeparator: ',',
-                                    thousandsSeparator: '.'
-                                });
+                                    template.find( ".dadosValor" ).html(data.data[i].valor_parcela);
+                                    template.find( ".dadosValor" ).priceFormat({
+                                        prefix: 'R$ ',
+                                        centsSeparator: ',',
+                                        thousandsSeparator: '.'
+                                    });
 
-                                if (data.data[i].table1 == "entrada") {
-                                    var dateEntrada = toDateBR(data.data[i].entrada_data, "noTime");
-                                    template.find( ".dadosData" ).html(dateEntrada);
-                                    var dateEntradaTooltip = toDateBR(data.data[i].entrada_data, "noTime");
-                                    template.find( ".dadosData" ).attr("data-title", dateEntradaTooltip);
-                                } else if (data.data[i].table1 == "saida") {
-                                    var dateSaida = toDateBR(data.data[i].entrada_data, "noTime");
-                                    template.find( ".dadosData" ).html(dateSaida);
-                                    var dateSaidaTooltip = toDateBR(data.data[i].entrada_data, "noTime");
-                                    template.find( ".dadosData" ).attr("data-title", dateSaidaTooltip);
-                                }
+                                    if (data.data[i].tipo_movimentacao == "entrada") {
+                                        var dateEntrada = toDateBR(data.data[i].entrada_data, "noTime");
+                                        template.find( ".dadosData" ).html(dateEntrada);
+                                        var dateEntradaTooltip = toDateBR(data.data[i].entrada_data, "noTime");
+                                        template.find( ".dadosData" ).attr("data-title", dateEntradaTooltip);
+                                    } else if (data.data[i].tipo_movimentacao == "saida") {
+                                        var dateSaida = toDateBR(data.data[i].entrada_data, "noTime");
+                                        template.find( ".dadosData" ).html(dateSaida);
+                                        var dateSaidaTooltip = toDateBR(data.data[i].entrada_data, "noTime");
+                                        template.find( ".dadosData" ).attr("data-title", dateSaidaTooltip);
+                                    }
 
-                                var dateAdicionado = toDateBR(data.data[i].created_at, "noTime");
-                                template.find( ".dadosCriadoEm" ).html(dateAdicionado);
-                                var dateAdicionadoTooltip = toDateBR(data.data[i].created_at, "yes");
-                                template.find( ".dadosCriadoEm" ).attr("data-title", dateAdicionadoTooltip);
+                                    var dateAdicionado = toDateBR(data.data[i].created_at, "noTime");
+                                    template.find( ".dadosCriadoEm" ).html(dateAdicionado);
+                                    var dateAdicionadoTooltip = toDateBR(data.data[i].created_at, "yes");
+                                    template.find( ".dadosCriadoEm" ).attr("data-title", dateAdicionadoTooltip);
 
-                                if (data.data[i].data_vencimento_parcela != null && data.data[i].data_vencimento_parcela != "null"  && data.data[i].data_vencimento_parcela != undefined && data.data[i].data_vencimento_parcela != "undefined" && data.data[i].data_vencimento_parcela != 0 && data.data[i].data_vencimento_parcela != "0") {
-                                    if (data.data[i].data_vencimento_parcela < Math.floor(Date.now() / 1000)) {
-                                        var parcelaAtualDate2 = new Date(data.data[i].data_vencimento_parcela*1000);
-                                        var diferencaParcelas = new Date().getMonth()+1 - parcelaAtualDate2.getMonth();
-                                        parcelaAtualDate2.setMonth(parcelaAtualDate2.getMonth() + diferencaParcelas);
+                                    if (data.data[i].data_vencimento_parcela != null && data.data[i].data_vencimento_parcela != "null"  && data.data[i].data_vencimento_parcela != undefined && data.data[i].data_vencimento_parcela != "undefined" && data.data[i].data_vencimento_parcela != 0 && data.data[i].data_vencimento_parcela != "0") {
+                                        if (data.data[i].data_vencimento_parcela < Math.floor(Date.now() / 1000)) {
+                                            var parcelaAtualDate2 = new Date(data.data[i].data_vencimento_parcela*1000);
+                                            var diferencaParcelas = new Date().getMonth()+1 - parcelaAtualDate2.getMonth();
+                                            parcelaAtualDate2.setMonth(parcelaAtualDate2.getMonth() + diferencaParcelas);
+                                            parcelaAtualDate2.setHours(0, 0, 0);
+                                            parcelaAtualDate2.setMilliseconds(0);
+                                            var parcelaAtualDate2 = toDateBR(parcelaAtualDate2/1000|0);
+                                            var parcelaAtualDate = new Date(data.data[i].created_at*1000);
+                                        } else {
+                                            var parcelaAtualDate2 = toDateBR(data.data[i].data_vencimento_parcela);
+                                            var parcelaAtualDate = new Date(data.data[i].created_at*1000);
+                                        }
+                                    } else if (data.data[i].data_vencimento_parcela < Math.floor(Date.now() / 1000) && data.data[i].data_vencimento_parcela != null && data.data[i].data_vencimento_parcela != "null"  && data.data[i].data_vencimento_parcela != undefined && data.data[i].data_vencimento_parcela != "undefined" && data.data[i].data_vencimento_parcela != 0 && data.data[i].data_vencimento_parcela != "0") {
+                                        if (data.data[i].created_at < Math.floor(Date.now() / 1000)) {
+                                            var parcelaAtualDate2 = new Date(data.data[i].data_vencimento_parcela*1000);
+                                            console.log(parcelaAtualDate2);
+                                            var parcelaAtualDate2Day = ('0' + parcelaAtualDate2.getDate()).slice(-2);
+                                            var parcelaAtualDate2Month = ('0' + eval(Number(parcelaAtualDate2.getMonth())+2)).slice(-2);
+                                            var parcelaAtualDate2Year = parcelaAtualDate2.getFullYear();
+                                            var parcelaAtualDate2 = parcelaAtualDate2Day + "/" + parcelaAtualDate2Month + "/" + parcelaAtualDate2Year;
+                                        } else {
+                                            var parcelaAtualDate2 = new Date(data.data[i].created_at*1000);
+                                            console.log(parcelaAtualDate2);
+                                            var parcelaAtualDate2Day = ('0' + parcelaAtualDate2.getDate()).slice(-2);
+                                            var parcelaAtualDate2Month = ('0' + eval(Number(parcelaAtualDate2.getMonth())+2)).slice(-2);
+                                            var parcelaAtualDate2Year = parcelaAtualDate2.getFullYear();
+                                            var parcelaAtualDate2 = parcelaAtualDate2Day + "/" + parcelaAtualDate2Month + "/" + parcelaAtualDate2Year;
+                                        }
+                                        var parcelaAtualDate = new Date(data.data[i].created_at*1000);
+                                    } else {
+                                        var parcelaAtualDate2 = new Date(data.data[i].created_at*1000);
+                                        if (parcelaAtualDate2.getMonth() < new Date().getMonth()+1) {
+                                            var diferencaParcelas = new Date().getMonth()+1 - parcelaAtualDate2.getMonth();
+                                            parcelaAtualDate2.setMonth(parcelaAtualDate2.getMonth() + diferencaParcelas);
+                                        } else {
+                                            parcelaAtualDate2.setMonth(new Date().getMonth()+1);
+                                        }
                                         parcelaAtualDate2.setHours(0, 0, 0);
                                         parcelaAtualDate2.setMilliseconds(0);
                                         var parcelaAtualDate2 = toDateBR(parcelaAtualDate2/1000|0);
                                         var parcelaAtualDate = new Date(data.data[i].created_at*1000);
-                                    } else {
-                                        var parcelaAtualDate2 = toDateBR(data.data[i].data_vencimento_parcela);
-                                        var parcelaAtualDate = new Date(data.data[i].created_at*1000);
                                     }
-                                } else if (data.data[i].data_vencimento_parcela < Math.floor(Date.now() / 1000) && data.data[i].data_vencimento_parcela != null && data.data[i].data_vencimento_parcela != "null"  && data.data[i].data_vencimento_parcela != undefined && data.data[i].data_vencimento_parcela != "undefined" && data.data[i].data_vencimento_parcela != 0 && data.data[i].data_vencimento_parcela != "0") {
-                                    if (data.data[i].created_at < Math.floor(Date.now() / 1000)) {
-                                        var parcelaAtualDate2 = new Date(data.data[i].data_vencimento_parcela*1000);
-                                        console.log(parcelaAtualDate2);
-                                        var parcelaAtualDate2Day = ('0' + parcelaAtualDate2.getDate()).slice(-2);
-                                        var parcelaAtualDate2Month = ('0' + eval(Number(parcelaAtualDate2.getMonth())+2)).slice(-2);
-                                        var parcelaAtualDate2Year = parcelaAtualDate2.getFullYear();
-                                        var parcelaAtualDate2 = parcelaAtualDate2Day + "/" + parcelaAtualDate2Month + "/" + parcelaAtualDate2Year;
-                                    } else {
-                                        var parcelaAtualDate2 = new Date(data.data[i].created_at*1000);
-                                        console.log(parcelaAtualDate2);
-                                        var parcelaAtualDate2Day = ('0' + parcelaAtualDate2.getDate()).slice(-2);
-                                        var parcelaAtualDate2Month = ('0' + eval(Number(parcelaAtualDate2.getMonth())+2)).slice(-2);
-                                        var parcelaAtualDate2Year = parcelaAtualDate2.getFullYear();
-                                        var parcelaAtualDate2 = parcelaAtualDate2Day + "/" + parcelaAtualDate2Month + "/" + parcelaAtualDate2Year;
+
+
+                                    var parcelaAtualDateDay = parcelaAtualDate.getDate();
+                                    var parcelaAtualDateMonth = parcelaAtualDate.getMonth()+1;
+                                    var parcelaAtualDateYear = parcelaAtualDate.getFullYear();
+
+                                    var parcelaAtual = eval(new Date().getMonth()+1) - parcelaAtualDateMonth
+                                        + (12 * (new Date().getFullYear() - parcelaAtualDateYear));
+
+                                    if(new Date().getDate() < parcelaAtualDateDay){
+                                        parcelaAtual--;
                                     }
-                                    var parcelaAtualDate = new Date(data.data[i].created_at*1000);
+
+                                    var parcelaConta = eval(Number(data.data[i].parcela_atual) + Number(parcelaAtual));
+                                    if (data.data[i].parcela_atual <= 1) {
+                                        if (data.data[i].n_parcelas > 1) {
+                                            template.find( ".dadosAtual" ).html(parcelaConta);
+                                        } else {
+                                            template.find( ".dadosAtual" ).html("-");
+                                            template.find( ".dadosParcelas" ).html("-");
+                                            template.find( ".dadosValor" ).html("-");
+                                            template.addClass("semParcelas");
+                                        }
+                                    } else {
+                                        template.find( ".dadosAtual" ).html(data.data[i].parcela_atual);
+                                    }
+
+                                    if (!template.hasClass("semParcelas") && parcelaConta-1 >= data.data[i].n_parcelas && data.data[i].n_parcelas > 1) {
+                                        template.addClass("vencido");
+                                        template.find( ".dadosAtualTd" ).addClass("tooltip").attr("data-title", "Parcelas já finalizadas!");
+                                        template.find( ".dadosAtual" ).html(data.data[i].n_parcelas);
+                                    } else if (!template.hasClass("semParcelas") && parcelaConta-1 < data.data[i].n_parcelas && data.data[i].n_parcelas > 1) {
+                                        template.find( ".dadosAtualTd" ).addClass("tooltip").attr("data-title", "Próximo vencimento em: " + parcelaAtualDate2);
+                                    } else if (template.hasClass("semParcelas")) {
+                                        template.find( ".dadosAtualTd" ).removeClass("tooltip");
+                                    }
+
+                                    template.attr("id", data.data[i].id);
+                                });
+
+                                carregou_item = 1;
+                                if (carregou < carregouTotal) {
+                                    carregou = carregou + 1;
+                                }
+                                carregando(carregou, carregou_item);
+
+                                if (carregou >= carregouTotal) {
+                                    lerTotaisEntradaESaida();
+                                }
+
+                                if (data.data.length >= 1) {
+                                    el.find('.inANDout .inANDoutNada').addClass("inANDoutNadaOff");
                                 } else {
-                                    var parcelaAtualDate2 = new Date(data.data[i].created_at*1000);
-                                    if (parcelaAtualDate2.getMonth() < new Date().getMonth()+1) {
-                                        var diferencaParcelas = new Date().getMonth()+1 - parcelaAtualDate2.getMonth();
-                                        parcelaAtualDate2.setMonth(parcelaAtualDate2.getMonth() + diferencaParcelas);
-                                    } else {
-                                        parcelaAtualDate2.setMonth(new Date().getMonth()+1);
-                                    }
-                                    parcelaAtualDate2.setHours(0, 0, 0);
-                                    parcelaAtualDate2.setMilliseconds(0);
-                                    var parcelaAtualDate2 = toDateBR(parcelaAtualDate2/1000|0);
-                                    var parcelaAtualDate = new Date(data.data[i].created_at*1000);
+                                    el.find('.inANDout .inANDoutNada').removeClass("inANDoutNadaOff");
                                 }
+                                el.find(".inANDoutCarregando").removeClass("loading_waiting");
 
-
-                                var parcelaAtualDateDay = parcelaAtualDate.getDate();
-                                var parcelaAtualDateMonth = parcelaAtualDate.getMonth()+1;
-                                var parcelaAtualDateYear = parcelaAtualDate.getFullYear();
-
-                                var parcelaAtual = eval(new Date().getMonth()+1) - parcelaAtualDateMonth
-                                    + (12 * (new Date().getFullYear() - parcelaAtualDateYear));
-
-                                if(new Date().getDate() < parcelaAtualDateDay){
-                                    parcelaAtual--;
-                                }
-
-                                var parcelaConta = eval(Number(data.data[i].parcela_atual) + Number(parcelaAtual));
-                                if (data.data[i].parcela_atual <= 1) {
-                                    if (data.data[i].nParcelas > 1) {
-                                        template.find( ".dadosAtual" ).html(parcelaConta);
-                                    } else {
-                                        template.find( ".dadosAtual" ).html("-");
-                                        template.find( ".dadosParcelas" ).html("-");
-                                        template.find( ".dadosValor" ).html("-");
-                                        template.addClass("semParcelas");
-                                    }
-                                } else {
-                                    template.find( ".dadosAtual" ).html(data.data[i].parcela_atual);
-                                }
-
-                                if (!template.hasClass("semParcelas") && parcelaConta-1 >= data.data[i].n_parcelas && data.data[i].n_parcelas > 1) {
-                                    template.addClass("vencido");
-                                    template.find( ".dadosAtualTd" ).addClass("tooltip").attr("data-title", "Parcelas já finalizadas!");
-                                    template.find( ".dadosAtual" ).html(data.data[i].n_parcelas);
-                                } else if (!template.hasClass("semParcelas") && parcelaConta-1 < data.data[i].n_parcelas && data.data[i].n_parcelas > 1) {
-                                    template.find( ".dadosAtualTd" ).addClass("tooltip").attr("data-title", "Próximo vencimento em: " + parcelaAtualDate2);
-                                } else if (template.hasClass("semParcelas")) {
-                                    template.find( ".dadosAtualTd" ).removeClass("tooltip");
-                                }
-
-                                template.attr("id", data.data[i].id);
-                            });
-
-                            carregou_item = 1;
-                            if (carregou < carregouTotal) {
-                                carregou = carregou + 1;
-                            }
-                            carregando(carregou, carregou_item);
-
-                            if (carregou >= carregouTotal) {
-                                lerTotaisEntradaESaida();
-                            }
-
-                            if (data.data.length >= 1) {
-                                el.find('.inANDout .inANDoutNada').addClass("inANDoutNadaOff");
+                                el.find(".inANDoutData").removeClass("inANDoutDataLoader");
+                                el.find(".inANDoutTotal").removeClass("inANDoutTotalLoader");
+                                el.find(".inANDoutParcelas").removeClass("inANDoutParcelasLoader");
+                                el.find(".inANDoutAtual").removeClass("inANDoutAtualLoader");
+                                el.find(".inANDoutValor").removeClass("inANDoutValorLoader");
+                                el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader");
+                                el.find(".inANDoutPaginacao").removeClass("paginacaoTravada");
                             } else {
-                                el.find('.inANDout .inANDoutNada').removeClass("inANDoutNadaOff");
+                                erroNoSistema(data);
                             }
-                            el.find(".inANDoutCarregando").removeClass("loading_waiting");
-
-                            el.find(".inANDoutData").removeClass("inANDoutDataLoader");
-                            el.find(".inANDoutTotal").removeClass("inANDoutTotalLoader");
-                            el.find(".inANDoutParcelas").removeClass("inANDoutParcelasLoader");
-                            el.find(".inANDoutAtual").removeClass("inANDoutAtualLoader");
-                            el.find(".inANDoutValor").removeClass("inANDoutValorLoader");
-                            el.find(".inANDoutTipo").removeClass("inANDoutTipoLoader");
-                            el.find(".inANDoutPaginacao").removeClass("paginacaoTravada");
-
                         },
                         error: function (data) {
                             erroNoSistema(data);
@@ -3729,7 +3876,7 @@
                         dataType: 'json',
                         data: { page: window.pageEntradaESaida, page_size: window.itemsPageEntradaESaida, data_inicio: window.firstTimestamp, data_fim: window.lastTimestamp },
                         beforeSend: function (data) {
-                            data.setRequestHeader("Authorization", "Bearer NOvgX6zpAh8F0JvZhk2EVV1RxzUk7JDrvJJC2x9lFO3mzz9Lm3rgPGAFyKp6");
+                            data.setRequestHeader("Authorization", window.token);
                         },
                         success: function (data) {
                             console.log("---------------------------------");
@@ -3893,9 +4040,9 @@
                         url: window.homepath + "objetivos",
                         method: 'GET',
                         dataType: 'json',
-                        data: { page: pagina, orderBy: ordenacao },
+                        data: { page: pagina, orderBy: ordenacao, page_size: window.itemsPageObjetivos},
                         beforeSend: function (data) {
-                            data.setRequestHeader("Authorization", "Bearer NOvgX6zpAh8F0JvZhk2EVV1RxzUk7JDrvJJC2x9lFO3mzz9Lm3rgPGAFyKp6");
+                            data.setRequestHeader("Authorization", window.token);
                         },
                         success: function (data) {
                             console.log("---------------------------------");
@@ -3903,101 +4050,105 @@
                             console.log(data);
 
 
-                            var paginas = Math.ceil(data.pagination.total / data.pagination.per_page);
-                            if (paginas > 1) {
-                                el.find(".objetivosPaginacao").html("Página: ");
-                                for (i = 1; i <= paginas; i++) {
-                                        if (i < paginas) {
-                                            el.find(".objetivosPaginacao").append("<span id='objetivosPagina"+i+"'>" + i + "</span>, ");
-                                        } else {
-                                            el.find(".objetivosPaginacao").append("<span id='objetivosPagina"+i+"'>" + i + "</span>");
-                                        }
-                                        if (pagina == i) {
-                                            el.find("#objetivosPagina"+i).addClass("paginaSelecionada");
-                                        }
-                                }
-                            } else {
-                                el.find(".objetivosPaginacao").html("");
-                            }
-
-                            el.find(".objetivosTotalResultados").slideDown();
-                            if (data.pagination.to == "") {
-                                var itens_sendo_exibidos = "0";
-                            } else {
-                                var itens_sendo_exibidos = data.pagination.to;
-                            }
-                            if (data.pagination.total == "") {
-                                var contagem = "0";
-                            } else {
-                                var contagem = data.pagination.total;
-                            }
-                            if (itens_sendo_exibidos == 1) {
-                                if (contagem == 1) {
-                                    el.find(".objetivosTotalResultados").html("Total de " + itens_sendo_exibidos + " item sendo exibidos de um total de " + contagem + " item.");
+                            if (data.success == true) {
+                                var paginas = data.pagination.total_pages;
+                                if (paginas > 1) {
+                                    el.find(".objetivosPaginacao").html("Página: ");
+                                    for (i = 1; i <= paginas; i++) {
+                                            if (i < paginas) {
+                                                el.find(".objetivosPaginacao").append("<span id='objetivosPagina"+i+"'>" + i + "</span>, ");
+                                            } else {
+                                                el.find(".objetivosPaginacao").append("<span id='objetivosPagina"+i+"'>" + i + "</span>");
+                                            }
+                                            if (pagina == i) {
+                                                el.find("#objetivosPagina"+i).addClass("paginaSelecionada");
+                                            }
+                                    }
                                 } else {
-                                    el.find(".objetivosTotalResultados").html("Total de " + itens_sendo_exibidos + " item sendo exibidos de um total de " + contagem + " itens.");
+                                    el.find(".objetivosPaginacao").html("");
                                 }
-                            } else {
-                                if (contagem == 1) {
-                                    el.find(".objetivosTotalResultados").html("Total de " + itens_sendo_exibidos + " itens sendo exibidos de um total de " + contagem + " item.");
+
+                                el.find(".objetivosTotalResultados").slideDown();
+                                if (data.pagination.total_in_page == "") {
+                                    var itens_sendo_exibidos = "0";
                                 } else {
-                                    el.find(".objetivosTotalResultados").html("Total de " + itens_sendo_exibidos + " itens sendo exibidos de um total de " + contagem + " itens.");
+                                    var itens_sendo_exibidos = data.pagination.total_in_page;
                                 }
-                            }
-
-                            $.each(data.data, function(i, item) {
-
-                                if (data.data[i].tipo_valor_tag == "compra") {
-                                    var template = el.find("tr.objetivosDados.template").clone().appendTo(el.find(".objetivos table")).removeClass("template").addClass("objetivosDadosEntrada");
-                                } else if (data.data[i].tipo_valor_tag == "venda") {
-                                    var template = el.find("tr.objetivosDados.template").clone().appendTo(el.find(".objetivos table")).removeClass("template").addClass("objetivosDadosSaida");
+                                if (data.pagination.total == "") {
+                                    var contagem = "0";
+                                } else {
+                                    var contagem = data.pagination.total;
+                                }
+                                if (itens_sendo_exibidos == 1) {
+                                    if (contagem == 1) {
+                                        el.find(".objetivosTotalResultados").html("Total de " + itens_sendo_exibidos + " item sendo exibidos de um total de " + contagem + " item.");
+                                    } else {
+                                        el.find(".objetivosTotalResultados").html("Total de " + itens_sendo_exibidos + " item sendo exibidos de um total de " + contagem + " itens.");
+                                    }
+                                } else {
+                                    if (contagem == 1) {
+                                        el.find(".objetivosTotalResultados").html("Total de " + itens_sendo_exibidos + " itens sendo exibidos de um total de " + contagem + " item.");
+                                    } else {
+                                        el.find(".objetivosTotalResultados").html("Total de " + itens_sendo_exibidos + " itens sendo exibidos de um total de " + contagem + " itens.");
+                                    }
                                 }
 
-                                template.find( ".objetivosDadosTipo" ).html("<span class='tag'>" + data.data[i].tipo_valor_tag + "</span> <span class='valor'>" + data.data[i].tipo_valor + "</span>");
-                                template.find( ".objetivosDadosTotal" ).html(data.data[i].valor_total);
-                                template.find( ".objetivosDadosTotal" ).priceFormat({
-                                    prefix: 'R$ ',
-                                    centsSeparator: ',',
-                                    thousandsSeparator: '.'
+                                $.each(data.data, function(i, item) {
+
+                                    if (data.data[i].tipo_valor_tag == "compra") {
+                                        var template = el.find("tr.objetivosDados.template").clone().appendTo(el.find(".objetivos table")).removeClass("template").addClass("objetivosDadosEntrada");
+                                    } else if (data.data[i].tipo_valor_tag == "venda") {
+                                        var template = el.find("tr.objetivosDados.template").clone().appendTo(el.find(".objetivos table")).removeClass("template").addClass("objetivosDadosSaida");
+                                    }
+
+                                    template.find( ".objetivosDadosTipo" ).html("<span class='tag'>" + data.data[i].tipo_valor_tag + "</span> <span class='valor'>" + data.data[i].tipo_valor + "</span>");
+                                    template.find( ".objetivosDadosTotal" ).html(data.data[i].valor_total);
+                                    template.find( ".objetivosDadosTotal" ).priceFormat({
+                                        prefix: 'R$ ',
+                                        centsSeparator: ',',
+                                        thousandsSeparator: '.'
+                                    });
+
+                                    var dataPrevisao = new Date(toDate(data.data[i].data_prevista));
+                                    var dataAtual = new Date();
+                                    var dataConta = Math.abs(dataAtual.getTime() - dataPrevisao.getTime());
+                                    var faltam = Math.ceil(dataConta / (1000 * 3600 * 24));
+                                    template.find( ".objetivosDadosPrevisao" ).html(faltam + " dias");
+                                    template.find( ".objetivosDadosPrevisao" ).attr("data-title", toDateBR(data.data[i].data_prevista));
+                                    template.find( ".objetivosDadosPrevisao" ).attr("date", toDateBR(data.data[i].data_prevista));
+                                    
+                                    var now = Math.round(+new Date()/1000);
+                                    if (data.data[i].data_prevista < now) {
+                                        template.find( ".objetivosDadosPrevisao" ).css("color", "red");
+                                        template.find( ".objetivosDadosPrevisao" ).html("0 dias <span class='icon-notification'></span>");
+                                        template.find( ".dadosC" ).css("pointer-events", "none").css("opacity", "0.5");
+                                    }
+
+                                    template.attr("id", data.data[i].id);
+
                                 });
 
-                                var dataPrevisao = new Date(toDate(data.data[i].data_prevista));
-                                var dataAtual = new Date();
-                                var dataConta = Math.abs(dataAtual.getTime() - dataPrevisao.getTime());
-                                var faltam = Math.ceil(dataConta / (1000 * 3600 * 24));
-                                template.find( ".objetivosDadosPrevisao" ).html(faltam + " dias");
-                                template.find( ".objetivosDadosPrevisao" ).attr("data-title", toDateBR(data.data[i].data_prevista));
-                                template.find( ".objetivosDadosPrevisao" ).attr("date", toDateBR(data.data[i].data_prevista));
-                                
-                                var now = Math.round(+new Date()/1000);
-                                if (data.data[i].data_prevista < now) {
-                                    template.find( ".objetivosDadosPrevisao" ).css("color", "red");
-                                    template.find( ".objetivosDadosPrevisao" ).html("0 dias <span class='icon-notification'></span>");
-                                    template.find( ".dadosC" ).css("pointer-events", "none").css("opacity", "0.5");
+                                carregou_item = 6;
+                                if (carregou < carregouTotal) {
+                                    carregou = carregou + 1;
                                 }
-
-                                template.attr("id", "obj" + data.data[i].id);
-
-                            });
-
-                            carregou_item = 6;
-                            if (carregou < carregouTotal) {
-                                carregou = carregou + 1;
-                            }
-                            carregando(carregou, carregou_item);
+                                carregando(carregou, carregou_item);
 
 
-                            if (data.data.length >= 1) {
-                                el.find('.objetivos .objetivosNada').addClass("objetivosNadaOff");
+                                if (data.data.length >= 1) {
+                                    el.find('.objetivos .objetivosNada').addClass("objetivosNadaOff");
+                                } else {
+                                    el.find('.objetivos .objetivosNada').removeClass("objetivosNadaOff");
+                                }
+                                el.find(".objetivosCarregando").removeClass("loading_waiting");
+
+                                el.find(".objetivosTipo").removeClass("objetivosTipoLoader");
+                                el.find(".objetivosPrazo").removeClass("objetivosPrazoLoader");
+                                el.find(".objetivosTotal").removeClass("objetivosTotalLoader");
+                                el.find(".objetivosPaginacao").removeClass("objetivosPaginacaoTravada");
                             } else {
-                                el.find('.objetivos .objetivosNada').removeClass("objetivosNadaOff");
+                                erroNoSistema(data);
                             }
-                            el.find(".objetivosCarregando").removeClass("loading_waiting");
-
-                            el.find(".objetivosTipo").removeClass("objetivosTipoLoader");
-                            el.find(".objetivosPrazo").removeClass("objetivosPrazoLoader");
-                            el.find(".objetivosTotal").removeClass("objetivosTotalLoader");
-                            el.find(".objetivosPaginacao").removeClass("objetivosPaginacaoTravada");
                         },
                         error: function (data) {
                             erroNoSistema(data);
@@ -4020,7 +4171,7 @@
                 el.find(".tooltip").trigger('mouseout');
                 el.find(".dialogSimNao").addClass('active');
                 el.find(".dialogSimNao .sim").attr("data-id", $(this).parent().parent().attr("id"));
-                el.find(".dialogSimNao .sim").attr("data-class", $(this).parent().parent().attr("class").split(' ')[1]);
+                el.find(".dialogSimNao .sim").attr("data-class", "movimentacao");
                 el.find(".dialogSimNao .itemConfirm .tag").html($(this).parent().parent().find(".dadosTipo .tag").text());
                 el.find(".dialogSimNao .itemConfirm .valor").html($(this).parent().parent().find(".dadosTipo .valor").text());
                 el.find(".dialogSimNao .itemConfirm .date").html("Cadastrado em: <span>" + $(this).parent().parent().find(".dadosData").attr("data-title") + "</span>");
@@ -4037,33 +4188,43 @@
             });
 
             $(document).on("click", ".dialogSimNao .sim",function(e){
-                el.find(".dialogSimNao").removeClass('active');
-                deletarEntradaESaida($(this).attr("data-id"), $(this).attr("data-class"));
+                if (el.find(".dialogSimNao .sim").attr("data-class") == "movimentacao"){
+                    el.find(".dialogSimNao").removeClass('active');
+                    deletarEntradaESaida($(this).attr("data-id"));
+                }
             });
 
-            function deletarEntradaESaida(id, table2) {
-                if (table2 == "dadosEntrada"){
-                    var table = "entrada";
-                } else if (table2 == "dadosSaida"){
-                    var table = "saida";
-                }
+            function deletarEntradaESaida(id) {
                 $.ajax({
-                    url: window.homepath + "ajax/deletarEntradaESaida.php",
-                    method: 'POST',
+                    url: window.homepath + "movimentacoes/" + id,
+                    method: 'DELETE',
                     dataType: 'json',
-                    data: { id: id, table: table },
+                    data: {},
+                    beforeSend: function (data) {
+                        data.setRequestHeader("Authorization", window.token);
+                    },
                     success: function (data) {
                         console.log("---------------------------------");
                         console.log("deletarEntradaESaida");
                         console.log(data);
 
-                        if (el.find(".dados").not(".template").length > 1) {
-                            lerEntradaESaida(window.pageEntradaESaida, window.ordemEntradaESaida, window.firstTimestamp, window.lastTimestamp);
-                        } else {
-                            lerEntradaESaida("1", window.ordemEntradaESaida, window.firstTimestamp, window.lastTimestamp);
-                        }
+                        if (data.success == true) {
+                            if (el.find(".dados").not(".template").length > 1) {
+                                lerEntradaESaida(window.pageEntradaESaida, window.ordemEntradaESaida, window.firstTimestamp, window.lastTimestamp);
+                            } else {
+                                lerEntradaESaida("1", window.ordemEntradaESaida, window.firstTimestamp, window.lastTimestamp);
+                            }
 
-                        lerUltimas();
+                            lerUltimas();
+                        } else {
+                            if (typeof(data.message) == "object"){
+                                $.each(data.message, function(i, item) {
+                                    tooltipalertTop(el.find("#"+id+" .dadosOpcoes .dadosX"), item);
+                                });
+                            } else {
+                                tooltipalertTop(el.find("#"+id+" .dadosOpcoes .dadosX"), data.message);
+                            }
+                        }
                     },
                     error: function (data) {
                         console.log("---------------------------------");
@@ -4080,7 +4241,8 @@
             $(document).on("click", ".objetivos .objetivosDados:not('.objetivosEditando') .dadosX",function(e){
                 el.find(".tooltip").trigger('mouseout');
                 el.find(".dialogSimNao").addClass('active');
-                el.find(".dialogSimNao .sim").attr("data-id", $(this).parent().parent().attr("id").substring(3));
+                el.find(".dialogSimNao .sim").attr("data-id", $(this).parent().parent().attr("id"));
+                el.find(".dialogSimNao .sim").attr("data-class", "objetivos");
                 el.find(".dialogSimNao .itemConfirm .tag").html($(this).parent().parent().find(".objetivosDadosTipo .tag").text());
                 el.find(".dialogSimNao .itemConfirm .valor").html($(this).parent().parent().find(".objetivosDadosTipo .valor").text());
                 el.find(".dialogSimNao .itemConfirm .date").html("Prazo termina em: <span>" + $(this).parent().parent().find(".objetivosDadosPrevisao").attr("data-title") + "</span>");
@@ -4093,35 +4255,50 @@
             });
 
             $(document).on("click", ".dialogSimNao .sim",function(e){
-                el.find(".dialogSimNao").removeClass('active');
-                deletarObjetivos($(this).attr("data-id"));
+                if (el.find(".dialogSimNao .sim").attr("data-class") == "objetivos"){
+                    el.find(".dialogSimNao").removeClass('active');
+                    deletarObjetivos($(this).attr("data-id"));
+                }
             });
 
             function deletarObjetivos(id) {
                 $.ajax({
-                    url: window.homepath + "ajax/deletarObjetivos.php",
-                    method: 'POST',
+                    url: window.homepath + "objetivos/" + id,
+                    method: 'DELETE',
                     dataType: 'json',
-                    data: { id: id },
+                    data: {},
+                    beforeSend: function (data) {
+                        data.setRequestHeader("Authorization", window.token);
+                    },
                     success: function (data) {
                         console.log("---------------------------------");
                         console.log("deletarObjetivos");
                         console.log(data);
 
-                        if (el.find(".objetivosDados").not(".template").length > 1) {
-                            lerObjetivos(window.pageObjetivos, window.ordemObjetivos);
-                        } else {
-                            lerObjetivos("1", window.ordemObjetivos);
-                        }
+                        if (data.success == true){
+                            if (el.find(".objetivosDados").not(".template").length > 1) {
+                                lerObjetivos(window.pageObjetivos, window.ordemObjetivos);
+                            } else {
+                                lerObjetivos("1", window.ordemObjetivos);
+                            }
 
-                        lerUltimas();
+                            lerUltimas();
+                        } else {
+                            if (typeof(data.message) == "object"){
+                                $.each(data.message, function(i, item) {
+                                    tooltipalertTop(el.find("#"+id+" .objetivosDadosOpcoes .dadosX"), item);
+                                });
+                            } else {
+                                tooltipalertTop(el.find("#"+id+" .objetivosDadosOpcoes .dadosX"), data.message);
+                            }
+                        }
                     },
                     error: function (data) {
                         console.log("---------------------------------");
                         console.log("deletarObjetivos");
                         console.log("ERRO:");
                         console.log(data);
-                        tooltipalertTop(el.find("#obj"+id+" .objetivosDadosOpcoes .dadosX"), 'Erro no sistema, tente mais tarde.');
+                        tooltipalertTop(el.find("#"+id+" .objetivosDadosOpcoes .dadosX"), 'Erro no sistema, tente mais tarde.');
                     },
                 });
             }
@@ -4416,48 +4593,38 @@
                 //INICIO //////////////////////////////////////////////
                 if (el.find(".editando").length >= 1 && tecla != "esc") {
                     if (el.find(".editando")[0].className.indexOf("dadosEntrada") > -1) {
-                        $.ajax({
-                            url: window.homepath + "ajax/editarEntrada.php",
-                            method: 'POST',
-                            dataType: 'json',
-                            data: { id: id, tipoValor: el.find(".editando .dadosTipoEdit").val(), valorTotal: valorTotalBD, nParcelas: el.find(".editando .dadosParcelasEdit").val(), parcelaAtual: el.find(".editando .dadosAtualEdit").val(), valorParcela: valorParcelaBD },
-                            success: function (data) {
-                                console.log("---------------------------------");
-                                console.log("editarEntrada");
-                                console.log(data);
-
-                                el.find(".dados#" + id).addClass("pisca");
-                                setTimeout(function() {
-                                    el.find(".dados#" + id).removeClass("pisca");
-                                    el.removeClass("travado");
-                                }, 1000);
-                            },
-                            error: function (data) {
-                                erroNoSistema(data);
-                            },
-                        });
+                        var tipo_movimentacao = "entrada";
                     } else if (el.find(".editando")[0].className.indexOf("dadosSaida") > -1 && tecla != "esc") {
-                        $.ajax({
-                            url: window.homepath + "ajax/editarSaida.php",
-                            method: 'POST',
-                            dataType: 'json',
-                            data: { id: el.find(".editando").attr("id"), tipoValor: el.find(".editando .dadosTipoEdit").val(), valorTotal: valorTotalBD, nParcelas: el.find(".editando .dadosParcelasEdit").val(), parcelaAtual: el.find(".editando .dadosAtualEdit").val(), valorParcela: valorParcelaBD },
-                            success: function (data) {
-                                console.log("---------------------------------");
-                                console.log("editarSaida");
-                                console.log(data);
+                        var tipo_movimentacao = "saida";
+                    }
+                    $.ajax({
+                        url: window.homepath + "movimentacoes/" + id,
+                        method: 'PUT',
+                        dataType: 'json',
+                        data: { tipo_movimentacao: tipo_movimentacao, tipo_valor: el.find(".editando .dadosTipoEdit").val(), valor_total: valorTotalBD, n_parcelas: el.find(".editando .dadosParcelasEdit").val(), parcela_atual: el.find(".editando .dadosAtualEdit").val(), valor_parcela: valorParcelaBD },
+                        beforeSend: function (data) {
+                            data.setRequestHeader("Authorization", window.token);
+                        },
+                        success: function (data) {
+                            console.log("---------------------------------");
+                            console.log("editarMovimentação");
+                            console.log(data);
 
+                            if (data.success == true){
                                 el.find(".dados#" + id).addClass("pisca");
                                 setTimeout(function() {
                                     el.find(".dados#" + id).removeClass("pisca");
                                     el.removeClass("travado");
                                 }, 1000);
-                            },
-                            error: function (data) {
+                            } else {
                                 erroNoSistema(data);
-                            },
-                        });
-                    }
+                            }
+
+                        },
+                        error: function (data) {
+                            erroNoSistema(data);
+                        },
+                    });
                 } else {
                     el.find(".dados#" + id).addClass("piscaEsc");
                     setTimeout(function() {
@@ -4595,17 +4762,19 @@
             });
 
             function editObjetivos(e, thisId, tecla) {
-                var id = thisId["0"].id.substring(3);
+                var id = thisId["0"].id;
+
+                console.log(id);
 
                 if (tecla != "esc") {
-                    window.voltarObjetivosTipo = el.find("#obj"+id+" .objetivosDadosTipo .valor").html();
-                    el.find("#obj"+id+" .objetivosDadosTotal").unpriceFormat();
-                    window.voltarObjetivosTotal = el.find("#obj"+id+" .objetivosDadosTotal").html().replace('R$ ', '');
-                    window.voltarObjetivosPrevisao = el.find("#obj"+id+" .objetivosDadosPrevisao").html();
+                    window.voltarObjetivosTipo = el.find("#"+id+" .objetivosDadosTipo .valor").html();
+                    el.find("#"+id+" .objetivosDadosTotal").unpriceFormat();
+                    window.voltarObjetivosTotal = el.find("#"+id+" .objetivosDadosTotal").html().replace('R$ ', '');
+                    window.voltarObjetivosPrevisao = el.find("#"+id+" .objetivosDadosPrevisao").html();
                 }
 
                 if (tecla == "esc") {
-                    el.find(".objetivosDados#obj" + id).addClass("objetivosEditando");
+                    el.find(".objetivosDados#" + id).addClass("objetivosEditando");
                     el.find(".objetivosEditando .objetivosDadosTipoEdit").val(window.voltarObjetivosTipo);
                     el.find(".objetivosEditando .objetivosDadosTotalEdit").val(window.voltarObjetivosTotal);
                     el.find(".objetivosEditando .objetivosDadosPrevisaoEdit").val(window.voltarObjetivosPrevisao);
@@ -4616,7 +4785,7 @@
                     voltandoEditObjetivos("no-esc");
                 } else if (el.find(".objetivosEditando").length < 1 && tecla != "esc") {
                     //INICIO //////////////////////////////////////////////
-                    el.find(".objetivosDados#obj" + id).addClass("objetivosEditando");
+                    el.find(".objetivosDados#" + id).addClass("objetivosEditando");
                     //Campo 1 - TIPO DE VALOR
                     dadosInputDadosTipoObjetivos = el.find(".objetivosEditando .objetivosDadosTipo .valor").text();
                     tagInputDadosTipoObjetivos = el.find(".objetivosEditando .objetivosDadosTipo .tag").text();
@@ -4662,7 +4831,7 @@
 
             function voltandoEditObjetivos(tecla) {
                 el.addClass("travado");
-                var id = el.find(".objetivosEditando").attr("id").substring(3);
+                var id = el.find(".objetivosEditando").attr("id");
 
                 el.find('.objetivosEditando .objetivosDadosTotalEdit').priceFormat({
                     prefix: '',
@@ -4677,37 +4846,45 @@
                     //INICIO //////////////////////////////////////////////
                     if (el.find(".objetivosEditando").length >= 1 && tecla != "esc") {
                         $.ajax({
-                            url: window.homepath + "ajax/editarObjetivos.php",
-                            method: 'POST',
+                            url: window.homepath + "objetivos/" + id,
+                            method: 'PUT',
                             dataType: 'json',
-                            data: { id: id, tipoValor: el.find(".objetivosEditando .objetivosDadosTipoEdit").val(), valorTotal: valorTotalBD, dataPrevista: dataPrevista },
+                            data: { tipo_valor: el.find(".objetivosEditando .objetivosDadosTipoEdit").val(), valor_total: valorTotalBD, data_prevista: dataPrevista },
+                            beforeSend: function (data) {
+                                data.setRequestHeader("Authorization", window.token);
+                            },
                             success: function (data) {
                                 console.log("---------------------------------");
                                 console.log("editarObjetivos");
                                 console.log(data);
 
-                                el.find(".objetivosDados#obj" + id).addClass("pisca");
-                                setTimeout(function() {
-                                    el.find(".objetivosDados#obj" + id).removeClass("pisca");
-                                    el.removeClass("travado");
-                                }, 1000);
+                                if (data.success == true){
+                                    el.find(".objetivosDados#" + id).addClass("pisca");
+                                    setTimeout(function() {
+                                        el.find(".objetivosDados#" + id).removeClass("pisca");
+                                        el.removeClass("travado");
+                                    }, 1000);
+                                } else {
+                                    erroNoSistema(data);
+                                }
+
                             },
                             error: function (data) {
                                 erroNoSistema(data);
                             },
                         });
                     } else {
-                        el.find(".objetivosDados#obj" + id).addClass("piscaEsc");
+                        el.find(".objetivosDados#" + id).addClass("piscaEsc");
                         setTimeout(function() {
-                            el.find(".objetivosDados#obj" + id).removeClass("piscaEsc");
+                            el.find(".objetivosDados#" + id).removeClass("piscaEsc");
                             el.removeClass("travado");
                         }, 1000);
                     }
                 } else {
                     tecla = "esc";
-                    el.find(".objetivosDados#obj" + id).addClass("piscaEsc");
+                    el.find(".objetivosDados#" + id).addClass("piscaEsc");
                     setTimeout(function() {
-                        el.find(".objetivosDados#obj" + id).removeClass("piscaEsc");
+                        el.find(".objetivosDados#" + id).removeClass("piscaEsc");
                         el.removeClass("travado");
                     }, 1000);
                 }

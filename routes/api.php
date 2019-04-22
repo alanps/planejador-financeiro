@@ -29,10 +29,10 @@ Route::group(['middleware'=>'auth:api'], function() {
 
 	//Objetivos
 	Route::get('objetivos', 'ObjetivoController@index');
-	Route::get('objetivos/{objetivos}', 'ObjetivoController@show');
+	Route::get('objetivos/{objetivo}', 'ObjetivoController@show');
 	Route::post('objetivos', 'ObjetivoController@store');
-	Route::put('objetivos/{objetivos}', 'ObjetivoController@update');
-	Route::delete('objetivos/{objetivos}', 'ObjetivoController@destroy');
+	Route::put('objetivos/{objetivo}', 'ObjetivoController@update');
+	Route::delete('objetivos/{objetivo}', 'ObjetivoController@destroy');
 
 
 });

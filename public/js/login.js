@@ -313,6 +313,10 @@
 			//////////////////////////////////////////
 			//função de ajax de login
 			function loginUsuario() {
+        		localStorage.setItem('token',null);
+        		window.token = null;
+        		var userData = setObject('userData', null);
+        		window.userData = userData;
 				el.find("#login").addClass("travado");
 				el.find(".registro .erro").fadeOut('fast');
 				el.find(".registro button").prop('disabled', false);
@@ -338,7 +342,11 @@
 								el.find(".loginUsuario").removeClass("backgroundBlue");
 								el.find(".loginSenha").removeClass("backgroundBlue");
 							}, 3000);
-							window.location = "planejador?token="+data.data.api_token+"&id="+data.data.id;
+							window.location = "planejador";
+        					window.token = "Bearer " + data.data.api_token;
+                    		localStorage.setItem('token', "Bearer " + data.data.api_token);
+			        		window.userData = data.data;
+			        		userData = setObject('userData', data.data);
 						} else {
 							el.find(".login .loading").hide();
 							if (loginEsconderTime == null) {

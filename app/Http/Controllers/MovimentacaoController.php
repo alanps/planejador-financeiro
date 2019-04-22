@@ -18,6 +18,41 @@ class MovimentacaoController extends Controller
         $decorators = Decorator::decorators(Movimentacao::class, $request);
         $movimentacoes = Movimentacao::with($decorators);
 
+        $orderBy = $request->orderBy;
+        if ($orderBy == "parcela_atual-desc") {
+            $movimentacoes = $movimentacoes->orderBy("parcela_atual", "desc");
+        } else if ($orderBy == "parcela_atual-asc") {
+            $movimentacoes = $movimentacoes->orderBy("parcela_atual", "asc");
+        } else if ($orderBy == "valor_parcela-asc") {
+            $movimentacoes = $movimentacoes->orderBy("valor_parcela", "asc");
+        } else if ($orderBy == "valor_parcela-desc") {
+            $movimentacoes = $movimentacoes->orderBy("valor_parcela", "desc");
+        } else if ($orderBy == "tipo_valor-asc") {
+            $movimentacoes = $movimentacoes->orderBy("tipo_valor", "asc");
+        } else if ($orderBy == "tipo_valor-desc") {
+            $movimentacoes = $movimentacoes->orderBy("tipo_valor", "desc");
+        } else if ($orderBy == "parcela_atual-asc") {
+            $movimentacoes = $movimentacoes->orderBy("parcela_atual", "asc");
+        } else if ($orderBy == "parcela_atual-desc") {
+            $movimentacoes = $movimentacoes->orderBy("parcela_atual", "desc");
+        } else if ($orderBy == "n_parcelas-asc") {
+            $movimentacoes = $movimentacoes->orderBy("n_parcelas", "asc");
+        } else if ($orderBy == "n_parcelas-desc") {
+            $movimentacoes = $movimentacoes->orderBy("n_parcelas", "desc");
+        } else if ($orderBy == "valor_total-asc") {
+            $movimentacoes = $movimentacoes->orderBy("valor_total", "asc");
+        } else if ($orderBy == "valor_total-desc") {
+            $movimentacoes = $movimentacoes->orderBy("valor_total", "desc");
+        } else if ($orderBy == "entrada_data-asc") {
+            $movimentacoes = $movimentacoes->orderBy("entrada_data", "asc");
+        } else if ($orderBy == "entrada_data-desc") {
+            $movimentacoes = $movimentacoes->orderBy("entrada_data", "desc");
+        } else if ($orderBy == "created_at-asc") {
+            $movimentacoes = $movimentacoes->orderBy("created_at", "asc");
+        } else if ($orderBy == "created_at-desc") {
+            $movimentacoes = $movimentacoes->orderBy("created_at", "desc");
+        }
+
         $tipo_movimentacao = $request->tipo_movimentacao;
         if (isset($tipo_movimentacao)) {
             $movimentacoes = $movimentacoes->where("movimentacoes.tipo_movimentacao", "=", $tipo_movimentacao);

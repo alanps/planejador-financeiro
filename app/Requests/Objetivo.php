@@ -17,25 +17,20 @@ class Objetivo extends FormRequest
     {
         //regras gerais
         $rules = [];
-        $rules["tipo_movimentacao"] = ["string", "in:entrada,saida"];
         $rules["usuario_id"] = ["numeric", "exists:users,id"];
-        $rules["tipo_valor_tag"] = ["string", "in:salario,venda,bonus,compra,cartao,emprestimo,outros"];
+        $rules["tipo_valor_tag"] = ["string", "in:compra,venda"];
         $rules["tipo_valor"] = ["string"];
         $rules["valor_total"] = ["numeric"];
-        $rules["valor_parcela"] = ["numeric"];
-        $rules["n_parcelas"] = ["numeric"];
-        $rules["parcela_atual"] = ["numeric"];
-        $rules["data_vencimento_parcela"] = ["numeric"];
-        $rules["entrada_data"] = ["numeric"];
+        $rules["data_prevista"] = ["numeric"];
+        $rules["data_conclusao"] = ["numeric"];
         
         //Se inserção de registro: método 'post'
         if ($this->isMethod('post')) {
-            $rules["tipo_movimentacao"][] = "required";
             $rules["usuario_id"][] = "required";
             $rules["tipo_valor_tag"][] = "required";
             $rules["tipo_valor"][] = "required";
             $rules["valor_total"][] = "required";
-            $rules["entrada_data"][] = "required";
+            $rules["data_prevista"][] = "required";
         }
 
 
