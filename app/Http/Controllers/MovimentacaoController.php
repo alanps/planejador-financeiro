@@ -148,15 +148,29 @@ class MovimentacaoController extends Controller
         if (isset($data_inicio) && isset($data_fim)) {
             $movimentacoes_entrada = $movimentacoes_entrada->whereBetween('created_at', [$data_inicio, $data_fim]);
         }
-        $movimentacoes_entrada = $movimentacoes_entrada->where("movimentacoes.tipo_movimentacao", "=", "entrada")->get()->toArray();
+        $movimentacoes_entrada = $movimentacoes_entrada->where("movimentacoes.tipo_movimentacao", "=", "entrada")->where("movimentacoes.n_parcelas", "=", null)->get()->toArray();
 
         //////////////////////////////
         $movimentacoes_saida = Movimentacao::select()->where("movimentacoes.usuario_id", "=", $user->id);
         if (isset($data_inicio) && isset($data_fim)) {
             $movimentacoes_saida = $movimentacoes_saida->whereBetween('created_at', [$data_inicio, $data_fim]);
         }
-        $movimentacoes_saida = $movimentacoes_saida->where("movimentacoes.tipo_movimentacao", "=", "saida")->get()->toArray();
-        
+        $movimentacoes_saida = $movimentacoes_saida->where("movimentacoes.tipo_movimentacao", "=", "saida")->where("movimentacoes.n_parcelas", "=", null)->get()->toArray();
+
+        //////////////////////////////
+        $movimentacoes_a_receber = Movimentacao::select()->where("movimentacoes.usuario_id", "=", $user->id);
+        if (isset($data_inicio) && isset($data_fim)) {
+            $movimentacoes_a_receber = $movimentacoes_a_receber->whereBetween('created_at', [$data_inicio, $data_fim]);
+        }
+        $movimentacoes_a_receber = $movimentacoes_a_receber->where("movimentacoes.tipo_movimentacao", "=", "entrada")->where("movimentacoes.n_parcelas", "<>", null)->get()->toArray();
+
+        //////////////////////////////
+        $movimentacoes_a_pagar = Movimentacao::select()->where("movimentacoes.usuario_id", "=", $user->id);
+        if (isset($data_inicio) && isset($data_fim)) {
+            $movimentacoes_a_pagar = $movimentacoes_a_pagar->whereBetween('created_at', [$data_inicio, $data_fim]);
+        }
+        $movimentacoes_a_pagar = $movimentacoes_a_pagar->where("movimentacoes.tipo_movimentacao", "=", "saida")->where("movimentacoes.n_parcelas", "<>", null)->get()->toArray();
+
         //////////////////////////////
         $movimentacoes_geral = Movimentacao::select()->where("movimentacoes.usuario_id", "=", $user->id);
         if (isset($data_inicio) && isset($data_fim)) {
@@ -167,8 +181,33 @@ class MovimentacaoController extends Controller
 
         //////////////////////////////
         $extras = array();
-        $extras["totalValoresEntrada"] = array_sum(array_column($movimentacoes_entrada, "valor_total"));
-        $extras["totalValoresSaida"] = array_sum(array_column($movimentacoes_saida, "valor_total"));
+        //////////////////////////////
+        $extras["totalValoresEntrada"] = array_sum(array_column($movimentacoes_entrada, "valor_total")) + array_sum(array_column($movimentacoes_a_receber, "valor_parcela"));
+        //////////////////////////////
+        $extras["totalValoresSaida"] = array_sum(array_column($movimentacoes_saida, "valor_total")) + array_sum(array_column($movimentacoes_a_pagar, "valor_parcela"));
+        //////////////////////////////
+        $calcTotalAReceber = 0;
+        foreach ($movimentacoes_a_receber as $aReceber) {
+            $calcParcelaAtualAReceber = $aReceber["parcela_atual"];
+            $calcNParcelasAReceber = $aReceber["n_parcelas"];
+            $calcParcelasAReceber = $aReceber["n_parcelas"] - $aReceber["parcela_atual"];
+            $calcValorParcela = $aReceber["valor_parcela"];
+            $calcAReceber = $calcParcelasAReceber * $calcValorParcela;
+            $calcTotalAReceber += $calcAReceber;
+        }
+        $extras["totalAReceber"] = $calcTotalAReceber;
+        //////////////////////////////
+        $calcTotalApagar = 0;
+        foreach ($movimentacoes_a_pagar as $aPagar) {
+            $calcParcelaAtualApagar = $aPagar["parcela_atual"];
+            $calcNParcelasApagar = $aPagar["n_parcelas"];
+            $calcParcelasApagar = $aPagar["n_parcelas"] - $aPagar["parcela_atual"];
+            $calcValorParcela = $aPagar["valor_parcela"];
+            $calcApagar = $calcParcelasApagar * $calcValorParcela;
+            $calcTotalApagar += $calcApagar;
+        }
+        $extras["totalAPagar"] = $calcTotalApagar;
+        //////////////////////////////
         $extras["itens_por_pagina"] = $page_size;
         $extras["itens_sendo_exibidos"] = $page_size;
         $extras["pagina"] = $request->page ?: 1;

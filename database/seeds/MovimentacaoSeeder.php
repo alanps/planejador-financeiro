@@ -45,9 +45,18 @@ class MovimentacaoSeeder extends Seeder
 		                  'entrada_data'   => $entrada_data[$entrada_data_key]
 		                 ];
             } else {
-            	$parcela_atual = rand(1,3);
-            	$valor_parcela = rand(5000,50000) / ($n_parcelas[$n_parcelas_key] - $parcela_atual);
-            	$valor_total = rand(5000,50000) * $n_parcelas[$n_parcelas_key];
+            	$parcela_atual_random = rand(1,3);
+        		if ($n_parcelas[$n_parcelas_key] > $parcela_atual_random){
+            		$parcela_atual = $n_parcelas[$n_parcelas_key] - $parcela_atual_random;
+            	} else {
+            		$parcela_atual = $parcela_atual_random;
+            	}
+            	if ($n_parcelas[$n_parcelas_key] - $parcela_atual > 0){
+	            	$valor_parcela = rand(5000,50000) / ($n_parcelas[$n_parcelas_key] - $parcela_atual);
+	            } else {
+	            	$valor_parcela = rand(5000,50000);
+	            }
+            	$valor_total = $valor_parcela * $n_parcelas[$n_parcelas_key];
             	
 		        $input = ['usuario_id' => 1,
 		                  'tipo_movimentacao'   => $tipo_movimentacao[$tipo_movimentacao_key], 

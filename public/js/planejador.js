@@ -3648,6 +3648,7 @@
                             console.log(data);
 
                             if (data.success == true) {
+                                window.pageEntradaESaida = pagina;
                                 var paginas = data.pagination.total_pages;
                                 if (paginas > 1) {
                                     el.find(".inANDoutPaginacao").html("Página: ");
@@ -3918,7 +3919,31 @@
                             });
                             el.find(".totalDiv").slideDown();
 
-                            carregou_item = 5;
+                            if (data.success == true) {
+                                el.find(".totalDivReceber .totalDiv_valor").html(data.extras.totalAReceber);
+                            } else {
+                                el.find(".totalDivReceber .totalDiv_valor").html("0");
+                            }
+                            //TOTAIS
+                            el.find(".totalDivReceber .totalDiv_valor").priceFormat({
+                                prefix: 'R$ ',
+                                centsSeparator: ',',
+                                thousandsSeparator: '.'
+                            });
+
+                            if (data.success == true) {
+                                el.find(".totalDivPagar .totalDiv_valor").html(data.extras.totalAPagar);
+                            } else {
+                                el.find(".totalDivPagar .totalDiv_valor").html("0");
+                            }
+                            //TOTAIS
+                            el.find(".totalDivPagar .totalDiv_valor").priceFormat({
+                                prefix: 'R$ ',
+                                centsSeparator: ',',
+                                thousandsSeparator: '.'
+                            });
+
+                                                        carregou_item = 5;
                             if (carregou < carregouTotal) {
                                 carregou = carregou + 1;
                             }
@@ -4051,6 +4076,7 @@
 
 
                             if (data.success == true) {
+                                window.pageObjetivos = pagina;
                                 var paginas = data.pagination.total_pages;
                                 if (paginas > 1) {
                                     el.find(".objetivosPaginacao").html("Página: ");
