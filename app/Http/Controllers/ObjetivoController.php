@@ -35,6 +35,8 @@ class ObjetivoController extends Controller
             $objetivos = $objetivos->orderBy("created_at", "asc");
         } else if ($orderBy == "created_at-desc") {
             $objetivos = $objetivos->orderBy("created_at", "desc");
+        } else {
+            $objetivos = $objetivos->orderBy("created_at", "desc");
         }
 
         $objetivos = $objetivos->paginate($page_size);

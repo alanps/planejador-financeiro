@@ -13,7 +13,7 @@ class UltimasController extends Controller
 
     public function index(Request $request)
     {
-        $page_size = $request->page_size ?: 10; //para mudar o offset mandar parametro "page": 2
+        $page_size = $request->page_size ?: 4; //para mudar o offset mandar parametro "page": 2
 
         $ultimasMovimentacoes = Movimentacao::select();
         $ultimasObjetivos = Objetivo::select();
@@ -25,8 +25,8 @@ class UltimasController extends Controller
             $ultimasObjetivos = $ultimasObjetivos->whereBetween('created_at', [$data_inicio, $data_fim]);
         }
 
-        $ultimasMovimentacoes = $ultimasMovimentacoes->get();
-        $ultimasObjetivos = $ultimasObjetivos->get();
+        $ultimasMovimentacoes = $ultimasMovimentacoes->orderBy("created_at", "asc")->get();
+        $ultimasObjetivos = $ultimasObjetivos->orderBy("created_at", "asc")->get();
 
         $ultimas = array_merge($ultimasMovimentacoes->toArray(), $ultimasObjetivos->toArray());
         usort($ultimas, function ($a, $b) use(&$name){

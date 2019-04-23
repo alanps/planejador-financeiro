@@ -3377,7 +3377,7 @@
                     url: window.homepath + "ultimas",
                     method: 'GET',
                     dataType: 'json',
-                    data: { data_inicio: window.firstTimestamp, data_fim: window.lastTimestamp, page_size: 4 },
+                    data: { page_size: 4 },
                     beforeSend: function (data) {
                         data.setRequestHeader("Authorization", window.token);
                     },
@@ -3391,9 +3391,13 @@
                                 if (data.data[i].tipo_movimentacao == "entrada") {
                                     var tipo_movimentacao = "Recebeu (" + data.data[i].tipo_valor_tag + ")";
                                     var tableUltima = "entradaUltima";
+                                    var dataUltima = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
+                                    var dataUltimaTitle = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
                                 } else if (data.data[i].tipo_movimentacao == "saida") {
                                     var tipo_movimentacao = "Gastou (" + data.data[i].tipo_valor_tag + ")";
                                     var tableUltima = "saidaUltima";
+                                    var dataUltima = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
+                                    var dataUltimaTitle = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
                                 } else if (!data.data[i].tipo_movimentacao) {
                                     if (data.data[i].tipo_valor_tag == "compra") {
                                         var tipo_movimentacao = "Objetivo (Compra)";
@@ -3402,10 +3406,9 @@
                                         var tipo_movimentacao = "Objetivo (Venda)";
                                         var tableUltima = "objetivoVendaUltima";
                                     }
+                                    var dataUltima = moment.unix(data.data[i].data_prevista).format("DD/MM/YY");
+                                    var dataUltimaTitle = moment.unix(data.data[i].data_prevista).format("DD/MM/YY");
                                 }
-
-                                var dataUltima = toDateBR(data.data[i].created_at, "noTime");
-                                var dataUltimaTitle = toDateBR(data.data[i].created_at, "yes");
 
                                 el.find(".ultimasNotificacoes").append("<div class='itemUltima'><span class='dataUltima tooltip' data-title='" + dataUltimaTitle + "'>" + dataUltima + "</span><span class='recebeuUltima " + tableUltima + "'>" + tipo_movimentacao + "</span><span class='tipoUltima'>" + data.data[i].tipo_valor + "</span> <span class='valorUltima'>(<span class='valorFormatUltima'>" + data.data[i].valor_total + "</span>)</span></div>");
 
@@ -3730,20 +3733,20 @@
                                     });
 
                                     if (data.data[i].tipo_movimentacao == "entrada") {
-                                        var dateEntrada = toDateBR(data.data[i].entrada_data, "noTime");
+                                        var dateEntrada = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
                                         template.find( ".dadosData" ).html(dateEntrada);
-                                        var dateEntradaTooltip = toDateBR(data.data[i].entrada_data, "noTime");
+                                        var dateEntradaTooltip = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
                                         template.find( ".dadosData" ).attr("data-title", dateEntradaTooltip);
                                     } else if (data.data[i].tipo_movimentacao == "saida") {
-                                        var dateSaida = toDateBR(data.data[i].entrada_data, "noTime");
+                                        var dateSaida = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
                                         template.find( ".dadosData" ).html(dateSaida);
-                                        var dateSaidaTooltip = toDateBR(data.data[i].entrada_data, "noTime");
+                                        var dateSaidaTooltip = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
                                         template.find( ".dadosData" ).attr("data-title", dateSaidaTooltip);
                                     }
 
-                                    var dateAdicionado = toDateBR(data.data[i].created_at, "noTime");
+                                    var dateAdicionado = moment.unix(data.data[i].created_at).format("DD/MM/YY");
                                     template.find( ".dadosCriadoEm" ).html(dateAdicionado);
-                                    var dateAdicionadoTooltip = toDateBR(data.data[i].created_at, "yes");
+                                    var dateAdicionadoTooltip = moment.unix(data.data[i].created_at).format("DD/MM/YY");
                                     template.find( ".dadosCriadoEm" ).attr("data-title", dateAdicionadoTooltip);
 
                                     if (data.data[i].data_vencimento_parcela != null && data.data[i].data_vencimento_parcela != "null"  && data.data[i].data_vencimento_parcela != undefined && data.data[i].data_vencimento_parcela != "undefined" && data.data[i].data_vencimento_parcela != 0 && data.data[i].data_vencimento_parcela != "0") {

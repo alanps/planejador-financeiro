@@ -51,6 +51,8 @@ class MovimentacaoController extends Controller
             $movimentacoes = $movimentacoes->orderBy("created_at", "asc");
         } else if ($orderBy == "created_at-desc") {
             $movimentacoes = $movimentacoes->orderBy("created_at", "desc");
+        } else {
+            $movimentacoes = $movimentacoes->orderBy("created_at", "desc");
         }
 
         $tipo_movimentacao = $request->tipo_movimentacao;
@@ -61,7 +63,7 @@ class MovimentacaoController extends Controller
         $data_inicio = $request->data_inicio;
         $data_fim = $request->data_fim;
         if (isset($data_inicio) && isset($data_fim)) {
-            $movimentacoes = $movimentacoes->whereBetween('created_at', [$data_inicio, $data_fim]);
+            $movimentacoes = $movimentacoes->whereBetween('entrada_data', [$data_inicio, $data_fim]);
         }
 
         $movimentacoes = $movimentacoes->paginate($page_size);
@@ -176,7 +178,7 @@ class MovimentacaoController extends Controller
         if (isset($data_inicio) && isset($data_fim)) {
             $movimentacoes_geral = $movimentacoes_geral->whereBetween('created_at', [$data_inicio, $data_fim]);
         }
-        $movimentacoes_geral = $movimentacoes_geral->get()->toArray();
+        $movimentacoes_geral = $movimentacoes_geral->orderBy("created_at", "desc")->get()->toArray();
 
 
         //////////////////////////////
