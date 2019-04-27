@@ -63,7 +63,7 @@ class MovimentacaoController extends Controller
         $data_inicio = $request->data_inicio;
         $data_fim = $request->data_fim;
         if (isset($data_inicio) && isset($data_fim)) {
-            $movimentacoes = $movimentacoes->whereBetween('entrada_data', [$data_inicio, $data_fim]);
+            $movimentacoes = $movimentacoes->whereBetween('created_at', [$data_inicio, $data_fim]);
         }
 
         $movimentacoes = $movimentacoes->paginate($page_size);
@@ -92,8 +92,8 @@ class MovimentacaoController extends Controller
         $input = $request->all();
 
         foreach ($input as $key => $value) {
-        	if ($input[$key] !== 0){
-        		$inputUpdate[$key] = $input[$key];
+        	if ($value !== 0 && $value != "0"){
+        		$inputUpdate[$key] = $value;
         	}
         }
 

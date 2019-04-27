@@ -51,7 +51,6 @@
 							<span class="icon-clock22 tooltip entrada30Dias disabled" data-title="Daqui a 30 dias"></span>
 						</div>
 						<input type="text" class="entradaValor tooltip-alert" maxlength="15" value="Valor Total">
-						<input type="text" class="entradaData tooltip-alert" maxlength="13" value="Data de Entrada">
 						<button class="entradaAdd tooltip-alert">Adicionar</button>
 						<img src="images/loading.svg" class="loading entrada_loading">
 					</form>
@@ -77,7 +76,6 @@
 							<span class="icon-clock22 tooltip saida30Dias disabled" data-title="Daqui a 30 dias"></span>
 						</div>
 						<input type="text" class="saidaValor tooltip-alert" maxlength="15" value="Valor Total">
-						<input type="text" class="saidaData tooltip-alert" maxlength="13" value="Data de Saída">
 						<button class="saidaAdd tooltip-alert">Adicionar</button>
 						<img src="images/loading.svg" class="loading saida_loading">
 					</form>

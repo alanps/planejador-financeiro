@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="{{ asset('fonts/icomoon/style.css') }}">
     <script src="{{ asset('js/app.js') }}"></script>
     <script src="{{ asset('libs/warp.js') }}"></script>
-	<script src="https://momentjs.com/downloads/moment.js" type="text/javascript"></script>
+	<script src="https://momentjs.com/downloads/moment-with-locales.js" type="text/javascript"></script>
 
     <?php 
     setlocale(LC_ALL, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');

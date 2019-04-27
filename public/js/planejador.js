@@ -15,6 +15,8 @@
 
         $(document).ready(function() {
 
+            moment.locale('pt-BR');
+
             //login
             var token = localStorage.getItem('token');
             var userData = getObject('userData');
@@ -626,7 +628,7 @@
             window.keyCode2;
 
             //keydown
-            $(document).on("keydown", ".objetivoData, .entradaVencimentoParcela, .saidaVencimentoParcela, .objetivosDadosPrevisaoEdit, .saidaData, .entradaData",function(event){
+            $(document).on("keydown", ".objetivoData",function(event){
                 window.valorMask = $(this).val();
 
                 window.valorMaskLengthKeyDown = $(this).val().length;
@@ -658,13 +660,13 @@
             });
 
 
-            $(document).on("input", ".objetivoData, .entradaVencimentoParcela, .saidaVencimentoParcela, .objetivosDadosPrevisaoEdit, .saidaData, .entradaData",function(event){
+            $(document).on("input", ".objetivoData",function(event){
                 window.valorMaskLengthInput = $(this).val().length;
                 window.valorMask3 = $(this).val();
             });
 
 
-            $(document).on("change", ".objetivoData, .entradaVencimentoParcela, .saidaVencimentoParcela, .objetivosDadosPrevisaoEdit, .saidaData, .entradaData",function(event){
+            $(document).on("change", ".objetivoData",function(event){
                 window.valorMaskLengthChange = $(this).val().length;
                 window.valorMask4 = $(this).val();
                 /*
@@ -733,7 +735,7 @@
             }
 
             //keyup
-            $(document).on("keyup", ".objetivoData, .entradaVencimentoParcela, .saidaVencimentoParcela, .objetivosDadosPrevisaoEdit, .saidaData, .entradaData",function(event){
+            $(document).on("keyup", ".objetivoData",function(event){
                 window.valorMask2 = $(this).val();
                 var cPos = getCursorPosition($(this));
                 window.errorPositionSelected = cPos;
@@ -1746,24 +1748,6 @@
             });
 
 
-            el.find(".entradaData").blur(function() {
-                var value = $(this).val();
-                //$(this).prop("type", "text");
-                if (value == "")
-                {
-                    $(this).val("Data de Entrada");
-                }
-            });
-
-            el.find(".entradaData").focus(function() {
-                var value = $(this).val();
-                if (value == "Data de Entrada")
-                {
-                    $(this).val("");
-                }
-            });
-
-
             $(document).on("click", ".entradaHoje",function(e){
                 if (!el.find(".entradaHoje").hasClass("disabled")) {
                     var date = ('0' + new Date().getDate()).slice(-2) + "/" + ('0' + eval(new Date().getMonth()+1)).slice(-2) + "/" + new Date().getFullYear();
@@ -1921,23 +1905,6 @@
                 } else if (value == "R$ 0,00") {
                     el.find('.saidaValor').unmask();
                     $(this).val("Valor Total");
-                }
-            });
-
-            el.find(".saidaData").blur(function() {
-                var value = $(this).val();
-                //$(this).prop("type", "text");
-                if (value == "")
-                {
-                    $(this).val("Data de Saída");
-                }
-            });
-
-            el.find(".saidaData").focus(function() {
-                var value = $(this).val();
-                if (value == "Data de Saída")
-                {
-                    $(this).val("");
                 }
             });
 
@@ -2358,16 +2325,10 @@
                     var parcelaAtual = 0;
                 }
 
-                if (nParcelas <= 1) {
-                    var entradaDataExplode = el.find(".entradaData").val().split('/');
-                    var entradaData = moment(entradaDataExplode[2]+"-"+entradaDataExplode[1]+"-"+entradaDataExplode[0]).format("X");
-                } else {
-                    var entradaDataExplode = el.find(".entradaVencimentoParcela").val().split('/');
-                    var entradaData = moment(entradaDataExplode[2]+"-"+entradaDataExplode[1]+"-"+entradaDataExplode[0]).format("X");
-                }
+                var entradaData = moment().format("X");
 
                 var dataVencimentoParcelaExplode = el.find(".entradaVencimentoParcela").val().split('/');
-                var dataVencimentoParcela = moment(dataVencimentoParcelaExplode[2]+"-"+dataVencimentoParcelaExplode[0]+"-"+dataVencimentoParcelaExplode[1]).format("X");
+                var dataVencimentoParcela = moment(dataVencimentoParcelaExplode[2]+"-"+dataVencimentoParcelaExplode[1]+"-"+dataVencimentoParcelaExplode[0]).format("X");
                 if (!isNaN(dataVencimentoParcela) == false){
                     dataVencimentoParcela = 0;
                 }
@@ -2469,29 +2430,13 @@
                         el.find(".entradaAdd").removeClass("disabled");
                     }, 3000);
                     el.find(".loading.entrada_loading").hide();
-                } else if (nParcelas <= 1 && el.find(".entradaData").val() == "" || nParcelas <= 1 && el.find(".entradaData").val() == "Data de Entrada") {
-                    el.find(".entradaData").addClass("backgroundRed");
-                    tooltipalert(el.find(".entradaData"), 'Campo obrigatório!');
-                    setTimeout(function() { 
-                        el.find(".entradaData").removeClass("backgroundRed");
-                        el.find(".entradaAdd").removeClass("disabled");
-                    }, 3000);
-                    el.find(".loading.entrada_loading").hide();
-                } else if (nParcelas <= 1 && checkDate(el.find(".entradaData").val().split("/")[0], el.find(".entradaData").val().split("/")[1], el.find(".entradaData").val().split("/")[2]) == false) {
-                    el.find(".entradaData").addClass("backgroundRed");
-                    tooltipalert(el.find(".entradaData"), 'Data inválida!');
-                    setTimeout(function() { 
-                        el.find(".entradaData").removeClass("backgroundRed");
-                        el.find(".entradaAdd").removeClass("disabled");
-                    }, 3000);
-                    el.find(".loading.entrada_loading").hide();
                 } else if (el.find(".entradaTipoValorTag").text() != "") {
 
                     $.ajax({
                         url: window.homepath + "movimentacoes",
                         method: 'POST',
                         dataType: 'json',
-                        data: { tipo_movimentacao: "entrada", usuario_id: window.userData.id, tipo_valor_tag: entradaTextoTag, tipo_valor: entradaTexto, valor_total: money, valor_parcela: moneyParcelas, n_parcelas: nParcelas, parcela_atual: parcelaAtual, data_vencimento_parcela: dataVencimentoParcela, entrada_data: entradaData },
+                        data: { tipo_movimentacao: "entrada", usuario_id: window.userData.id, tipo_valor_tag: entradaTextoTag, tipo_valor: entradaTexto, valor_total: money, valor_parcela: moneyParcelas, n_parcelas: nParcelas, parcela_atual: parcelaAtual, data_vencimento_parcela: dataVencimentoParcela },
                         beforeSend: function (data) {
                             data.setRequestHeader("Authorization", window.token);
                         },
@@ -2543,8 +2488,10 @@
                                 el.find(".inANDoutTotal").removeClass("inANDoutTotalLoader").removeClass("inANDoutTotalDESC").removeClass("inANDoutTotalASC");
 
                                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                                lerEntradaESaida("1");
-                                lerUltimas();
+                                //lerEntradaESaida("1");
+                                //lerUltimas();
+                                calendario(new Date().getMonth()+1, new Date().getFullYear());
+
 
                                 /*
                                 var template = el.find("tr.dados.template").clone().insertAfter($( ".inANDout table .template")).removeClass("template").addClass("dadosSaida");
@@ -2681,14 +2628,7 @@
                     var parcelaAtual = 0;
                 }
 
-                if (nParcelas <= 1) {
-                    var saidaDataExplode = el.find(".saidaData").val().split('/');
-                    var saidaData = moment(saidaDataExplode[2]+"-"+saidaDataExplode[1]+"-"+saidaDataExplode[0]).format("X");
-                } else {
-                    var saidaDataExplode = el.find(".saidaVencimentoParcela").val().split('/');
-                    var saidaData = moment(saidaDataExplode[2]+"-"+saidaDataExplode[1]+"-"+saidaDataExplode[0]).format("X");
-                }
-
+                var saidaData = moment().format("X");
 
                 var dataVencimentoParcelaExplode = el.find(".saidaVencimentoParcela").val().split('/');
                 var dataVencimentoParcela = moment(dataVencimentoParcelaExplode[2]+"-"+dataVencimentoParcelaExplode[1]+"-"+dataVencimentoParcelaExplode[0]).format("X");
@@ -2794,28 +2734,12 @@
                         el.find(".saidaAdd").removeClass("disabled");
                     }, 3000);
                     el.find(".loading.saida_loading").hide();
-                } else if (el.find(".saidaData").val() == "" || el.find(".saidaData").val() == "Data de Saída") {
-                    el.find(".saidaData").addClass("backgroundRed");
-                    tooltipalert(el.find(".saidaData"), 'Campo obrigatório!');
-                    setTimeout(function() { 
-                        el.find(".saidaData").removeClass("backgroundRed");
-                        el.find(".saidaAdd").removeClass("disabled");
-                    }, 3000);
-                    el.find(".loading.saida_loading").hide();
-                } else if (checkDate(el.find(".saidaData").val().split("/")[0], el.find(".saidaData").val().split("/")[1], el.find(".saidaData").val().split("/")[2]) == false) {
-                    el.find(".saidaData").addClass("backgroundRed");
-                    tooltipalert(el.find(".saidaData"), 'Data inválida!');
-                    setTimeout(function() { 
-                        el.find(".saidaData").removeClass("backgroundRed");
-                        el.find(".saidaAdd").removeClass("disabled");
-                    }, 3000);
-                    el.find(".loading.saida_loading").hide();
                 } else if (el.find(".saidaTipoValorTag").text() != "") {
                     $.ajax({
                         url: window.homepath + "movimentacoes",
                         method: 'POST',
                         dataType: 'json',
-                        data: { tipo_movimentacao: "saida", usuario_id: window.userData.id, tipo_valor_tag: saidaTextoTag, tipo_valor: saidaTexto, valor_total: money, valor_parcela: moneyParcelas, n_parcelas: nParcelas, parcela_atual: parcelaAtual, data_vencimento_parcela: dataVencimentoParcela, entrada_data: saidaData },
+                        data: { tipo_movimentacao: "saida", usuario_id: window.userData.id, tipo_valor_tag: saidaTextoTag, tipo_valor: saidaTexto, valor_total: money, valor_parcela: moneyParcelas, n_parcelas: nParcelas, parcela_atual: parcelaAtual, data_vencimento_parcela: dataVencimentoParcela },
                         beforeSend: function (data) {
                             data.setRequestHeader("Authorization", window.token);
                         },
@@ -2867,8 +2791,10 @@
                                 el.find(".inANDoutTotal").removeClass("inANDoutTotalLoader").removeClass("inANDoutTotalDESC").removeClass("inANDoutTotalASC");
 
                                 $("html, body").animate({ scrollTop: 0 }, "slow");
-                                lerEntradaESaida("1");
-                                lerUltimas();
+                                //lerEntradaESaida("1");
+                                //lerUltimas();
+                                calendario(new Date().getMonth()+1, new Date().getFullYear());
+
 
                                 /*
                                 var template = el.find("tr.dados.template").clone().insertAfter($( ".inANDout table .template")).removeClass("template").addClass("dadosSaida");
@@ -3391,13 +3317,13 @@
                                 if (data.data[i].tipo_movimentacao == "entrada") {
                                     var tipo_movimentacao = "Recebeu (" + data.data[i].tipo_valor_tag + ")";
                                     var tableUltima = "entradaUltima";
-                                    var dataUltima = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
-                                    var dataUltimaTitle = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
+                                    var dataUltima = moment.unix(data.data[i].created_at).fromNow();
+                                    var dataUltimaTitle = moment.unix(data.data[i].created_at).format("DD/MM/YY HH:mm:ss");
                                 } else if (data.data[i].tipo_movimentacao == "saida") {
                                     var tipo_movimentacao = "Gastou (" + data.data[i].tipo_valor_tag + ")";
                                     var tableUltima = "saidaUltima";
-                                    var dataUltima = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
-                                    var dataUltimaTitle = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
+                                    var dataUltima = moment.unix(data.data[i].created_at).fromNow();
+                                    var dataUltimaTitle = moment.unix(data.data[i].created_at).format("DD/MM/YY HH:mm:ss");
                                 } else if (!data.data[i].tipo_movimentacao) {
                                     if (data.data[i].tipo_valor_tag == "compra") {
                                         var tipo_movimentacao = "Objetivo (Compra)";
@@ -3406,11 +3332,11 @@
                                         var tipo_movimentacao = "Objetivo (Venda)";
                                         var tableUltima = "objetivoVendaUltima";
                                     }
-                                    var dataUltima = moment.unix(data.data[i].data_prevista).format("DD/MM/YY");
-                                    var dataUltimaTitle = moment.unix(data.data[i].data_prevista).format("DD/MM/YY");
+                                    var dataUltima = moment.unix(data.data[i].created_at).fromNow();
+                                    var dataUltimaTitle = moment.unix(data.data[i].created_at).format("DD/MM/YY HH:mm:ss");
                                 }
 
-                                el.find(".ultimasNotificacoes").append("<div class='itemUltima'><span class='dataUltima tooltip' data-title='" + dataUltimaTitle + "'>" + dataUltima + "</span><span class='recebeuUltima " + tableUltima + "'>" + tipo_movimentacao + "</span><span class='tipoUltima'>" + data.data[i].tipo_valor + "</span> <span class='valorUltima'>(<span class='valorFormatUltima'>" + data.data[i].valor_total + "</span>)</span></div>");
+                                el.find(".ultimasNotificacoes").append("<div class='itemUltima'><span class='dataUltima tooltip' data-title='"+dataUltimaTitle+"'>" + dataUltima + "</span><span class='recebeuUltima " + tableUltima + "'>" + tipo_movimentacao + "</span><span class='tipoUltima'>" + data.data[i].tipo_valor + "</span> <span class='valorUltima'>(<span class='valorFormatUltima'>" + data.data[i].valor_total + "</span>)</span></div>");
 
                                 el.find( ".ultimasNotificacoes .valorFormatUltima" ).priceFormat({
                                     prefix: 'R$ ',
@@ -3618,14 +3544,15 @@
             });
 
             //////////////////////////////////////////////
-            //função de click na páginação de ENTRADA E SAÍDA para ordenação
-            $(document).on("click", ".inANDoutPaginacao span",function(e) {
+            //click na paginação de ENTRADA E SAÍDA
+            $(document).on("click", ".inANDoutPaginacao span",function(e){
                 window.pageEntradaESaida = e.target.innerText;
+                lerEntradaESaida(window.pageEntradaESaida, window.ordemEntradaESaida, window.firstTimestamp, window.lastTimestamp);
             });
 
             //////////////////////////////////////////////
             //função de preenchimento de ENTRADA E SAÍDA
-            function lerEntradaESaida(pagina, ordenacao = "padrao", dataAdd, dataFim) {
+            function lerEntradaESaida(pagina, ordenacao = "padrao") {
                 if (ordenacao == "padrao") {
                     el.find(".inANDoutTotal").removeClass("inANDoutTotalDESC").removeClass("inANDoutTotalASC");
                     el.find(".inANDoutData").removeClass("inANDoutDataDESC").removeClass("inANDoutDataASC");
@@ -3641,7 +3568,7 @@
                         url: window.homepath + "movimentacoes",
                         method: 'GET',
                         dataType: 'json',
-                        data: { page: pagina, page_size: window.itemsPageEntradaESaida, orderBy: ordenacao, data_inicio: dataAdd, data_fim: dataFim },
+                        data: { page: pagina, page_size: window.itemsPageEntradaESaida, orderBy: ordenacao, data_inicio: window.firstTimestamp, data_fim: window.lastTimestamp },
                         beforeSend: function (data) {
                             data.setRequestHeader("Authorization", window.token);
                         },
@@ -3732,17 +3659,10 @@
                                         thousandsSeparator: '.'
                                     });
 
-                                    if (data.data[i].tipo_movimentacao == "entrada") {
-                                        var dateEntrada = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
-                                        template.find( ".dadosData" ).html(dateEntrada);
-                                        var dateEntradaTooltip = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
-                                        template.find( ".dadosData" ).attr("data-title", dateEntradaTooltip);
-                                    } else if (data.data[i].tipo_movimentacao == "saida") {
-                                        var dateSaida = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
-                                        template.find( ".dadosData" ).html(dateSaida);
-                                        var dateSaidaTooltip = moment.unix(data.data[i].entrada_data).format("DD/MM/YY");
-                                        template.find( ".dadosData" ).attr("data-title", dateSaidaTooltip);
-                                    }
+                                    var dateCreated = moment.unix(data.data[i].created_at).format("DD/MM/YY");
+                                    template.find( ".dadosData" ).html(dateCreated);
+                                    var dateCreatedTooltip = moment.unix(data.data[i].created_at).format("DD/MM/YY HH:mm:ss");
+                                    template.find( ".dadosData" ).attr("data-title", dateCreatedTooltip);
 
                                     var dateAdicionado = moment.unix(data.data[i].created_at).format("DD/MM/YY");
                                     template.find( ".dadosCriadoEm" ).html(dateAdicionado);
@@ -3780,32 +3700,58 @@
                                         }
                                         var parcelaAtualDate = new Date(data.data[i].created_at*1000);
                                     } else {
-                                        var parcelaAtualDate2 = new Date(data.data[i].created_at*1000);
-                                        if (parcelaAtualDate2.getMonth() < new Date().getMonth()+1) {
-                                            var diferencaParcelas = new Date().getMonth()+1 - parcelaAtualDate2.getMonth();
-                                            parcelaAtualDate2.setMonth(parcelaAtualDate2.getMonth() + diferencaParcelas);
+                                        var parcelaCreatedDateUnix = moment.unix(data.data[i].created_at).format("X");
+                                        var parcelaAtualDateM = moment().format("M");
+                                        var parcelaCreatedDateM = moment.unix(data.data[i].created_at).format("M");
+                                        if (parcelaCreatedDateM < moment.unix(data.data[i].created_at).add(+1, 'day').format("M")) {
+                                            var diferencaParcelas = moment.unix(parcelaCreatedDateUnix).add(+1, 'month').format("M") - moment.unix(parcelaCreatedDateUnix).format("M");
+                                            parcelaCreatedDateM = moment.unix(parcelaCreatedDateUnix).add(parcelaAtualDateM + diferencaParcelas, 'month');
                                         } else {
-                                            parcelaAtualDate2.setMonth(new Date().getMonth()+1);
+                                            parcelaCreatedDateM = moment().format("DD/MM/YY");
                                         }
-                                        parcelaAtualDate2.setHours(0, 0, 0);
-                                        parcelaAtualDate2.setMilliseconds(0);
-                                        var parcelaAtualDate2 = toDateBR(parcelaAtualDate2/1000|0);
-                                        var parcelaAtualDate = new Date(data.data[i].created_at*1000);
+                                        var parcelaCreatedDateM = moment.unix(data.data[i].created_at).format("X");
+                                    }
+
+                                    if (data.data[i].data_vencimento_parcela < moment().format("X") && data.data[i].data_vencimento_parcela != null && data.data[i].data_vencimento_parcela != 0) {
+                                        var parcelaCreatedDateTooltip = moment.unix(data.data[i].data_vencimento_parcela).format("DD/MM/YY");
+                                    }
+
+                                    if (data.data[i].data_vencimento_parcela){
+                                        var dataAtual = moment();
+                                        var dataVencimento = moment.unix(data.data[i].data_vencimento_parcela);
+                                        var calcVencimentoAtualDays = Math.floor(moment.duration(dataVencimento.diff(dataAtual)).asDays());
+                                        var calcVencimentoAtualMonths = Math.floor(moment.duration(dataVencimento.diff(dataAtual)).asMonths());
+
+                                        var parcelaAtual = 1;
+                                        if (calcVencimentoAtualDays > 0 && calcVencimentoAtualMonths <= 0){
+                                            var proximoVencimento = moment(dataVencimento).add(+1, 'month').format("DD/MM/YY");
+                                            parcelaAtual++;
+                                        } else if (calcVencimentoAtualDays <= 0 && calcVencimentoAtualMonths <= 0){
+                                            var proximoVencimentoMonthCalcVenc = Number(moment.unix(dataVencimento.format("X")).format("MM"));
+                                            var proximoVencimentoMonthCalcNow = Number(moment().format("MM"));
+                                            var diferencaMeses = Math.abs(proximoVencimentoMonthCalcVenc - proximoVencimentoMonthCalcNow);
+                                            var proximoVencimentoDaysCalcVenc = Number(moment.unix(dataVencimento.format("X")).format("MM"));
+                                            var proximoVencimentoDaysCalcNow = Number(moment().format("MM"));
+                                            var diferencaDias = Math.abs(proximoVencimentoDaysCalcVenc - proximoVencimentoDaysCalcNow);
+                                            if (diferencaMeses > 0 && diferencaDias > 0){
+                                                var proximoVencimento = moment(dataVencimento).month(proximoVencimentoMonthCalcNow).format("DD/MM/YY");
+                                            } else {
+                                                var proximoVencimento = moment(dataVencimento).format("DD/MM/YY");
+                                            }
+                                        console.log(data.data[i].id);
+                                        console.log(proximoVencimento);
+                                        } else if (calcVencimentoAtualMonths > 0){
+                                            var proximoVencimento = moment(dataVencimento).add(+1, 'month').format("DD/MM/YY");
+                                        }
+
+
+
+
                                     }
 
 
-                                    var parcelaAtualDateDay = parcelaAtualDate.getDate();
-                                    var parcelaAtualDateMonth = parcelaAtualDate.getMonth()+1;
-                                    var parcelaAtualDateYear = parcelaAtualDate.getFullYear();
+                                    var parcelaConta = Number(data.data[i].parcela_atual) + Number(parcelaAtual);
 
-                                    var parcelaAtual = eval(new Date().getMonth()+1) - parcelaAtualDateMonth
-                                        + (12 * (new Date().getFullYear() - parcelaAtualDateYear));
-
-                                    if(new Date().getDate() < parcelaAtualDateDay){
-                                        parcelaAtual--;
-                                    }
-
-                                    var parcelaConta = eval(Number(data.data[i].parcela_atual) + Number(parcelaAtual));
                                     if (data.data[i].parcela_atual <= 1) {
                                         if (data.data[i].n_parcelas > 1) {
                                             template.find( ".dadosAtual" ).html(parcelaConta);
@@ -3824,7 +3770,7 @@
                                         template.find( ".dadosAtual" ).addClass("tooltip").attr("data-title", "Parcelas já finalizadas!");
                                         template.find( ".dadosAtual" ).html(data.data[i].n_parcelas);
                                     } else if (!template.hasClass("semParcelas") && parcelaConta-1 < data.data[i].n_parcelas && data.data[i].n_parcelas > 1) {
-                                        template.find( ".dadosAtual" ).addClass("tooltip").attr("data-title", "Próximo vencimento em: " + parcelaAtualDate2);
+                                        template.find( ".dadosAtual" ).addClass("tooltip").attr("data-title", "Próximo vencimento em: " + proximoVencimento);
                                     } else if (template.hasClass("semParcelas")) {
                                         template.find( ".dadosAtual" ).removeClass("tooltip");
                                     }
@@ -3960,11 +3906,6 @@
                 });
             }
 
-            //////////////////////////////////////////////
-            //click na paginação de ENTRADA E SAÍDA
-            $(document).on("click", ".inANDoutPaginacao span",function(event){
-                lerEntradaESaida($(this).attr("id").replace('inANDoutPagina',''), window.ordemEntradaESaida, window.firstTimestamp, window.lastTimestamp);
-            });
 
             //////////////////////////////////////////////
             //função de ordenação de OBJETIVOS pelo prazo

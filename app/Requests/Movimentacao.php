@@ -22,8 +22,8 @@ class Movimentacao extends FormRequest
         $rules["tipo_valor_tag"] = ["string", "in:salario,venda,bonus,compra,cartao,emprestimo,outros"];
         $rules["tipo_valor"] = ["string"];
         $rules["valor_total"] = ["numeric"];
-        $rules["valor_parcela"] = ["numeric"];
         $rules["n_parcelas"] = ["numeric"];
+        $rules["valor_parcela"] = ["numeric"];
         $rules["parcela_atual"] = ["numeric"];
         $rules["data_vencimento_parcela"] = ["numeric"];
         $rules["entrada_data"] = ["numeric"];
@@ -35,7 +35,11 @@ class Movimentacao extends FormRequest
             $rules["tipo_valor_tag"][] = "required";
             $rules["tipo_valor"][] = "required";
             $rules["valor_total"][] = "required";
-            $rules["entrada_data"][] = "required";
+            $rules["valor_parcela"][] = "required_with:n_parcelas";
+            $rules["parcela_atual"][] = "required_with:n_parcelas";
+            $rules["parcela_atual"][] = "lte:n_parcelas";
+            $rules["data_vencimento_parcela"][] = "numeric";
+            $rules["data_vencimento_parcela"][] = "required_with:n_parcelas";
         }
 
 

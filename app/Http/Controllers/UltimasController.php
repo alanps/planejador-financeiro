@@ -15,8 +15,8 @@ class UltimasController extends Controller
     {
         $page_size = $request->page_size ?: 4; //para mudar o offset mandar parametro "page": 2
 
-        $ultimasMovimentacoes = Movimentacao::select();
-        $ultimasObjetivos = Objetivo::select();
+        $ultimasMovimentacoes = Movimentacao::select("usuario_id","tipo_movimentacao","tipo_valor_tag","tipo_valor","tipo_valor_tag","valor_total","valor_parcela","n_parcelas","parcela_atual","data_vencimento_parcela","entrada_data","created_at","id as id_mov");
+        $ultimasObjetivos = Objetivo::select("usuario_id","tipo_valor_tag","tipo_valor","tipo_valor_tag",'data_prevista','data_conclusao',"created_at","id as id_obj");
 
         $data_inicio = $request->data_inicio;
         $data_fim = $request->data_fim;
@@ -25,12 +25,13 @@ class UltimasController extends Controller
             $ultimasObjetivos = $ultimasObjetivos->whereBetween('created_at', [$data_inicio, $data_fim]);
         }
 
-        $ultimasMovimentacoes = $ultimasMovimentacoes->orderBy("created_at", "asc")->get();
-        $ultimasObjetivos = $ultimasObjetivos->orderBy("created_at", "asc")->get();
+        $ultimasMovimentacoes = $ultimasMovimentacoes->orderBy("created_at", "asc")->get()->toArray();
+        $ultimasObjetivos = $ultimasObjetivos->orderBy("created_at", "asc")->get()->toArray();
 
-        $ultimas = array_merge($ultimasMovimentacoes->toArray(), $ultimasObjetivos->toArray());
-        usort($ultimas, function ($a, $b) use(&$name){
-            return $a['created_at'] - $b['created_at'];
+        $ultimas = array_merge($ultimasMovimentacoes, $ultimasObjetivos);
+        usort($ultimas, function($a, $b) {
+            if($a['created_at']==$b['created_at']) return 0;
+            return $a['created_at'] < $b['created_at']?1:-1;
         });
         $ultimas = array_slice($ultimas, 0, $page_size);
 
