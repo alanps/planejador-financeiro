@@ -17,6 +17,14 @@
 			console.log("Iniciando tela de login do Planejador Financeiro.");
 			console.log("#################################################");
 
+
+            //setando os campos que usam o calendário
+            el.find('.registroDataNascimento').datepicker({
+                language: 'pt-BR',
+                minDate: new Date("1900-01-01"), // Now can select only dates, which goes after today
+                maxDate: new Date() // Now can select only dates, which goes after today
+            });
+
 			//////////////////////////////////////////////
 			//função inicial de carregamento
 		    //barra entrada em smartphone e tablet
@@ -34,6 +42,13 @@
 			//////////////////////////////////////////////
 			//chamada da função inicial de carregamento
 		    $(document).ready(function() {
+	            var token = localStorage.getItem('token');
+	            var userData = getObject('userData');
+	            if(token && userData){
+	            	window.location = "planejador";
+	                return;
+	            }
+	            
 		        carregamento();
 	    	});
 
@@ -41,130 +56,6 @@
 			    carregamento();
 			});
 
-			//////////////////////////////////////////////
-		    //eventos em inputs de data
-			var patternday = "[0-3]";
-			var patternday2 = "[0-9]";
-			var patternmonth = "[0-1]";
-			var patternmonth2 = "[0-9]";
-			var patternyear = "[1-2]";
-			var patternyear2 = "[0-9]";
-			var patternyear3 = "[0-9]";
-			var patternyear4 = "[0-9]";
-
-            el.find('.registroDataNascimento').click(function(event) {
-	          	el.find('.registroDataNascimento').mask('dD/sS/yYzZ', {'translation': {
-						d: {pattern: patternday},
-						D: {pattern: patternday2},
-						s: {pattern: patternmonth},
-						S: {pattern: patternmonth2},
-						y: {pattern: patternyear},
-						Y: {pattern: patternyear2},
-						z: {pattern: patternyear3},
-						Z: {pattern: patternyear4},
-		            }, 
-		            onChange: function(data){
-						el.find(".registroDataNascimento").attr('value', data);
-					},
-	            });
-            });
-
-            el.find('.registroDataNascimento').focus(function(event) {
-	          	el.find('.registroDataNascimento').mask('dD/sS/yYzZ', {'translation': {
-						d: {pattern: patternday},
-						D: {pattern: patternday2},
-						s: {pattern: patternmonth},
-						S: {pattern: patternmonth2},
-						y: {pattern: patternyear},
-						Y: {pattern: patternyear2},
-						z: {pattern: patternyear3},
-						Z: {pattern: patternyear4},
-		            }, 
-		            onChange: function(data){
-						el.find(".registroDataNascimento").attr('value', data);
-					},
-	            });
-            });
-
-            el.find('.registroDataNascimento').click(function() {
-				patternday = "[0-3]";
-				patternday2 = "[0-9]";
-				patternmonth = "[0-1]";
-				patternmonth2 = "[0-9]";
-				patternyear = "[1-2]";
-				patternyear2 = "[0-9]";
-				patternyear3 = "[0-9]";
-				patternyear4 = "[0-9]";
-			    $(this).select();
-			});
-
-            el.find('.registroDataNascimento').keydown(function(event) {
-            	if (event.keyCode == "46") {
-            		el.find(".registroDataNascimento").val("");
-            	}
-
-            	var data = el.find('.registroDataNascimento').val();
-            	var arr = data.split('/');
-			    var day = arr[0];
-		    	if (day == "3") {
-		    		patternday = "[3]";
-		    		patternday2 = "[0-1]";
-                	changeMaskDate();
-		    	}
-
-		    	if (day == "0") {
-		    		patternday2 = "[1-9]";
-                	changeMaskDate();
-		    	}
-
-		    	if (data.length >= 3) {
-			    	var month = arr[1];
-			    	if (month == 0) {
-			    		patternmonth = "[0-1]";
-			    		patternmonth2 = "[1-9]";
-	                	changeMaskDate();
-			    	} else if (month == 1) {
-			    		patternmonth = "[0-1]";
-			    		patternmonth2 = "[0-2]";
-	                	changeMaskDate();
-			    	}
-			    }
-
-		    	if (data.length >= 6) {
-					var year = arr[2].split(''); //terceiro digito do ano
-			    	if (year[0] == "1") {
-			    		patternyear2 = "[9]";
-			    		patternyear3 = "[0-9]";
-			    		patternyear4 = "[0-9]";
-	                	changeMaskDate();
-			    	} else if (year[0] == "2") {
-			    		patternyear2 = "[0]";
-			    		patternyear3 = "[0-2]";
-			    		patternyear4 = "[0-9]";
-	                	changeMaskDate();
-			    	}
-			    }
-
-
-            });
-
-            function changeMaskDate(e){
-				el.find('.registroDataNascimento').unmask();
-	          	el.find('.registroDataNascimento').mask('dD/sS/yYzZ', {'translation': {
-						d: {pattern: patternday},
-						D: {pattern: patternday2},
-						s: {pattern: patternmonth},
-						S: {pattern: patternmonth2},
-						y: {pattern: patternyear},
-						Y: {pattern: patternyear2},
-						z: {pattern: patternyear3},
-						Z: {pattern: patternyear4},
-		            }, 
-		            onChange: function(data){
-						el.find(".registroDataNascimento").attr('value', data);
-					},
-	            });
-            }
 
 			//////////////////////////////////////////
 			//timer da div/alert de login
@@ -221,7 +112,7 @@
 				var password = el.find(".registroSenha").val();
 				var nome = el.find(".registroNome").val();
 				var dataNascimentoExplode = el.find(".registroDataNascimento").val().split('/');
-				var dataNascimento = moment(dataNascimentoExplode[2]+"-"+dataNascimentoExplode[0]+"-"+dataNascimentoExplode[1]).format("X");
+				var dataNascimento = moment(dataNascimentoExplode[2]+"/"+dataNascimentoExplode[1]+"/"+dataNascimentoExplode[0]).format("X");
 				var profissao = el.find(".registroProfissao").val();
 				var sexo = el.find(".registroSexoOp").html();
 				el.find(".registro button").prop('disabled', true);
@@ -282,7 +173,7 @@
 				    },
 				    error: function (data, status, error) {
 				    	console.log("ERRO:");
-                 		console.log(data, status, error);
+                 		console.log(data);
 						el.find(".registro .loading").hide();
 						el.find(".registro .erro").html("Erro, tente mais tarde!");
 						el.find(".registro .erro").fadeIn('fast');
@@ -342,11 +233,11 @@
 								el.find(".loginUsuario").removeClass("backgroundBlue");
 								el.find(".loginSenha").removeClass("backgroundBlue");
 							}, 3000);
-							window.location = "planejador";
         					window.token = "Bearer " + data.data.api_token;
                     		localStorage.setItem('token', "Bearer " + data.data.api_token);
 			        		window.userData = data.data;
 			        		userData = setObject('userData', data.data);
+							window.location = "planejador";
 						} else {
 							el.find(".login .loading").hide();
 							if (loginEsconderTime == null) {
@@ -368,7 +259,7 @@
 				    },
 				    error: function (data) {
 				    	console.log("ERRO:");
-                 		console.log(data, status, error);
+                 		console.log(data);
 						el.find(".login .loading").hide();
 						el.find(".login .erro").html("Erro, tente mais tarde!");
 						el.find(".login .erro").fadeIn('fast');

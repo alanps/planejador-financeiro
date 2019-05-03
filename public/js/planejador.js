@@ -32,8 +32,9 @@
                 window.token = token;
                 setObject('userData',userData);
                 window.userData = userData;
-            }else{
+            } else {
                 window.location = window.homepath;
+                return;
             }
 
             //////////////////////////////////////////////
@@ -368,6 +369,10 @@
                         console.log(data);
 
                         if (data.success == true){
+                            localStorage.setItem('token',null);
+                            window.token = null;
+                            var userData = setObject('userData', null);
+                            window.userData = userData;
                             window.location = window.homepath;
                         } else {
                             erroNoSistema(data);

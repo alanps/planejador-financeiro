@@ -1,8 +1,11 @@
 @include('head')
 
 <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.min.css" rel="stylesheet" type="text/css">
 <script src="{{ asset('js/login.js') }}"></script>
-<script src="libs/mask/jquery.mask.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.pt-BR.js"></script>
+
 
 <section id="login">
 
@@ -39,7 +42,7 @@
             <div class="registroDiv">
                 <form class="registroForm" name="registroForm">
                     <input type="text" name="registroNome" class="registroNome" placeholder="NOME COMPLETO">
-                    <input type="text" name="registroDataNascimento" class="registroDataNascimento" placeholder="DATA DE NASCIMENTO">
+                    <input type="text" name="registroDataNascimento" class="registroDataNascimento" placeholder="DATA DE NASCIMENTO" readonly>
                     <input type="text" name="registroProfissao" class="registroProfissao" placeholder="PROFISSÃO">
                     <div class="registroSexo">
                         <span class="registroSexoOp">SEXO</span>

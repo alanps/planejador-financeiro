@@ -673,13 +673,14 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     font-size: 0.8em;
     left: 0.2em;
     top: 0.1em;
-    position: absolute;
+    position: relative;
     width: 15.5em;
     text-align: center;
 }
 
 #planejador .tela .ultimasNotificacoes span.tipoUltima {
     font-size: 0.98em;
+    margin-right: 0.5em;
 }
 
 #planejador .tela .ultimasNotificacoes span.valorUltima {
@@ -691,10 +692,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     margin: 0.4em 0.3em 0;
     background-color: rgba(89, 92, 98, 0.05);
     height: 1.4em;
+    display: flex;
 }
 
 #planejador .tela .ultimasNotificacoes span.recebeuUltima {
-    margin-left: 14.8em;
+    margin-left: 1em;
     margin-right: 0.5em;
     background-color: rgba(89, 92, 98, 0.10);
     padding: 0 0.2em;

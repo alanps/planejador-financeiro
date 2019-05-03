@@ -23,7 +23,7 @@ class MovimentacaoSeeder extends Seeder
         $entrada_data = ["1555848000","1565827200","1557230400","1582329600"];
         $tipo_movimentacao = ["entrada","saida"];
         $n_parcelas = [5,10,8,6,2,4];
-        $data_vencimento_parcela = [strtotime('+1 month',time()),strtotime('+1 week',time()),strtotime('+3 days',time()),strtotime('-3 weeks',time()),strtotime('-2 month',time()),strtotime('-10 days',time()),strtotime('-2 weeks',time())];
+        $data_vencimento_parcela = [strtotime('-2 month',time()),strtotime('-3 month',time()),strtotime('+1 month',time()),strtotime('+1 week',time()),strtotime('+3 days',time()),strtotime('-3 weeks',time()),strtotime('-2 month',time()),strtotime('-10 days',time()),strtotime('-2 weeks',time())];
 
         $faker = Faker::create();
     	foreach (range(1,17) as $index) {
@@ -46,8 +46,8 @@ class MovimentacaoSeeder extends Seeder
 		                 ];
             } else {
             	$parcela_atual_random = rand(1,3);
-        		if ($n_parcelas[$n_parcelas_key] > $parcela_atual_random){
-            		$parcela_atual = $n_parcelas[$n_parcelas_key] - $parcela_atual_random;
+        		if ($parcela_atual_random >= $n_parcelas[$n_parcelas_key]){
+            		$parcela_atual = 1;
             	} else {
             		$parcela_atual = $parcela_atual_random;
             	}
