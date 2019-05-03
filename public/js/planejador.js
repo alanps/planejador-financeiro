@@ -17,6 +17,13 @@
 
             moment.locale('pt-BR');
 
+            //setando os campos que usam o calendário
+            el.find('.saidaVencimentoParcela, .entradaVencimentoParcela, .objetivoData').datepicker({
+                language: 'pt-BR',
+                minDate: new Date() // Now can select only dates, which goes after today
+            });
+
+
             //login
             var token = localStorage.getItem('token');
             var userData = getObject('userData');
@@ -107,8 +114,8 @@
                     }
                     var date = new Date(ano, mes, 0);
                     var d = date.getDate();
-                    window.firstTimestamp = toTimestamp(mes + '/' + "01" + '/' + ano + ' 00:00:00');
-                    window.lastTimestamp = toTimestamp(mes + '/' + d + '/' + ano + ' 00:00:00');
+                    window.firstTimestamp = moment(ano + '/' + mes + '/' + '01').format("X");
+                    window.lastTimestamp = moment(ano + '/' + mes + '/' + d).format("X");
                     window.pageEntradaESaida = "1";
                     lerEntradaESaida(window.pageEntradaESaida, window.ordemEntradaESaida, window.firstTimestamp, window.lastTimestamp);
                     lerUltimas();
@@ -377,411 +384,6 @@
                 });
             }
 
-            //////////////////////////////////////////////
-            //eventos em inputs de data
-            //variaveis carregadas na inicialização
-            var patternday = "[0-3]";
-            var patternday2 = "[0-9]";
-            var patternmonth = "[0-1]";
-            var patternmonth2 = "[0-9]";
-            var patternyear = "[2]";
-            var patternyear2 = "[0]";
-            var patternyear3 = "[1-3]";
-            var patternyear4 = "[0-9]";
-
-            //função que seta as variaveis
-            function mascaras(event, Ithis, code) {
-
-                //Mascara da data
-                var data = Ithis.val();
-
-                if (data.length <= 0) {
-                    patternday = "[0-3]";
-                    patternday2 = "[0-9]";
-                    patternmonth = "[0-1]";
-                    patternmonth2 = "[0-9]";
-                    patternyear = "[2]";
-                    patternyear2 = "[0]";
-                    patternyear3 = "[1-3]";
-                    patternyear4 = "[0-9]";
-                }
-
-                if (data.length <= 2) {
-                    var day = data;
-                    var dia = data;
-                } else if  (data.length >= 3) {
-                    var arr = data.split('/');
-                    var day = arr[0];
-                    var dia = arr[0];
-                    var mes = arr[1];
-                    var ano = arr[2];
-                }
-
-                if (day == "0") {
-                    patternday = "[0-3]";
-                    patternday2 = "[1-9]";
-                } else if (day == "2" || day == "1") {
-                    patternday = "[0-3]";
-                    patternday2 = "[0-9]";
-                } else if (day == "3") {
-                    patternday = "[0-3]";
-                    patternday2 = "[0-1]";
-                }
-
-                if (data.length >= 2) {
-                    var daySplit = day.split('');
-                    if (daySplit[0] <= "2" && daySplit[1] == "1") {
-                        patternday = "[0-3]";
-                        patternday2 = "[0-9]";
-                    } else if (daySplit[0] <= "2" && daySplit[1] >= "2") {
-                        patternday = "[0-2]";
-                        patternday2 = "[0-9]";
-                    } else if (daySplit[0] <= "2" && daySplit[1] == "0") {
-                        patternday = "[1-3]";
-                        patternday2 = "[0-9]";
-                    } else if (daySplit[0] <= "2" && daySplit[1] == "3") {
-                        patternday = "[0-3]";
-                        patternday2 = "[0-1]";
-                    } else if (daySplit[0] == "3" && daySplit[1] <= "1") {
-                        patternday = "[0-3]";
-                        patternday2 = "[0-1]";
-                    }
-                }
-
-                if (data.length == 4) {
-                    var month = mes.split('');
-                    if (month[0] == 1) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "[0-2]";
-                    } else if (day <= 28 && month[0] == 0) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "[1-9]";
-                    } else if (month[0] == 2) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "[1-9]";
-                    } else if (day > 28 && month[0] == 0) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "^[0-1]{0,150}[3-9]{0,150}$";
-                    } else if (day == 31 && month[0] == 1) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "^[0-1]{0,150}[3-9]{0,150}$";
-                    } else if (day > 28 && day <= 30 &&month[0] == 1) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "[0-2]";
-                    }
-                } else if (data.length >= 5) {
-                    var monthSplit = mes.split('');
-                    if (monthSplit[0] == 1 && monthSplit[1] <= 2) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "[0-2]";
-                    } else if (monthSplit[0] == 0 && monthSplit[1] <= 2) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "[1-9]";
-                    } else if (monthSplit[0] == 0 && monthSplit[1] >= 3) {
-                        patternmonth = "[0]";
-                        patternmonth2 = "[1-9]";
-                    } else if (day > 28 && monthSplit[0] == 0) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "^[0-1]{0,150}[3-9]{0,150}$";
-                    } else if (day > 28 && monthSplit[0] == 1) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "[0-2]";
-                    }
-                }
-                    
-                if (data.length >= 8) {
-                    var fulldate = toTimestamp(mes + '/' + dia + '/' + new Date().getFullYear() + " 20:31:30");
-                    var nowdate = toTimestamp(new Date());
-
-                    var year = arr[2].split(''); //terceiro digito do ano
-                    if (year[2] == "1") {
-                        patternyear3 = "[1-3]";
-                        if (nowdate >= fulldate) {
-                            patternyear4 = "[8-9]";
-                        } else {
-                            patternyear4 = "[7-9]";
-                        }
-                    } else if (year[2] >= "2" && year[3] == "0") {
-                        patternyear3 = "[2-4]";
-                        patternyear4 = "[0-9]";
-                    } else if (year[2] == "4" && year[3] >= "7") {
-                        patternyear3 = "[1-4]";
-                        patternyear4 = "[0]";
-                    } else if (year[2] == "4" && year[3] < "7") {
-                        patternyear3 = "[2-4]";
-                        patternyear4 = "[0]";
-                    } else if ((year[2] == "2" || year[2] == "3") && year[3] > "0") {
-                        patternyear3 = "[2-3]";
-                        patternyear4 = "[0-9]";
-                    }  else if (year[2] == "2" && year[3] != "0") {
-                        patternyear3 = "[0-3]";
-                        patternyear4 = "[0-9]";
-                    } else {
-                        patternyear3 = "[1-4]";
-                        patternyear4 = "[0-9]";
-                    }
-               }
-
-                //Validação do dia nos meses com 28 e 30 dias
-                if (data.length <= 2) {
-                    var dia = data;
-                } else if (data.length >= 3) {
-                    var arr = data.split('/');
-                    var dia = arr[0];
-                    var mes = arr[1];
-                    var ano = arr[2];
-                    var diaSplit = dia.split('');
-                }
-                if (data.length >= 4) {
-                    var mesSplit = mes.split('');
-                }
-
-                if (mes == 02) {
-                    patternmonth = "[0-1]";
-                    patternmonth2 = "[1-9]";
-                    if (dia >= 21) {
-                        patternday = "[0-2]";
-                        patternday2 = "[0-8]";
-                    } else if (dia == 20) {
-                        patternday = "[1-2]";
-                        patternday2 = "[0-8]";
-                    } else if (dia <= 18 && dia >= 11) {
-                        patternday = "[0-2]";
-                        patternday2 = "[0-9]";
-                    } else if (dia <= 10 && dia >= 09) {
-                        patternday = "[1-2]";
-                        patternday2 = "[1-9]";
-                    } else if (dia <= 08) {
-                        patternday = "[0-2]";
-                        patternday2 = "[1-9]";
-                    }
-                } else if (mes == 04 || mes == 06 || mes == 09 || mes == 11) {
-                    patternmonth = "[0]";
-                    patternmonth2 = "[1-9]";
-                    if (dia == 30) {
-                        patternday = "[0-3]";
-                        patternday2 = "[0]";
-                    } else if (dia == 31) {
-                        patternday = "[0-3]";
-                        patternday2 = "[0]";
-                    } else if (dia <= 29 && dia >= 21) {
-                        patternday = "[0-2]";
-                        patternday2 = "[0-9]";
-                    } else if (dia == 20) {
-                        patternday = "[1-3]";
-                        patternday2 = "[0-9]";
-                    } else if (dia <= 19 && dia <= 11) {
-                        patternday = "[0-2]";
-                        patternday2 = "[0-9]";
-                    } else if (dia == 10) {
-                        patternday = "[1-3]";
-                        patternday2 = "[0-9]";
-                    } else if (dia <= 09) {
-                        patternday = "[0-2]";
-                        patternday2 = "[0-9]";
-                    }
-                    if (mes == 11) {
-                        patternmonth = "[0-1]";
-                        patternmonth2 = "[0-2]";
-                    }
-                } else if (mes == 01 || mes == 03 || mes == 05 || mes == 07 || mes == 08 || mes == 10 || mes == 12) {
-                    if (dia == 31) {
-                        patternday = "[0-3]";
-                        patternday2 = "[0-1]";
-                    } else if (dia == 30) {
-                        patternday = "[1-3]";
-                        patternday2 = "[0-1]";
-                    } else if (dia <= 29 && dia >= 22) {
-                        patternday = "[0-2]";
-                        patternday2 = "[0-9]";
-                    } else if (dia == 21 || dia == 20) {
-                        patternday = "[0-3]";
-                        patternday2 = "[0-9]";
-                    } else if (dia <= 19 && dia >= 12) {
-                        patternday = "[0-2]";
-                        patternday2 = "[0-9]";
-                    } else if (dia <= 11) {
-                        patternday = "[0-3]";
-                        patternday2 = "[0-9]";
-                    } else if (dia <= 09) {
-                        patternday = "[0-2]";
-                        patternday2 = "[0-9]";
-                    } else if (dia == 01) {
-                        patternday = "[0-3]";
-                        patternday2 = "[0-9]";
-                    }
-                }
-
-            }
-
-            //função que adiciona a mascara
-            function changeMaskDate(e, options) {
-                el.find("."+e.target.classList["0"]).mask('dD/sS/yYzZ', options);
-            }
-
-            //variaveis carregadas na inicialização
-            window.ifMask;
-            window.valorMask = "";
-            window.keyCode;
-            window.keyCodeInvalid;
-            window.errorPosition;
-            window.keyCode2;
-
-            //keydown
-            $(document).on("keydown", ".objetivoData",function(event){
-                window.valorMask = $(this).val();
-
-                window.valorMaskLengthKeyDown = $(this).val().length;
-
-                if (event.keyCode == "96"){
-                    window.keyCode = 0;
-                } else if (event.keyCode == "97"){
-                    window.keyCode = 1;
-                } else if (event.keyCode == "98"){
-                    window.keyCode = 2;
-                } else if (event.keyCode == "99"){
-                    window.keyCode = 3;
-                } else if (event.keyCode == "100"){
-                    window.keyCode = 4;
-                } else if (event.keyCode == "101"){
-                    window.keyCode = 5;
-                } else if (event.keyCode == "102"){
-                    window.keyCode = 6;
-                } else if (event.keyCode == "103"){
-                    window.keyCode = 7;
-                } else if (event.keyCode == "104"){
-                    window.keyCode = 8;
-                } else if (event.keyCode == "105"){
-                    window.keyCode = 9;
-                } else {
-                    window.keyCode = String.fromCharCode(event.keyCode);
-                }
-
-            });
-
-
-            $(document).on("input", ".objetivoData",function(event){
-                window.valorMaskLengthInput = $(this).val().length;
-                window.valorMask3 = $(this).val();
-            });
-
-
-            $(document).on("change", ".objetivoData",function(event){
-                window.valorMaskLengthChange = $(this).val().length;
-                window.valorMask4 = $(this).val();
-                /*
-                console.log("valorMaskLengthChange: " + window.valorMaskLengthChange);
-                console.log("val2: " + window.valorMask2);
-                console.log("val: " + window.valorMask);
-                console.log("valorMask3: " + window.valorMask3);
-                console.log("keyup: " + window.valorMaskLengthKeyUp);
-                console.log("keyinput: " + window.valorMaskLengthInput);
-                console.log("keydown: " + window.valorMaskLengthKeyDown);
-                console.log("keychange: " + window.valorMaskLengthChange);
-                console.log("valorMask4: " + window.valorMask4);
-                console.log("valorMask: " + window.valorMask);
-                console.log("$(this): " + $(this).val());
-                console.log("keyCode: " + window.keyCode);
-                console.log("keyCode2: " + window.keyCode2);
-                */
-                var mask3 = window.valorMask3.split('/');
-                if (window.valorMask != window.valorMask3 && window.valorMask3.slice(-1) == window.keyCode && window.valorMaskLengthChange < 10 && window.valorMaskLengthChange > 4) {
-                    if (mask3[0] > 28 && window.keyCode2 == window.keyCode && window.keyCode == 2 && window.valorMaskLengthChange < 6) {
-                        $(this).val(window.valorMask3.slice(0, -1));
-                    }
-                }
-            });
-
-            //keyup
-            function maskDate(event) {
-                var options =  {
-                    'translation': {
-                        d: {pattern: patternday},
-                        D: {pattern: patternday2},
-                        s: {pattern: patternmonth},
-                        S: {pattern: patternmonth2},
-                        y: {pattern: patternyear},
-                        Y: {pattern: patternyear2},
-                        z: {pattern: patternyear3},
-                        Z: {pattern: patternyear4},
-                    },
-                    onInvalid: function(val, e, f, invalid, options) {
-                        var error = invalid[0];
-                        console.log ("Digit: ", error.v, " is invalid for the position: ", error.p, ". We expect something like: ", error.e);
-                        window.ifMask = "sim";
-                        window.keyCodeInvalid = error.v;
-                        window.errorPosition = error.p;
-                    },
-                };
-
-                changeMaskDate(event, options);
-            };
-
-            //keyup
-            function getCursorPosition(jqueryItem) {
-                var input = jqueryItem.get(0);
-                if (!input) return; // No (input) element found
-                if ('selectionStart' in input) {
-                    // Standard-compliant browsers
-                    return input.selectionStart;
-                } else if (document.selection) {
-                    // IE
-                    input.focus();
-                    var sel = document.selection.createRange();
-                    var selLen = document.selection.createRange().text.length;
-                    sel.moveStart('character', -input.value.length);
-                    return sel.text.length - selLen;
-                }
-            }
-
-            //keyup
-            $(document).on("keyup", ".objetivoData",function(event){
-                window.valorMask2 = $(this).val();
-                var cPos = getCursorPosition($(this));
-                window.errorPositionSelected = cPos;
-                window.valorMaskLengthKeyUp  = $(this).val().length;
-                window.valorMaskLengthKeyDown = parseInt(window.valorMaskLengthKeyDown) + parseInt(1);
-
-                //if (window.keyCode != window.keyCodeInvalid && window.errorPosition != window.errorPositionSelected && window.valorMaskLengthKeyDown != window.valorMaskLengthInput && window.ifMask != "sim") {
-                    mascaras(event, $(this));
-                //}
-
-                maskDate(event);
-
-                if (window.ifMask == "sim") {
-                    $(this).val(window.valorMask);
-                    window.ifMask = "nao";
-                    window.valorMask = "";
-                } else {
-
-                    if (event.keyCode == "96"){
-                        window.keyCode2 = 0;
-                    } else if (event.keyCode == "97"){
-                        window.keyCode2 = 1;
-                    } else if (event.keyCode == "98"){
-                        window.keyCode2 = 2;
-                    } else if (event.keyCode == "99"){
-                        window.keyCode2 = 3;
-                    } else if (event.keyCode == "100"){
-                        window.keyCode2 = 4;
-                    } else if (event.keyCode == "101"){
-                        window.keyCode2 = 5;
-                    } else if (event.keyCode == "102"){
-                        window.keyCode2 = 6;
-                    } else if (event.keyCode == "103"){
-                        window.keyCode2 = 7;
-                    } else if (event.keyCode == "104"){
-                        window.keyCode2 = 8;
-                    } else if (event.keyCode == "105"){
-                        window.keyCode2 = 9;
-                    } else {
-                        window.keyCode2 = String.fromCharCode(event.keyCode);
-                    }
-                    //el.find(".objetivoData, .entradaVencimentoParcela, .saidaVencimentoParcela").change();
-                }
-                
-
-            });
 
             //////////////////////////////////////////////
             //eventos pra chamar funções de ação
@@ -2897,7 +2499,7 @@
                 var objetivoTexto = el.find(".objetivoTipoValor2").val();
                 var objetivoTextoTag = el.find(".objetivoTipoValorTag").attr("tipo_valor_tag");
                 var arr = el.find('.objetivoData').val().split('/');
-                var dataPrevista = moment(arr[2]+"-"+arr[1]+"-"+arr[1]).format("X");
+                var dataPrevista = moment(arr[2]+"-"+arr[1]+"-"+arr[0]).format("X");
 
 
                 if (!el.find(".objetivoTipoValor").hasClass("objetivoTipoValor2")) {
@@ -3071,65 +2673,6 @@
 
             }
 
-
-            //////////////////////////////////////////////
-            //função que verifica se data é valida
-            function checkDate(day, month, year) {
-               if ((month == 4 || month == 6 || month == 9 || month == 11) && day < 30) {
-                   return true;
-               }
-               else if (month == 2 && day <= 28) {
-                   return true;
-               }
-               else if ((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) && day <= 31) {
-                   return true;
-               }
-               else {
-                   return false;
-               }
-            }
-
-            //////////////////////////////////////////////
-            //função que converte a data para timestamp
-            function toTimestamp(date){
-               var datum = Date.parse(date);
-               return datum/1000;
-            }
-
-            //////////////////////////////////////////////
-            //função que converte o timestamp para data
-            function toDate(timestamp){
-                var theDate = new Date(timestamp * 1000);
-                return (theDate.getMonth()+1) + '/' + theDate.getDate() + '/' + theDate.getFullYear();
-            }
-
-            //////////////////////////////////////////////
-            //função que converte o timestamp para data formato BR
-            function toDateBR(timestamp, time = "noTime"){
-                if (time == "noTime") {
-                    var theDate = new Date(timestamp * 1000);
-
-                    var day = ("0" + (theDate.getDate())).slice(-2);
-                    var month = ("0" + (theDate.getMonth() + 1)).slice(-2);
-                    var year = theDate.getFullYear();
-                    var date = day + "/" + month + "/" + year;
-
-                    return date;
-                } else {
-                    var theDate = new Date(timestamp * 1000);
-
-                    var day = ("0" + (theDate.getDate())).slice(-2);
-                    var month = ("0" + (theDate.getMonth() + 1)).slice(-2);
-                    var year = theDate.getFullYear();
-
-                    var hour = ("0" + (theDate.getHours())).slice(-2);;
-                    var min = ("0" + (theDate.getMinutes())).slice(-2);;
-
-                    var date = day + "/" + month + "/" + year + " " + hour + ":" + min;
-
-                    return date;
-                }
-            }
 
             //////////////////////////////////////////////
             //função de preenchimento do PERFIL DO USUARIO
@@ -3635,11 +3178,7 @@
                                         var template = el.find("tr.dados.template").clone().appendTo(el.find( ".inANDout table")).removeClass("template").addClass("dadosSaida");
                                     }
 
-                                    if (data.data[i].n_parcelas > 1) {
-                                        var totalRes = data.data[i].valor_parcela * data.data[i].n_parcelas;
-                                    } else {
-                                        var totalRes = data.data[i].valor_total;
-                                    }
+                                    var totalRes = data.data[i].valor_total;
 
                                     template.find(".dadosTotal").html(totalRes);
                                     template.find( ".dadosTotal" ).priceFormat({
@@ -3669,107 +3208,24 @@
                                     var dateAdicionadoTooltip = moment.unix(data.data[i].created_at).format("DD/MM/YY");
                                     template.find( ".dadosCriadoEm" ).attr("data-title", dateAdicionadoTooltip);
 
-                                    if (data.data[i].data_vencimento_parcela != null && data.data[i].data_vencimento_parcela != "null"  && data.data[i].data_vencimento_parcela != undefined && data.data[i].data_vencimento_parcela != "undefined" && data.data[i].data_vencimento_parcela != 0 && data.data[i].data_vencimento_parcela != "0") {
-                                        if (data.data[i].data_vencimento_parcela < Math.floor(Date.now() / 1000)) {
-                                            var parcelaAtualDate2 = new Date(data.data[i].data_vencimento_parcela*1000);
-                                            var diferencaParcelas = new Date().getMonth()+1 - parcelaAtualDate2.getMonth();
-                                            parcelaAtualDate2.setMonth(parcelaAtualDate2.getMonth() + diferencaParcelas);
-                                            parcelaAtualDate2.setHours(0, 0, 0);
-                                            parcelaAtualDate2.setMilliseconds(0);
-                                            var parcelaAtualDate2 = toDateBR(parcelaAtualDate2/1000|0);
-                                            var parcelaAtualDate = new Date(data.data[i].created_at*1000);
-                                        } else {
-                                            var parcelaAtualDate2 = toDateBR(data.data[i].data_vencimento_parcela);
-                                            var parcelaAtualDate = new Date(data.data[i].created_at*1000);
-                                        }
-                                    } else if (data.data[i].data_vencimento_parcela < Math.floor(Date.now() / 1000) && data.data[i].data_vencimento_parcela != null && data.data[i].data_vencimento_parcela != "null"  && data.data[i].data_vencimento_parcela != undefined && data.data[i].data_vencimento_parcela != "undefined" && data.data[i].data_vencimento_parcela != 0 && data.data[i].data_vencimento_parcela != "0") {
-                                        if (data.data[i].created_at < Math.floor(Date.now() / 1000)) {
-                                            var parcelaAtualDate2 = new Date(data.data[i].data_vencimento_parcela*1000);
-                                            console.log(parcelaAtualDate2);
-                                            var parcelaAtualDate2Day = ('0' + parcelaAtualDate2.getDate()).slice(-2);
-                                            var parcelaAtualDate2Month = ('0' + eval(Number(parcelaAtualDate2.getMonth())+2)).slice(-2);
-                                            var parcelaAtualDate2Year = parcelaAtualDate2.getFullYear();
-                                            var parcelaAtualDate2 = parcelaAtualDate2Day + "/" + parcelaAtualDate2Month + "/" + parcelaAtualDate2Year;
-                                        } else {
-                                            var parcelaAtualDate2 = new Date(data.data[i].created_at*1000);
-                                            console.log(parcelaAtualDate2);
-                                            var parcelaAtualDate2Day = ('0' + parcelaAtualDate2.getDate()).slice(-2);
-                                            var parcelaAtualDate2Month = ('0' + eval(Number(parcelaAtualDate2.getMonth())+2)).slice(-2);
-                                            var parcelaAtualDate2Year = parcelaAtualDate2.getFullYear();
-                                            var parcelaAtualDate2 = parcelaAtualDate2Day + "/" + parcelaAtualDate2Month + "/" + parcelaAtualDate2Year;
-                                        }
-                                        var parcelaAtualDate = new Date(data.data[i].created_at*1000);
+
+                                    var parcelaNumero = data.data[i].n_parcelas;
+                                    var parcelaAtual = data.data[i].parcela_atual;
+                                    var proximoVencimento = moment.unix(data.data[i].data_vencimento_parcela).format("DD/MM/YY");
+
+                                    if (parcelaNumero > 1) {
+                                        template.find( ".dadosAtual" ).html(parcelaAtual);
                                     } else {
-                                        var parcelaCreatedDateUnix = moment.unix(data.data[i].created_at).format("X");
-                                        var parcelaAtualDateM = moment().format("M");
-                                        var parcelaCreatedDateM = moment.unix(data.data[i].created_at).format("M");
-                                        if (parcelaCreatedDateM < moment.unix(data.data[i].created_at).add(+1, 'day').format("M")) {
-                                            var diferencaParcelas = moment.unix(parcelaCreatedDateUnix).add(+1, 'month').format("M") - moment.unix(parcelaCreatedDateUnix).format("M");
-                                            parcelaCreatedDateM = moment.unix(parcelaCreatedDateUnix).add(parcelaAtualDateM + diferencaParcelas, 'month');
-                                        } else {
-                                            parcelaCreatedDateM = moment().format("DD/MM/YY");
-                                        }
-                                        var parcelaCreatedDateM = moment.unix(data.data[i].created_at).format("X");
+                                        template.find( ".dadosAtual" ).html("-");
+                                        template.find( ".dadosParcelas" ).html("-");
+                                        template.find( ".dadosValor" ).html("-");
+                                        template.addClass("semParcelas");
                                     }
 
-                                    if (data.data[i].data_vencimento_parcela < moment().format("X") && data.data[i].data_vencimento_parcela != null && data.data[i].data_vencimento_parcela != 0) {
-                                        var parcelaCreatedDateTooltip = moment.unix(data.data[i].data_vencimento_parcela).format("DD/MM/YY");
-                                    }
-
-                                    if (data.data[i].data_vencimento_parcela){
-                                        var dataAtual = moment();
-                                        var dataVencimento = moment.unix(data.data[i].data_vencimento_parcela);
-                                        var calcVencimentoAtualDays = Math.floor(moment.duration(dataVencimento.diff(dataAtual)).asDays());
-                                        var calcVencimentoAtualMonths = Math.floor(moment.duration(dataVencimento.diff(dataAtual)).asMonths());
-
-                                        var parcelaAtual = 1;
-                                        if (calcVencimentoAtualDays > 0 && calcVencimentoAtualMonths <= 0){
-                                            var proximoVencimento = moment(dataVencimento).add(+1, 'month').format("DD/MM/YY");
-                                            parcelaAtual++;
-                                        } else if (calcVencimentoAtualDays <= 0 && calcVencimentoAtualMonths <= 0){
-                                            var proximoVencimentoMonthCalcVenc = Number(moment.unix(dataVencimento.format("X")).format("MM"));
-                                            var proximoVencimentoMonthCalcNow = Number(moment().format("MM"));
-                                            var diferencaMeses = Math.abs(proximoVencimentoMonthCalcVenc - proximoVencimentoMonthCalcNow);
-                                            var proximoVencimentoDaysCalcVenc = Number(moment.unix(dataVencimento.format("X")).format("MM"));
-                                            var proximoVencimentoDaysCalcNow = Number(moment().format("MM"));
-                                            var diferencaDias = Math.abs(proximoVencimentoDaysCalcVenc - proximoVencimentoDaysCalcNow);
-                                            if (diferencaMeses > 0 && diferencaDias > 0){
-                                                var proximoVencimento = moment(dataVencimento).month(proximoVencimentoMonthCalcNow).format("DD/MM/YY");
-                                            } else {
-                                                var proximoVencimento = moment(dataVencimento).format("DD/MM/YY");
-                                            }
-                                        console.log(data.data[i].id);
-                                        console.log(proximoVencimento);
-                                        } else if (calcVencimentoAtualMonths > 0){
-                                            var proximoVencimento = moment(dataVencimento).add(+1, 'month').format("DD/MM/YY");
-                                        }
-
-
-
-
-                                    }
-
-
-                                    var parcelaConta = Number(data.data[i].parcela_atual) + Number(parcelaAtual);
-
-                                    if (data.data[i].parcela_atual <= 1) {
-                                        if (data.data[i].n_parcelas > 1) {
-                                            template.find( ".dadosAtual" ).html(parcelaConta);
-                                        } else {
-                                            template.find( ".dadosAtual" ).html("-");
-                                            template.find( ".dadosParcelas" ).html("-");
-                                            template.find( ".dadosValor" ).html("-");
-                                            template.addClass("semParcelas");
-                                        }
-                                    } else {
-                                        template.find( ".dadosAtual" ).html(data.data[i].parcela_atual);
-                                    }
-
-                                    if (!template.hasClass("semParcelas") && parcelaConta-1 >= data.data[i].n_parcelas && data.data[i].n_parcelas > 1) {
+                                    if (!template.hasClass("semParcelas") && parcelaAtual >= parcelaNumero) {
                                         template.addClass("vencido");
                                         template.find( ".dadosAtual" ).addClass("tooltip").attr("data-title", "Parcelas já finalizadas!");
-                                        template.find( ".dadosAtual" ).html(data.data[i].n_parcelas);
-                                    } else if (!template.hasClass("semParcelas") && parcelaConta-1 < data.data[i].n_parcelas && data.data[i].n_parcelas > 1) {
+                                    } else if (!template.hasClass("semParcelas") && parcelaAtual < parcelaNumero) {
                                         template.find( ".dadosAtual" ).addClass("tooltip").attr("data-title", "Próximo vencimento em: " + proximoVencimento);
                                     } else if (template.hasClass("semParcelas")) {
                                         template.find( ".dadosAtual" ).removeClass("tooltip");
@@ -4810,7 +4266,8 @@
                 });
                 var valorTotalBD = el.find(".objetivosEditando .objetivosDadosTotalEdit").val();
                 var arr = el.find('.objetivosEditando .objetivosDadosPrevisaoEdit').val().split('/');
-                var dataPrevista = toTimestamp(arr[1] + '/' + arr[0] + '/' + arr[2] + ' 00:00:00');
+                var dataPrevista = moment(arr[2] + '/' + arr[1] + '/' + arr[0]).format("X");
+
 
                 if (checkDate(arr[0], arr[1], arr[2]) === true) {
                     //INICIO //////////////////////////////////////////////
@@ -4887,7 +4344,7 @@
                         var valPrevisao = el.find(".objetivosEditando .objetivosDadosPrevisao").attr("date");
                     }
                     var arr_2 = valPrevisao.split('/');
-                    var dadosInputobjetivosDadosPrevisao = toTimestamp(arr_2[1] + '/' + arr_2[0] + '/' + arr_2[2] + ' 00:00:00');
+                    var dadosInputobjetivosDadosPrevisao = moment(arr_2[2] + '/' + arr_2[1] + '/' + arr_2[0]).format("X");
                     var dataPrevisao = new Date(toDate(dadosInputobjetivosDadosPrevisao));
                     var dataAtual = new Date();
                     var dataConta = Math.abs(dataAtual.getTime() - dataPrevisao.getTime());
@@ -4916,6 +4373,61 @@
                     //FIM //////////////////////////////////////////////
             }
 
+
+            //////////////////////////////////////////////
+            //UTILITÁRIOS
+
+            //////////////////////////////////////////////
+            //função que verifica se data é valida
+            function checkDate(day, month, year) {
+               if ((month == 4 || month == 6 || month == 9 || month == 11) && day < 30) {
+                   return true;
+               }
+               else if (month == 2 && day <= 28) {
+                   return true;
+               }
+               else if ((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) && day <= 31) {
+                   return true;
+               }
+               else {
+                   return false;
+               }
+            }
+
+            //////////////////////////////////////////////
+            //função que converte o timestamp para data
+            function toDate(timestamp){
+                var theDate = new Date(timestamp * 1000);
+                return (theDate.getMonth()+1) + '/' + theDate.getDate() + '/' + theDate.getFullYear();
+            }
+
+            //////////////////////////////////////////////
+            //função que converte o timestamp para data formato BR
+            function toDateBR(timestamp, time = "noTime"){
+                if (time == "noTime") {
+                    var theDate = new Date(timestamp * 1000);
+
+                    var day = ("0" + (theDate.getDate())).slice(-2);
+                    var month = ("0" + (theDate.getMonth() + 1)).slice(-2);
+                    var year = theDate.getFullYear();
+                    var date = day + "/" + month + "/" + year;
+
+                    return date;
+                } else {
+                    var theDate = new Date(timestamp * 1000);
+
+                    var day = ("0" + (theDate.getDate())).slice(-2);
+                    var month = ("0" + (theDate.getMonth() + 1)).slice(-2);
+                    var year = theDate.getFullYear();
+
+                    var hour = ("0" + (theDate.getHours())).slice(-2);;
+                    var min = ("0" + (theDate.getMinutes())).slice(-2);;
+
+                    var date = day + "/" + month + "/" + year + " " + hour + ":" + min;
+
+                    return date;
+                }
+            }
 
 
         //////////////////////////////////////////////

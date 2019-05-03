@@ -381,14 +381,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     white-space: nowrap;
     display: block;
     margin: 0.33em 0;
+    width: fit-content;
 }
 
 #planejador .tela .box .ellipsisContainer {
     width: 100%;
-}
-
-#planejador .tela .box.box_perfil span.idade {
-    /* width: 5em; */
 }
 
 #planejador .tela .editarPerfil {
@@ -477,7 +474,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     top: 1em;
     padding: 0.2em;
     font-size: 0.7em;
-    z-index: 1000;
+    z-index: 100;
     position: absolute;
     text-align: center;
     color: #FFF;
@@ -1875,7 +1872,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     height: 2em;
     position: absolute;
     line-height: 2em;
-    left: 2.9em;
+    left: 2.95em;
     top: 0.8em;
     cursor: pointer;
     font-weight: bold;

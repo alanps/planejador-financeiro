@@ -1,9 +1,12 @@
 @include('head')
 
 <link rel="stylesheet" href="{{ asset('css/planejador.css') }}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/css/datepicker.min.css" rel="stylesheet" type="text/css">
 <script src="{{ asset('js/planejador.js') }}"></script>
-<script src="libs/mask/jquery.mask.js" type="text/javascript"></script>
 <script src="libs/priceformat/jquery.priceformat.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.pt-BR.js"></script>
+
 
 <section id="planejador">
 
@@ -17,15 +20,9 @@
 				<div class="box box_perfil clearfix">
 					<div class="foto">Sua Foto</div>
 					<div class="flexGroup">
-						<div class="ellipsisContainer">
-							<span class="nome tooltip" data-title=""></span>
-						</div>
-						<div class="ellipsisContainer">
-							<span class="idade tooltip" data-title=""></span>
-						</div>
-						<div class="ellipsisContainer">
-							<span class="profissao tooltip" data-title=""></span>
-						</div>
+						<span class="nome tooltip" data-title=""></span>
+						<span class="idade tooltip" data-title=""></span>
+						<span class="profissao tooltip" data-title=""></span>
 					</div>
 					<div class="editarPerfil">Editar Perfil</div>
 					<div class="editarPerfil sair">Sair</div>
@@ -46,7 +43,7 @@
 						<input type="text" class="entradaParcelas tooltip-alert" value="Parcelas">
 						<input type="text" class="entradaValorParcela tooltip-alert" value="Valor das Parcelas" maxlength="13" disabled="disabled">
 						<div class="entradaVencimentoParcelaDiv">
-							<input type="text" class="entradaVencimentoParcela tooltip-alert" value="Vencimento da 1ª Parcela" maxlength="13" disabled="disabled">
+							<input type="text" class="entradaVencimentoParcela tooltip-alert" value="Vencimento da 1ª Parcela" maxlength="13" disabled="disabled" readonly>
 							<span class="icon-clock2 tooltip entradaHoje disabled" data-title="Hoje"></span>
 							<span class="icon-clock22 tooltip entrada30Dias disabled" data-title="Daqui a 30 dias"></span>
 						</div>
@@ -71,7 +68,7 @@
 						<input type="text" class="saidaParcelas tooltip-alert" value="Parcelas">
 						<input type="text" class="saidaValorParcela tooltip-alert" value="Valor das Parcelas" maxlength="13" disabled="disabled">
 						<div class="saidaVencimentoParcelaDiv">
-							<input type="text" class="saidaVencimentoParcela tooltip-alert" value="Vencimento da 1ª Parcela" maxlength="13" disabled="disabled">
+							<input type="text" class="saidaVencimentoParcela tooltip-alert" value="Vencimento da 1ª Parcela" maxlength="13" disabled="disabled" readonly>
 							<span class="icon-clock2 tooltip saidaHoje disabled" data-title="Hoje"></span>
 							<span class="icon-clock22 tooltip saida30Dias disabled" data-title="Daqui a 30 dias"></span>
 						</div>
@@ -91,7 +88,7 @@
 							<span class="objetivoTipoValorSelectOpcao1 opcoes">Compra</span>
 							<span class="objetivoTipoValorSelectOpcao2 opcoes">Venda</span>
 						</div>
-						<input type="text" class="objetivoData tooltip-alert" placeholder="Data Prevista">
+						<input type="text" class="objetivoData tooltip-alert" placeholder="Data Prevista" readonly>
 						<input type="text" class="objetivoValor tooltip-alert" maxlength="15" placeholder="Valor Total">
 						<button class="objetivoAdd tooltip-alert">Adicionar</button>
 						<img src="images/loading.svg" class="loading objetivo_loading">
