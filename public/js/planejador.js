@@ -20,7 +20,7 @@
             //setando os campos que usam o calendário
             el.find('.saidaVencimentoParcela, .entradaVencimentoParcela, .objetivoData').datepicker({
                 language: 'pt-BR',
-                minDate: new Date() // Now can select only dates, which goes after today
+                minDate: new Date()
             });
 
 
@@ -1304,10 +1304,8 @@
                 var value = $(this).val();
                 if (value == "")
                 {
-                    el.find('.entradaValorParcela').unmask();
                     $(this).val("Valor das Parcelas");
                 } else if (value == "R$ 0,00") {
-                    el.find('.entradaValorParcela').unmask();
                     $(this).val("Valor das Parcelas");
                 }
             });
@@ -1329,10 +1327,8 @@
                 var value = $(this).val();
                 if (value == "")
                 {
-                    el.find('.entradaValor').unmask();
                     $(this).val("Valor Total");
                 } else if (value == "R$ 0,00") {
-                    el.find('.entradaValor').unmask();
                     $(this).val("Valor Total");
                 }
             });
@@ -1483,10 +1479,8 @@
                 var value = $(this).val();
                 if (value == "")
                 {
-                    el.find('.saidaValorParcela').unmask();
                     $(this).val("Valor das Parcelas");
                 } else if (value == "R$ 0,00") {
-                    el.find('.saidaValorParcela').unmask();
                     $(this).val("Valor das Parcelas");
                 }
             });
@@ -1510,7 +1504,6 @@
                 {
                     $(this).val("Valor Total");
                 } else if (value == "R$ 0,00") {
-                    el.find('.saidaValor').unmask();
                     $(this).val("Valor Total");
                 }
             });
@@ -1594,7 +1587,6 @@
                 {
                     $(this).val("Valor Total");
                 } else if (value == "R$ 0,00") {
-                    el.find('.objetivoValor').unmask();
                     $(this).val("Valor Total");
                 }
             });
@@ -1948,7 +1940,9 @@
                         el.find(".entradaAdd").removeClass("disabled");
                     }, 3000);
                     el.find(".loading.entrada_loading").hide();
-                } else if (el.find(".entradaParcelas").val() >= 2 && checkDate(el.find(".entradaVencimentoParcela").val().split("/")[0], el.find(".entradaVencimentoParcela").val().split("/")[1], el.find(".entradaVencimentoParcela").val().split("/")[2]) == false) {
+
+
+                } else if (el.find(".entradaParcelas").val() >= 2 && moment(el.find(".entradaVencimentoParcela").val().split("/")[2] + '/' + el.find(".entradaVencimentoParcela").val().split("/")[1] + '/' + el.find(".entradaVencimentoParcela").val().split("/")[0], "YYYY/MM/DD").isValid() == false) {
                     el.find(".entradaVencimentoParcela").addClass("backgroundRed");
                     tooltipalert(el.find(".entradaVencimentoParcela"), 'Data inválida!');
                     setTimeout(function() { 
@@ -2252,7 +2246,8 @@
                         el.find(".saidaAdd").removeClass("disabled");
                     }, 3000);
                     el.find(".loading.saida_loading").hide();
-                } else if (el.find(".saidaParcelas").val() >= 2 && checkDate(el.find(".saidaVencimentoParcela").val().split("/")[0], el.find(".saidaVencimentoParcela").val().split("/")[1], el.find(".saidaVencimentoParcela").val().split("/")[2]) == false) {
+
+                } else if (el.find(".saidaParcelas").val() >= 2 && moment(el.find(".saidaVencimentoParcela").val().split("/")[2] + '/' + el.find(".saidaVencimentoParcela").val().split("/")[1] + '/' + el.find(".saidaVencimentoParcela").val().split("/")[0], "YYYY/MM/DD").isValid() == false) {
                     el.find(".saidaVencimentoParcela").addClass("backgroundRed");
                     tooltipalert(el.find(".saidaVencimentoParcela"), 'Data inválida!');
                     setTimeout(function() { 
@@ -2539,7 +2534,8 @@
                         el.find(".objetivoAdd").removeClass("disabled");
                     }, 3000);
                     el.find(".loading.objetivo_loading").hide();
-                } else if (el.find(".objetivoData").val() != "Data Prevista" && checkDate(el.find(".objetivoData").val().split("/")[0], el.find(".objetivoData").val().split("/")[1], el.find(".objetivoData").val().split("/")[2]) == false) {
+
+                } else if (el.find(".objetivoData").val() != "Data Prevista" && moment(el.find(".objetivoData").val().split("/")[2] + '/' + el.find(".objetivoData").val().split("/")[1] + '/' + el.find(".objetivoData").val().split("/")[0], "YYYY/MM/DD").isValid() == false) {
                     el.find(".objetivoData").addClass("backgroundRed");
                     tooltipalert(el.find(".objetivoData"), 'Data inválida!');
                     setTimeout(function() { 
@@ -2704,7 +2700,7 @@
                                 el.find('.box_perfil .foto').html("");
                             }
 
-                            var date = toDate(data.data.data_nascimento);
+                            var date = moment.unix(data.data.data_nascimento).format("DD/MM/YY");
                             var dob = new Date(date);
                             var today = new Date();
                             var age = Math.floor((today-dob) / (365.25 * 24 * 60 * 60 * 1000));
@@ -3203,20 +3199,20 @@
                                         thousandsSeparator: '.'
                                     });
 
-                                    var dateCreated = moment.unix(data.data[i].created_at).format("DD/MM/YY");
+                                    var dateCreated = moment.unix(data.data[i].created_at).format("DD/MM/YYYY");
                                     template.find( ".dadosData" ).html(dateCreated);
-                                    var dateCreatedTooltip = moment.unix(data.data[i].created_at).format("DD/MM/YY HH:mm:ss");
+                                    var dateCreatedTooltip = moment.unix(data.data[i].created_at).format("DD/MM/YYYY HH:mm:ss");
                                     template.find( ".dadosData" ).attr("data-title", dateCreatedTooltip);
 
-                                    var dateAdicionado = moment.unix(data.data[i].created_at).format("DD/MM/YY");
+                                    var dateAdicionado = moment.unix(data.data[i].created_at).format("DD/MM/YYYY");
                                     template.find( ".dadosCriadoEm" ).html(dateAdicionado);
-                                    var dateAdicionadoTooltip = moment.unix(data.data[i].created_at).format("DD/MM/YY");
+                                    var dateAdicionadoTooltip = moment.unix(data.data[i].created_at).format("DD/MM/YYYY");
                                     template.find( ".dadosCriadoEm" ).attr("data-title", dateAdicionadoTooltip);
 
 
                                     var parcelaNumero = data.data[i].n_parcelas;
                                     var parcelaAtual = data.data[i].parcela_atual;
-                                    var proximoVencimento = moment.unix(data.data[i].data_vencimento_parcela).format("DD/MM/YY");
+                                    var proximoVencimento = moment.unix(data.data[i].data_vencimento_parcela).format("DD/MM/YYYY");
 
                                     if (parcelaNumero > 1) {
                                         template.find( ".dadosAtual" ).html(parcelaAtual);
@@ -3540,13 +3536,10 @@
                                         thousandsSeparator: '.'
                                     });
 
-                                    var dataPrevisao = new Date(toDate(data.data[i].data_prevista));
-                                    var dataAtual = new Date();
-                                    var dataConta = Math.abs(dataAtual.getTime() - dataPrevisao.getTime());
-                                    var faltam = Math.ceil(dataConta / (1000 * 3600 * 24));
-                                    template.find( ".objetivosDadosPrevisao" ).html(faltam + " dias");
-                                    template.find( ".objetivosDadosPrevisao" ).attr("data-title", toDateBR(data.data[i].data_prevista));
-                                    template.find( ".objetivosDadosPrevisao" ).attr("date", toDateBR(data.data[i].data_prevista));
+                                    var faltam = moment.unix(data.data[i].data_prevista).fromNow("dd");
+                                    template.find( ".objetivosDadosPrevisao" ).html(faltam);
+                                    template.find( ".objetivosDadosPrevisao" ).attr("data-title", moment.unix(data.data[i].data_prevista).format("DD/MM/YYYY"));
+                                    template.find( ".objetivosDadosPrevisao" ).attr("date", moment.unix(data.data[i].data_prevista).format("DD/MM/YYYY"));
                                     
                                     var now = Math.round(+new Date()/1000);
                                     if (data.data[i].data_prevista < now) {
@@ -4195,8 +4188,6 @@
             function editObjetivos(e, thisId, tecla) {
                 var id = thisId["0"].id;
 
-                console.log(id);
-
                 if (tecla != "esc") {
                     window.voltarObjetivosTipo = el.find("#"+id+" .objetivosDadosTipo .valor").html();
                     el.find("#"+id+" .objetivosDadosTotal").unpriceFormat();
@@ -4236,11 +4227,22 @@
                             $(this).val(dadosInputDadosTotalObjetivos);
                         }
                     });
-                    el.find(".objetivosEditando .objetivosDadosTotalEdit").css("width", "6.9em");
+                    el.find(".objetivosEditando .objetivosDadosTotalEdit").css("width", "7.9em");
                     //Campo 3 - PRAZO
                     dadosInputDadosPrazoObjetivos = el.find(".objetivosEditando .objetivosDadosPrevisao").attr("date");
-                    el.find(".objetivosEditando .objetivosDadosPrevisao").html("<input type='text' maxlength='12' class='objetivosDadosPrevisaoEdit campoEditavelObjetivos2' value='"+dadosInputDadosPrazoObjetivos+"'>");
-                    el.find(".objetivosEditando .objetivosDadosPrevisaoEdit").css("width", "6.5em");
+                    el.find(".objetivosEditando .objetivosDadosPrevisao").html("<input type='text' maxlength='12' class='objetivosDadosPrevisaoEdit campoEditavelObjetivos2 tooltip-alert-top' value='"+dadosInputDadosPrazoObjetivos+"'>");
+                    el.find(".objetivosEditando .objetivosDadosPrevisaoEdit").css("width", "7.5em");
+                        
+                    el.find(".objetivosEditando .objetivosDadosPrevisaoEdit").mask('00/00/0000');
+                    $(document).on("keyup", '.objetivosDadosPrevisaoEdit', function (e) {
+                        if ($(this).val().length >= 10){
+                            if (moment($(this).val().split("/")[2] + '/' + $(this).val().split("/")[1] + '/' + $(this).val().split("/")[0], "YYYY/MM/DD").isValid() === false){
+                                $(this).val("");
+                                tooltipalertTop($(this), "Data invalida!");
+                            }
+                        }
+                    });
+
                     ////////////////////////////////////////////////////
                     el.find(".objetivosEditando .dadosE span").removeClass("icon-write").addClass("icon-floppy-disk");
                     el.find(".objetivosEditando .dadosX span").addClass("icon-cross").removeClass("icon-trash");
@@ -4271,10 +4273,9 @@
                 });
                 var valorTotalBD = el.find(".objetivosEditando .objetivosDadosTotalEdit").val();
                 var arr = el.find('.objetivosEditando .objetivosDadosPrevisaoEdit').val().split('/');
-                var dataPrevista = moment(arr[2] + '/' + arr[1] + '/' + arr[0]).format("X");
+                var dataPrevista = moment(arr[2] + '/' + arr[1] + '/' + arr[0], "YYYY/MM/DD").format("X");
 
-
-                if (checkDate(arr[0], arr[1], arr[2]) === true) {
+                if (moment(arr[2] + '/' + arr[1] + '/' + arr[0], "YYYY/MM/DD").isValid() == true) {
                     //INICIO //////////////////////////////////////////////
                     if (el.find(".objetivosEditando").length >= 1 && tecla != "esc") {
                         $.ajax({
@@ -4349,12 +4350,11 @@
                         var valPrevisao = el.find(".objetivosEditando .objetivosDadosPrevisao").attr("date");
                     }
                     var arr_2 = valPrevisao.split('/');
-                    var dadosInputobjetivosDadosPrevisao = moment(arr_2[2] + '/' + arr_2[1] + '/' + arr_2[0]).format("X");
-                    var dataPrevisao = new Date(toDate(dadosInputobjetivosDadosPrevisao));
-                    var dataAtual = new Date();
-                    var dataConta = Math.abs(dataAtual.getTime() - dataPrevisao.getTime());
-                    var faltam = Math.ceil(dataConta / (1000 * 3600 * 24));
-                    el.find(".objetivosEditando .objetivosDadosPrevisao").html(faltam + " dias");
+                    var dadosInputobjetivosDadosPrevisao = moment(arr_2[2] + '/' + arr_2[1] + '/' + arr_2[0], "YYYY/MM/DD").format("X");
+
+                    var faltam = moment(arr_2[2] + '/' + arr_2[1] + '/' + arr_2[0], "YYYY/MM/DD").fromNow("dd");
+
+                    el.find(".objetivosEditando .objetivosDadosPrevisao").html(faltam);
                     el.find(".objetivosEditando .objetivosDadosPrevisao").attr("data-title", valPrevisao);
                     el.find(".objetivosEditando .objetivosDadosPrevisao").attr("date", valPrevisao);
                     el.find(".objetivosEditando .objetivosDadosPrevisao" ).css("color", "#595c62");
@@ -4379,61 +4379,76 @@
             }
 
 
-            //////////////////////////////////////////////
-            //UTILITÁRIOS
+            function mascaraData(val) {
+              var pass = val.value;
+              var expr = /[0123456789]/;
 
-            //////////////////////////////////////////////
-            //função que verifica se data é valida
-            function checkDate(day, month, year) {
-               if ((month == 4 || month == 6 || month == 9 || month == 11) && day < 30) {
-                   return true;
-               }
-               else if (month == 2 && day <= 28) {
-                   return true;
-               }
-               else if ((month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) && day <= 31) {
-                   return true;
-               }
-               else {
-                   return false;
-               }
-            }
+              for (i = 0; i < pass.length; i++) {
+                // charAt -> retorna o caractere posicionado no índice especificado
+                var lchar = val.value.charAt(i);
+                var nchar = val.value.charAt(i + 1);
 
-            //////////////////////////////////////////////
-            //função que converte o timestamp para data
-            function toDate(timestamp){
-                var theDate = new Date(timestamp * 1000);
-                return (theDate.getMonth()+1) + '/' + theDate.getDate() + '/' + theDate.getFullYear();
-            }
+                if (i == 0) {
+                  // search -> retorna um valor inteiro, indicando a posição do inicio da primeira
+                  // ocorrência de expReg dentro de instStr. Se nenhuma ocorrencia for encontrada o método retornara -1
+                  // instStr.search(expReg);
+                  if ((lchar.search(expr) != 0) || (lchar > 3)) {
+                    val.value = "";
+                  }
 
-            //////////////////////////////////////////////
-            //função que converte o timestamp para data formato BR
-            function toDateBR(timestamp, time = "noTime"){
-                if (time == "noTime") {
-                    var theDate = new Date(timestamp * 1000);
+                } else if (i == 1) {
 
-                    var day = ("0" + (theDate.getDate())).slice(-2);
-                    var month = ("0" + (theDate.getMonth() + 1)).slice(-2);
-                    var year = theDate.getFullYear();
-                    var date = day + "/" + month + "/" + year;
+                  if (lchar.search(expr) != 0) {
+                    // substring(indice1,indice2)
+                    // indice1, indice2 -> será usado para delimitar a string
+                    var tst1 = val.value.substring(0, (i));
+                    val.value = tst1;
+                    continue;
+                  }
 
-                    return date;
-                } else {
-                    var theDate = new Date(timestamp * 1000);
+                  if ((nchar != '/') && (nchar != '')) {
+                    var tst1 = val.value.substring(0, (i) + 1);
 
-                    var day = ("0" + (theDate.getDate())).slice(-2);
-                    var month = ("0" + (theDate.getMonth() + 1)).slice(-2);
-                    var year = theDate.getFullYear();
+                    if (nchar.search(expr) != 0)
+                      var tst2 = val.value.substring(i + 2, pass.length);
+                    else
+                      var tst2 = val.value.substring(i + 1, pass.length);
 
-                    var hour = ("0" + (theDate.getHours())).slice(-2);;
-                    var min = ("0" + (theDate.getMinutes())).slice(-2);;
+                    val.value = tst1 + '/' + tst2;
+                  }
 
-                    var date = day + "/" + month + "/" + year + " " + hour + ":" + min;
+                } else if (i == 4) {
 
-                    return date;
+                  if (lchar.search(expr) != 0) {
+                    var tst1 = val.value.substring(0, (i));
+                    val.value = tst1;
+                    continue;
+                  }
+
+                  if ((nchar != '/') && (nchar != '')) {
+                    var tst1 = val.value.substring(0, (i) + 1);
+
+                    if (nchar.search(expr) != 0)
+                      var tst2 = val.value.substring(i + 2, pass.length);
+                    else
+                      var tst2 = val.value.substring(i + 1, pass.length);
+
+                    val.value = tst1 + '/' + tst2;
+                  }
                 }
-            }
 
+                if (i >= 6) {
+                  if (lchar.search(expr) != 0) {
+                    var tst1 = val.value.substring(0, (i));
+                    val.value = tst1;
+                  }
+                }
+              }
+
+              if (pass.length > 10)
+                val.value = val.value.substring(0, 10);
+              return true;
+            }
 
         //////////////////////////////////////////////
         //FINAL DO SCRIPT

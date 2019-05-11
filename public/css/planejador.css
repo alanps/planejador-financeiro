@@ -1147,15 +1147,15 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 #planejador .tela .inANDout td.inANDoutData.inANDoutDataDESC span.icon-arrow-up2 {
     display: block !important;
     transform: rotate(180deg);
-    top: 0.75em;
-    right: 4.8em;
+    top: 2.95em;
+    right: 3.8em;
 }
 
 #planejador .tela .inANDout td.inANDoutData.inANDoutDataASC span.icon-arrow-up2 {
     display: block !important;
     transform: rotate(0deg);
-    top: 0.75em;
-    right: 4.8em;
+    top: 2.95em;
+    right: 3.8em;
 }
 
 #planejador .tela .inANDout td.inANDoutTotal.inANDoutTotalDESC span.icon-arrow-up2 {
@@ -1499,7 +1499,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
 #planejador .tela .inANDout table td {
     border-left: 2px solid #595c62;
-    padding: 1em;
+    padding: 1em 0;
     height: 3.6em;
     flex: 1;
 }
@@ -2121,7 +2121,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 
 
 #planejador .tela .calculadora .calculadoraBackspace .icon-undo2 {
-    margin-top: 0.6em;
+    margin-top: 0.48em;
     margin-left: -0.5em;
     position: absolute;
 }
@@ -2218,16 +2218,15 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 #planejador .tooltips-alert-seta-baixo {
     position: absolute;
     top: 33px;
-    left: 145px;
+    left: 50%;
 }
 
 #planejador .tooltips-alert-seta-baixo:before  {
     content: "";
     display: inline-block;
     vertical-align: middle;
-    margin-right: 10px;
-    width: 0; 
-    height: 0; 
+    width: 0;
+    height: 0;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-top: 6px solid #000;
@@ -2290,7 +2289,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     height: 1.1em;
     padding: 0 0.3em !important;
     margin: 0 !important;
-    margin-left: 0.3em !important;
     cursor: text;
     text-align: center;
     border: 1px solid #595c62;

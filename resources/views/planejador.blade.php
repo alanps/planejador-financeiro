@@ -6,6 +6,7 @@
 <script src="libs/priceformat/jquery.priceformat.js" type="text/javascript"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/datepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/air-datepicker/2.2.3/js/i18n/datepicker.pt-BR.js"></script>
+<script src="libs/jquery.mask.js" type="text/javascript"></script>
 
 
 <section id="planejador">
@@ -43,7 +44,7 @@
 						<input type="text" class="entradaParcelas tooltip-alert" value="Parcelas">
 						<input type="text" class="entradaValorParcela tooltip-alert" value="Valor das Parcelas" maxlength="13" disabled="disabled">
 						<div class="entradaVencimentoParcelaDiv">
-							<input type="text" class="entradaVencimentoParcela tooltip-alert" value="Vencimento da 1ª Parcela" maxlength="13" disabled="disabled" readonly>
+							<input type="text" class="entradaVencimentoParcela tooltip-alert" value="Vencimento da 1ª Parcela" maxlength="10" disabled="disabled" readonly>
 							<span class="icon-clock2 tooltip entradaHoje disabled" data-title="Hoje"></span>
 							<span class="icon-clock22 tooltip entrada30Dias disabled" data-title="Daqui a 30 dias"></span>
 						</div>
@@ -68,7 +69,7 @@
 						<input type="text" class="saidaParcelas tooltip-alert" value="Parcelas">
 						<input type="text" class="saidaValorParcela tooltip-alert" value="Valor das Parcelas" maxlength="13" disabled="disabled">
 						<div class="saidaVencimentoParcelaDiv">
-							<input type="text" class="saidaVencimentoParcela tooltip-alert" value="Vencimento da 1ª Parcela" maxlength="13" disabled="disabled" readonly>
+							<input type="text" class="saidaVencimentoParcela tooltip-alert" value="Vencimento da 1ª Parcela" maxlength="10" disabled="disabled" readonly>
 							<span class="icon-clock2 tooltip saidaHoje disabled" data-title="Hoje"></span>
 							<span class="icon-clock22 tooltip saida30Dias disabled" data-title="Daqui a 30 dias"></span>
 						</div>
@@ -88,7 +89,7 @@
 							<span class="objetivoTipoValorSelectOpcao1 opcoes">Compra</span>
 							<span class="objetivoTipoValorSelectOpcao2 opcoes">Venda</span>
 						</div>
-						<input type="text" class="objetivoData tooltip-alert" placeholder="Data Prevista" readonly>
+						<input type="text" class="objetivoData tooltip-alert" placeholder="Data Prevista" maxlength="10" readonly>
 						<input type="text" class="objetivoValor tooltip-alert" maxlength="15" placeholder="Valor Total">
 						<button class="objetivoAdd tooltip-alert">Adicionar</button>
 						<img src="images/loading.svg" class="loading objetivo_loading">
@@ -189,7 +190,7 @@
 									<span class="icon-arrow-up2"></span>
 								</td>
 								<td class="inANDoutData">
-									<span class="label">Data de Entrada/Saída</span>
+									<span class="label">Data de Entrada no Sistema</span>
 									<span class="icon-arrow-up2"></span>
 								</td>
 								<td class="inANDoutCriadoEm">
