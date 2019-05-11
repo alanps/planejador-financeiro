@@ -1175,43 +1175,43 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 #planejador .tela .inANDout td.inANDoutValor.inANDoutValorDESC span.icon-arrow-up2 {
     display: block !important;
     transform: rotate(0deg);
-    top: 0.75em;
-    right: 1.7em;
+    top: 2.9em;
+    right: 2.3em;
 }
 
 #planejador .tela .inANDout td.inANDoutValor.inANDoutValorASC span.icon-arrow-up2 {
     display: block;
     transform: rotate(180deg);
-    top: 0.75em;
-    right: 1.7em;
+    top: 2.9em;
+    right: 2.3em;
 }
 
 #planejador .tela .inANDout td.inANDoutParcelas.inANDoutParcelasDESC span.icon-arrow-up2 {
     display: block !important;
     transform: rotate(0deg);
-    top: 0.7em;
-    right: 0.9em;
+    top: 2.9em;
+    right: 1.7em;
 }
 
 #planejador .tela .inANDout td.inANDoutParcelas.inANDoutParcelasASC span.icon-arrow-up2 {
     display: block;
     transform: rotate(180deg);
-    top: 0.7em;
-    right: 0.9em;
+    top: 2.9em;
+    right: 1.7em;
 }
 
 #planejador .tela .inANDout td.inANDoutAtual.inANDoutAtualDESC span.icon-arrow-up2 {
     display: block !important;
     transform: rotate(0deg);
-    top: 0.75em;
-    right: 2em;
+    top: 2.9em;
+    right: 3em;
 }
 
 #planejador .tela .inANDout td.inANDoutAtual.inANDoutAtualASC span.icon-arrow-up2 {
     display: block;
     transform: rotate(180deg);
-    top: 0.75em;
-    right: 2em;
+    top: 2.9em;
+    right: 3em;
 }
 
 #planejador .tela .inANDout td.inANDoutTipo.inANDoutTipoDESC span.icon-arrow-up2 {
