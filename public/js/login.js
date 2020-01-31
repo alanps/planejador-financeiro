@@ -45,7 +45,7 @@
 	            var token = localStorage.getItem('token');
 	            var userData = getObject('userData');
 	            if(token && userData){
-	            	window.location = "planejador";
+	            	window.location = "aplicativo";
 	                return;
 	            }
 	            
@@ -237,7 +237,7 @@
                     		localStorage.setItem('token', "Bearer " + data.data.api_token);
 			        		window.userData = data.data;
 			        		userData = setObject('userData', data.data);
-							window.location = "planejador";
+							window.location = "aplicativo";
 						} else {
 							el.find(".login .loading").hide();
 							if (loginEsconderTime == null) {

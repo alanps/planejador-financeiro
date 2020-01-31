@@ -19,6 +19,6 @@ Route::get('/esqueciaasenha', function () {
     return view('esqueciaasenha');
 })->name("esqueciaasenha");
 
-Route::get('/planejador', function () {
+Route::get('/aplicativo', function () {
     return view('planejador');
-})->name("planejador");
+})->name("aplicativo");
