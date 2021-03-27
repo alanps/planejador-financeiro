@@ -8,7 +8,6 @@
 	<!-- Meta ===================================================== -->
 	<meta charset="utf-8" />
 	<meta name="description" content="Planejamento Financeiro - Agência Dream Up">
-	<meta name="keywords" content="Planejamento Financeiro, Agência Dream Up">
 	<link rel="shortcut icon" type="image/x-icon" href="./images/favicon.ico">
 	<link rel="image_src" type="image/jpeg" href="./images/logo.jpg" />
 
