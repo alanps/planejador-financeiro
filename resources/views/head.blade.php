@@ -48,6 +48,6 @@
 
 <script>
 	//window.homepath = "http://www.agenciadreamup.com.br/planejador/"; //ftp
-	window.homepath = "http://localhost/planejador-financeiro/public/"; //localhost
-	window.uploadpath = "http://localhost/planejador-financeiro/storage/app/public/"; //localhost
+	window.homepath = "https://www.agenciadreamup.com.br/planejador/"; //localhost
+	window.uploadpath = "hhttps://www.agenciadreamup.com.br/planejador/storage/app/public/"; //localhost
 </script>
